@@ -1,0 +1,8 @@
+{
+  "title": "Stato del servizio",
+  "status": {
+    "loading": "Verifica in corso…",
+    "ok": "Il servizio è attivo",
+    "error": "Il servizio non è raggiungibile"
+  }
+}

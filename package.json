@@ -1,0 +1,8 @@
+{
+  "name": "bis",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "test:e2e": "pnpm --filter bis-e2e test"
+  }
+}

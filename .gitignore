@@ -1,0 +1,12 @@
+.env
+node_modules/
+dist/
+.venv
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+storybook-static/
+test-results/
+playwright-report/
+*.tsbuildinfo
