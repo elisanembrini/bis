@@ -3,9 +3,14 @@ name = "bis-backend"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "alembic==1.20.1",
+    "email-validator==2.3.0",
     "fastapi==0.161.1",
+    "psycopg[binary]==3.3.6",
+    "pwdlib[argon2]==0.3.1",
     "pydantic==2.14.1",
     "pydantic-settings==2.16.1",
+    "sqlalchemy==2.1.6",
     "uvicorn[standard]==0.54.0",
 ]
 
@@ -26,6 +31,9 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "B", "UP", "N", "SIM", "RUF", "ASYNC", "PT"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["alembic"]
 
 [tool.mypy]
 python_version = "3.12"

@@ -18,16 +18,27 @@ services:
   backend:
     build:
       context: ./apps/backend
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    command:
+      - sh
+      - -c
+      - alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --proxy-headers --forwarded-allow-ips="*"
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      FRONTEND_BASE_URL: http://localhost:${FRONTEND_PORT:-5173}
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURITY: none
+      SMTP_FROM: Bis <noreply@bis.local>
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
       - ./apps/backend/app:/app/app
+      - ./apps/backend/alembic:/app/alembic
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 5s
@@ -53,6 +64,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+
+  mailpit:
+    image: axllent/mailpit:v1.31.6
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
 
 volumes:
   db-data:

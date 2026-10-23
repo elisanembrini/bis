@@ -142,6 +142,9 @@ Ogni utente appartiene a una sola casa. Chi si registra senza invito diventa pro
 - `recipe_tags`: recipe_id, tag_id.
 - `recipe_shares`: recipe_id, user_id, created_at. Unicità su (recipe_id, user_id). Il destinatario deve appartenere alla stessa casa dell'autrice.
 - `photos`: id, owner_id, storage_key, content_type, width, height, size_bytes, created_at.
+- `sessions`: id, user_id, token_hash (unico), created_at, expires_at. Sessioni lato server; il cookie contiene il token, il database solo il suo hash.
+- `password_reset_tokens`: id, user_id, token_hash (unico), created_at, expires_at, used_at (nullable). Token monouso valido 1 ora.
+- `login_attempts`: id, email, ip, succeeded, attempted_at. Base del limite ai tentativi di accesso.
 
 Eliminando una ricetta si eliminano a cascata ingredienti, passaggi, etichette associate, condivisioni e foto.
 

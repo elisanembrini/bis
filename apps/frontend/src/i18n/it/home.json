@@ -1,0 +1,4 @@
+{
+  "greeting": "Ciao, {{name}}!",
+  "intro": "Qui troverai presto il tuo ricettario."
+}
