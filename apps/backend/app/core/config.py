@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     smtp_security: Literal["none", "starttls", "ssl"] = "starttls"
     smtp_from: str
 
+    google_client_id: str | None = None
+    google_client_secret: SecretStr | None = None
+    google_redirect_uri: str | None = None
+    google_state_ttl_minutes: int = 10
+
 
 @lru_cache
 def get_settings() -> Settings:

@@ -14,6 +14,7 @@ from app.repositories import sessions, users
 from app.services.tokens import hash_token
 
 SESSION_COOKIE_NAME = "bis_session"
+OAUTH_STATE_COOKIE_NAME = "bis_oauth_state"
 
 session_cookie = APIKeyCookie(name=SESSION_COOKIE_NAME, auto_error=False)
 
@@ -40,10 +41,10 @@ def get_authenticated(
     return Authenticated(user=user, session_id=session.id)
 
 
-def set_session_cookie(response: Response, token: str, max_age_seconds: int) -> None:
+def _set_cookie(response: Response, name: str, value: str, max_age_seconds: int) -> None:
     response.set_cookie(
-        key=SESSION_COOKIE_NAME,
-        value=token,
+        key=name,
+        value=value,
         max_age=max_age_seconds,
         path="/",
         httponly=True,
@@ -52,11 +53,21 @@ def set_session_cookie(response: Response, token: str, max_age_seconds: int) -> 
     )
 
 
+def _clear_cookie(response: Response, name: str) -> None:
+    response.delete_cookie(key=name, path="/", httponly=True, secure=True, samesite="lax")
+
+
+def set_session_cookie(response: Response, token: str, max_age_seconds: int) -> None:
+    _set_cookie(response, SESSION_COOKIE_NAME, token, max_age_seconds)
+
+
 def clear_session_cookie(response: Response) -> None:
-    response.delete_cookie(
-        key=SESSION_COOKIE_NAME,
-        path="/",
-        httponly=True,
-        secure=True,
-        samesite="lax",
-    )
+    _clear_cookie(response, SESSION_COOKIE_NAME)
+
+
+def set_oauth_state_cookie(response: Response, state: str, max_age_seconds: int) -> None:
+    _set_cookie(response, OAUTH_STATE_COOKIE_NAME, state, max_age_seconds)
+
+
+def clear_oauth_state_cookie(response: Response) -> None:
+    _clear_cookie(response, OAUTH_STATE_COOKIE_NAME)

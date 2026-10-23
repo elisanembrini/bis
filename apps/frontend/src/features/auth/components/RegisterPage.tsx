@@ -6,6 +6,8 @@ import { $api } from "../../../api/client";
 import { errorCodeOf } from "../../../api/errors";
 import { meQueryOptions } from "../queries";
 import { AuthPageLayout } from "./AuthPageLayout";
+import { GoogleSignInButton } from "./GoogleSignInButton";
+import { OrDivider } from "./OrDivider";
 import { RegisterForm } from "./RegisterForm";
 
 export function RegisterPage() {
@@ -21,6 +23,8 @@ export function RegisterPage() {
 
   return (
     <AuthPageLayout title={t("register.title")}>
+      <GoogleSignInButton />
+      <OrDivider />
       <RegisterForm
         onSubmit={(body) => register.mutate({ body })}
         isSubmitting={register.isPending}

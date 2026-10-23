@@ -48,6 +48,12 @@ class UnauthenticatedError(DomainError):
     message = "Accesso richiesto."
 
 
+class GoogleLoginError(Exception):
+    def __init__(self, code: ErrorCode) -> None:
+        super().__init__(code)
+        self.code = code
+
+
 async def handle_domain_error(_: Request, exc: Exception) -> JSONResponse:
     if not isinstance(exc, DomainError):
         raise exc

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { sanitizeRedirect, validateRedirectSearch } from "./redirect";
+import { sanitizeRedirect, validateLoginSearch, validateRedirectSearch } from "./redirect";
 
 describe("sanitizeRedirect", () => {
   it("accepts internal paths with query string", () => {
@@ -26,5 +26,17 @@ describe("validateRedirectSearch", () => {
 
   it("keeps a safe redirect", () => {
     expect(validateRedirectSearch({ redirect: "/" })).toEqual({ redirect: "/" });
+  });
+});
+
+describe("validateLoginSearch", () => {
+  it("keeps a known error code from the Google callback", () => {
+    expect(validateLoginSearch({ error: "GOOGLE_EMAIL_NOT_VERIFIED" })).toEqual({
+      error: "GOOGLE_EMAIL_NOT_VERIFIED",
+    });
+  });
+
+  it("drops unknown error codes", () => {
+    expect(validateLoginSearch({ error: "<script>", redirect: "/" })).toEqual({ redirect: "/" });
   });
 });

@@ -14,8 +14,24 @@ def get_by_id(db: Session, user_id: uuid.UUID) -> User | None:
     return db.get(User, user_id)
 
 
-def add(db: Session, *, email: str, password_hash: str, display_name: str) -> User:
-    user = User(email=email, password_hash=password_hash, display_name=display_name)
+def get_by_google_sub(db: Session, google_sub: str) -> User | None:
+    return db.scalar(select(User).where(User.google_sub == google_sub))
+
+
+def add(
+    db: Session,
+    *,
+    email: str,
+    display_name: str,
+    password_hash: str | None = None,
+    google_sub: str | None = None,
+) -> User:
+    user = User(
+        email=email,
+        password_hash=password_hash,
+        google_sub=google_sub,
+        display_name=display_name,
+    )
     db.add(user)
     db.flush()
     return user

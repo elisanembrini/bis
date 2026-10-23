@@ -55,3 +55,12 @@ export const TooManyAttempts: Story = {
     await expect(await canvas.findByRole("alert")).toHaveTextContent("Troppi tentativi");
   },
 };
+
+export const GoogleEmailNotVerified: Story = {
+  args: { errorCode: "GOOGLE_EMAIL_NOT_VERIFIED" },
+  play: async ({ canvas }) => {
+    await expect(await canvas.findByRole("alert")).toHaveTextContent(
+      "Google non ha verificato questo indirizzo email",
+    );
+  },
+};

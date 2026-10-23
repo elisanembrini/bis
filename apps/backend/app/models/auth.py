@@ -44,3 +44,15 @@ class LoginAttempt(Base):
     ip: Mapped[str] = mapped_column(String(45))
     succeeded: Mapped[bool] = mapped_column(Boolean)
     attempted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class OAuthState(Base):
+    __tablename__ = "oauth_states"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    state_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    code_verifier: Mapped[str] = mapped_column(String(128))
+    redirect: Mapped[str | None] = mapped_column(String(2048))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

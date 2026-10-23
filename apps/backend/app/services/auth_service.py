@@ -1,4 +1,5 @@
 import math
+import secrets
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -12,17 +13,28 @@ from app.core.clock import Clock, get_clock
 from app.core.config import Settings, get_settings
 from app.core.errors import (
     EmailAlreadyRegisteredError,
+    GoogleLoginError,
     InvalidCredentialsError,
     ResetTokenInvalidError,
     TooManyAttemptsError,
 )
 from app.db import get_db
 from app.models import User
-from app.repositories import households, login_attempts, password_reset_tokens, sessions, users
+from app.repositories import (
+    households,
+    login_attempts,
+    oauth_states,
+    password_reset_tokens,
+    sessions,
+    users,
+)
 from app.schemas.auth import HouseholdRole, HouseholdSummary, MeResponse
+from app.schemas.errors import ErrorCode
 from app.services.email_sender import EmailSender, get_email_sender
 from app.services.emails import build_password_reset_email, password_reset_link
+from app.services.google_oauth import GoogleIdentity, GoogleOAuthClient, GoogleOAuthError
 from app.services.password_hasher import PasswordHasher, get_password_hasher
+from app.services.pkce import code_challenge_s256, generate_code_verifier
 from app.services.tokens import generate_token, hash_token
 
 
@@ -31,6 +43,22 @@ class OpenedSession:
     user: User
     token: str
     max_age_seconds: int
+
+
+@dataclass(frozen=True)
+class GoogleLoginStart:
+    authorization_url: str
+    state: str
+    max_age_seconds: int
+
+
+@dataclass(frozen=True)
+class GoogleLoginResult:
+    opened: OpenedSession
+    redirect: str | None
+
+
+DISPLAY_NAME_MAX_LENGTH = 100
 
 
 class AuthService:
@@ -127,6 +155,88 @@ class AuthService:
         sessions.delete_all_for_user(self._db, user.id)
         self._db.commit()
 
+    def start_google_login(
+        self, google: GoogleOAuthClient, redirect: str | None
+    ) -> GoogleLoginStart:
+        now = self._clock.now()
+        ttl = timedelta(minutes=self._settings.google_state_ttl_minutes)
+        state = generate_token()
+        code_verifier = generate_code_verifier()
+        oauth_states.add(
+            self._db,
+            state_hash=hash_token(state),
+            code_verifier=code_verifier,
+            redirect=redirect,
+            created_at=now,
+            expires_at=now + ttl,
+        )
+        self._db.commit()
+        return GoogleLoginStart(
+            authorization_url=google.authorization_url(
+                state=state, code_challenge=code_challenge_s256(code_verifier)
+            ),
+            state=state,
+            max_age_seconds=int(ttl.total_seconds()),
+        )
+
+    def complete_google_login(
+        self,
+        google: GoogleOAuthClient,
+        *,
+        state: str | None,
+        state_cookie: str | None,
+        code: str | None,
+        error: str | None,
+    ) -> GoogleLoginResult:
+        if not state or not state_cookie or not secrets.compare_digest(state, state_cookie):
+            raise GoogleLoginError(ErrorCode.GOOGLE_STATE_INVALID)
+        now = self._clock.now()
+        oauth_state = oauth_states.get_usable_for_update(self._db, hash_token(state), now)
+        if oauth_state is None:
+            raise GoogleLoginError(ErrorCode.GOOGLE_STATE_INVALID)
+        oauth_state.used_at = now
+        self._db.commit()
+        if error is not None:
+            if error == "access_denied":
+                raise GoogleLoginError(ErrorCode.GOOGLE_CANCELLED)
+            raise GoogleLoginError(ErrorCode.GOOGLE_FAILED)
+        if not code:
+            raise GoogleLoginError(ErrorCode.GOOGLE_FAILED)
+        try:
+            identity = google.exchange(code=code, code_verifier=oauth_state.code_verifier)
+        except GoogleOAuthError as exc:
+            raise GoogleLoginError(ErrorCode.GOOGLE_FAILED) from exc
+        user = self._find_or_create_google_user(identity)
+        opened = self._open_session(user, now)
+        self._db.commit()
+        return GoogleLoginResult(opened=opened, redirect=oauth_state.redirect)
+
+    def _find_or_create_google_user(self, identity: GoogleIdentity) -> User:
+        user = users.get_by_google_sub(self._db, identity.sub)
+        if user is not None:
+            return user
+        if not identity.email_verified:
+            raise GoogleLoginError(ErrorCode.GOOGLE_EMAIL_NOT_VERIFIED)
+        email = identity.email.strip().lower()
+        user = users.get_by_email(self._db, email)
+        if user is not None:
+            if user.google_sub is not None:
+                raise GoogleLoginError(ErrorCode.GOOGLE_ACCOUNT_CONFLICT)
+            user.google_sub = identity.sub
+            return user
+        try:
+            user = users.add(
+                self._db,
+                email=email,
+                google_sub=identity.sub,
+                display_name=_display_name_for(identity, email),
+            )
+            households.add_with_owner(self._db, user.id)
+        except IntegrityError as exc:
+            self._db.rollback()
+            raise GoogleLoginError(ErrorCode.GOOGLE_FAILED) from exc
+        return user
+
     def describe(self, user: User) -> MeResponse:
         household = users.get_household(self._db, user.id)
         if household is None:
@@ -172,6 +282,11 @@ class AuthService:
                 unblocks_at = failures[len(failures) - limit] + window
                 retry_after = max(1, math.ceil((unblocks_at - now).total_seconds()))
                 raise TooManyAttemptsError(retry_after)
+
+
+def _display_name_for(identity: GoogleIdentity, email: str) -> str:
+    name = (identity.name or "").strip() or email.split("@", 1)[0]
+    return name[:DISPLAY_NAME_MAX_LENGTH]
 
 
 def get_auth_service(

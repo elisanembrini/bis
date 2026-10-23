@@ -29,6 +29,9 @@ services:
       SMTP_PORT: 1025
       SMTP_SECURITY: none
       SMTP_FROM: Bis <noreply@bis.local>
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: http://localhost:${FRONTEND_PORT:-5173}/api/auth/google/callback
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
