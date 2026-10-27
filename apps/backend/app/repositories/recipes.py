@@ -1,25 +1,37 @@
 import uuid
 
-from sqlalchemy import Select, exists, func, select
+from sqlalchemy import CompoundSelect, Select, exists, func, select, union
 from sqlalchemy.orm import Session, selectinload
 
-from app.models import Ingredient, Recipe, recipe_tags
+from app.models import Ingredient, Recipe, RecipeShare, recipe_tags
 from app.repositories.search import build_tsquery
 
 
-def visible_recipe_ids(user_id: uuid.UUID) -> Select[uuid.UUID]:
+def own_recipe_ids(user_id: uuid.UUID) -> Select[uuid.UUID]:
     return select(Recipe.id).where(Recipe.owner_id == user_id)
+
+
+def shared_recipe_ids(user_id: uuid.UUID) -> Select[uuid.UUID]:
+    return select(RecipeShare.recipe_id).where(RecipeShare.user_id == user_id)
+
+
+def visible_recipe_ids(user_id: uuid.UUID) -> CompoundSelect[uuid.UUID]:
+    return union(own_recipe_ids(user_id), shared_recipe_ids(user_id))
 
 
 def search(
     db: Session,
     *,
-    visible: Select[uuid.UUID],
+    visible: Select[uuid.UUID] | CompoundSelect[uuid.UUID],
     title_words: list[str],
     ingredient_words: list[str],
     tag_id: uuid.UUID | None,
 ) -> list[Recipe]:
-    statement = select(Recipe).where(Recipe.id.in_(visible)).options(selectinload(Recipe.tags))
+    statement = (
+        select(Recipe)
+        .where(Recipe.id.in_(visible))
+        .options(selectinload(Recipe.tags), selectinload(Recipe.owner))
+    )
     ordering = []
     if title_words:
         title_query = build_tsquery(title_words)
@@ -50,14 +62,15 @@ def search(
     )
 
 
-def get_for_owner(db: Session, *, recipe_id: uuid.UUID, owner_id: uuid.UUID) -> Recipe | None:
+def get_visible(db: Session, *, recipe_id: uuid.UUID, user_id: uuid.UUID) -> Recipe | None:
     return db.scalar(
         select(Recipe)
-        .where(Recipe.id == recipe_id, Recipe.owner_id == owner_id)
+        .where(Recipe.id == recipe_id, Recipe.id.in_(visible_recipe_ids(user_id)))
         .options(
             selectinload(Recipe.ingredients),
             selectinload(Recipe.steps),
             selectinload(Recipe.tags),
+            selectinload(Recipe.owner),
         )
     )
 

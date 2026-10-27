@@ -150,6 +150,24 @@ class TagNotAvailableError(DomainError):
     message = "Una delle etichette non è disponibile."
 
 
+class RecipeReadOnlyError(DomainError):
+    status_code = 403
+    code = ErrorCode.RECIPE_READ_ONLY
+    message = "Questa ricetta è condivisa con te in sola lettura."
+
+
+class ShareNotAllowedError(DomainError):
+    status_code = 422
+    code = ErrorCode.SHARE_NOT_ALLOWED
+    message = "Puoi condividere una ricetta solo con chi vive nella tua casa."
+
+
+class CannotCopyOwnError(DomainError):
+    status_code = 409
+    code = ErrorCode.CANNOT_COPY_OWN
+    message = "Questa ricetta è già nel tuo ricettario."
+
+
 class GoogleLoginError(Exception):
     def __init__(self, code: ErrorCode) -> None:
         super().__init__(code)

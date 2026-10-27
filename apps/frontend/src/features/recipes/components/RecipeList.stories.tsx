@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
+import { expect, within } from "storybook/test";
 
 import { dishImage } from "../../../components/storyImages";
-import { recipeSummaries, summariesWithThumbnail } from "./fixtures";
+import { recipeSummaries, sharedSummary, summariesWithThumbnail } from "./fixtures";
 import { RecipeList } from "./RecipeList";
 
 const meta = {
@@ -29,6 +29,27 @@ export const WithThumbnails: Story = {
     const images = canvasElement.querySelectorAll("img");
     await expect(images).toHaveLength(1);
     await expect(images[0]).toHaveAttribute("alt", "");
+  },
+};
+
+export const WithSharedRecipes: Story = {
+  args: { recipes: [...recipeSummaries, sharedSummary] },
+  play: async ({ canvas }) => {
+    await expect(await canvas.findByRole("heading", { name: "Condivise con me" })).toBeVisible();
+    const shared = within(canvas.getByRole("list", { name: "Condivise con me" }));
+    await expect(shared.getByRole("link", { name: "Tiramisù di Bruno" })).toBeVisible();
+    await expect(shared.getByText("Condivisa")).toBeVisible();
+    await expect(shared.getByText(/di Bruno · 4 porzioni/)).toBeVisible();
+    const own = within(canvas.getByRole("list", { name: "Le mie ricette" }));
+    await expect(own.queryByText("Tiramisù di Bruno")).toBeNull();
+  },
+};
+
+export const OnlySharedRecipes: Story = {
+  args: { recipes: [sharedSummary] },
+  play: async ({ canvas }) => {
+    await expect(await canvas.findByText("Non hai ancora nessuna ricetta.")).toBeVisible();
+    await expect(canvas.getByRole("heading", { name: "Condivise con me" })).toBeVisible();
   },
 };
 

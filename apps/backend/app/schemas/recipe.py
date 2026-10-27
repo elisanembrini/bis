@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, StringConstraints, field_validator
 
@@ -16,6 +16,7 @@ TIMER_MAX_SECONDS = 86400
 MINUTES_MAX = 10000
 SERVINGS_MAX = 100
 MAX_TAGS = 20
+MAX_SHARES = 50
 SEARCH_MAX_LENGTH = 200
 
 Title = Annotated[
@@ -77,9 +78,19 @@ class StepResponse(BaseModel):
     photo_id: uuid.UUID | None
 
 
+class AuthorSummary(BaseModel):
+    id: uuid.UUID
+    display_name: str
+
+
+RecipeScope = Literal["mine", "shared"]
+
+
 class RecipeSummary(BaseModel):
     id: uuid.UUID
     title: str
+    is_own: bool
+    author: AuthorSummary
     servings: int
     prep_minutes: int | None
     cook_minutes: int | None
@@ -93,3 +104,13 @@ class RecipeResponse(RecipeSummary):
     notes: str | None
     ingredients: list[IngredientResponse]
     steps: list[StepResponse]
+
+
+class ShareCandidate(BaseModel):
+    user_id: uuid.UUID
+    display_name: str
+    shared: bool
+
+
+class SharesInput(BaseModel):
+    user_ids: Annotated[list[uuid.UUID], Field(max_length=MAX_SHARES)]

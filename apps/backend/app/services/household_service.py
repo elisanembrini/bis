@@ -20,7 +20,7 @@ from app.core.errors import (
 )
 from app.db import get_db
 from app.models import Household, HouseholdInvite, User
-from app.repositories import households, users
+from app.repositories import households, shares, users
 from app.schemas.auth import HouseholdRole
 from app.schemas.household import (
     HouseholdMemberResponse,
@@ -153,6 +153,7 @@ class HouseholdService:
         self._db.flush()
 
     def _move_to_new_household(self, household_id: uuid.UUID, user_id: uuid.UUID) -> None:
+        shares.delete_involving(self._db, user_id)
         households.remove_member(self._db, household_id=household_id, user_id=user_id)
         households.add_with_owner(self._db, user_id)
 

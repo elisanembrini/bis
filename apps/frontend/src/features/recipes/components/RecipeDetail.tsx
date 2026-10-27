@@ -1,4 +1,4 @@
-import { Badge, Button, Group, Image, List, Stack, Text, Title } from "@mantine/core";
+import { Alert, Badge, Button, Group, Image, List, Stack, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -18,17 +18,31 @@ import classes from "./RecipeDetail.module.css";
 type RecipeDetailProps = {
   recipe: RecipeResponse;
   onDelete: () => void;
+  onCopy: () => void;
+  onShare: () => void;
   isDeleting?: boolean;
+  isCopying?: boolean;
+  justCopied?: boolean;
+  sharedWith?: string[];
   errorCode?: AppErrorCode | undefined;
   photoSrc?: (photoId: string) => string;
 };
+
+const NOBODY: string[] = [];
+
+const listFormatter = new Intl.ListFormat("it-IT", { style: "long", type: "conjunction" });
 
 const defaultPhotoSrc = (photoId: string) => photoUrl(photoId, "full");
 
 export function RecipeDetail({
   recipe,
   onDelete,
+  onCopy,
+  onShare,
   isDeleting = false,
+  isCopying = false,
+  justCopied = false,
+  sharedWith = NOBODY,
   errorCode,
   photoSrc = defaultPhotoSrc,
 }: RecipeDetailProps) {
@@ -70,20 +84,47 @@ export function RecipeDetail({
           </Group>
         )}
       </Stack>
+      {justCopied && <Alert color="green" title={t("detail.copied")} />}
+      {!recipe.is_own && (
+        <Alert
+          color="orange"
+          title={t("detail.sharedWithMe", { name: recipe.author.display_name })}
+        />
+      )}
       <FormError code={errorCode} />
-      <Group grow>
-        <ButtonLink to="/recipes/$recipeId/edit" params={{ recipeId: recipe.id }} variant="default">
-          {t("detail.edit")}
-        </ButtonLink>
-        <Button
-          color="red"
-          variant="light"
-          onClick={() => setConfirming(true)}
-          loading={isDeleting}
-        >
-          {t("detail.delete")}
+      {recipe.is_own ? (
+        <Stack gap="xs">
+          <Group grow>
+            <ButtonLink
+              to="/recipes/$recipeId/edit"
+              params={{ recipeId: recipe.id }}
+              variant="default"
+            >
+              {t("detail.edit")}
+            </ButtonLink>
+            <Button variant="default" onClick={onShare}>
+              {t("detail.share")}
+            </Button>
+            <Button
+              color="red"
+              variant="light"
+              onClick={() => setConfirming(true)}
+              loading={isDeleting}
+            >
+              {t("detail.delete")}
+            </Button>
+          </Group>
+          {sharedWith.length > 0 && (
+            <Text size="sm" c="dimmed">
+              {t("detail.sharedWith", { names: listFormatter.format(sharedWith) })}
+            </Text>
+          )}
+        </Stack>
+      ) : (
+        <Button onClick={onCopy} loading={isCopying} size="md">
+          {t("detail.copy")}
         </Button>
-      </Group>
+      )}
 
       <Stack gap="xs">
         <Title order={2} size="h3">

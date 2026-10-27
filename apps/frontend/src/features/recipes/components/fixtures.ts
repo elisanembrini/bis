@@ -1,8 +1,12 @@
-import type { RecipeResponse, RecipeSummary, TagResponse } from "../types";
+import type { RecipeResponse, RecipeSummary, ShareCandidate, TagResponse } from "../types";
+
+export const anna = { id: "11111111-1111-4111-8111-111111111111", display_name: "Anna" };
 
 export const pastaRecipe: RecipeResponse = {
   id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
   title: "Pasta al pomodoro",
+  is_own: true,
+  author: anna,
   notes: "Meglio con il basilico fresco.\nSe avanza, il giorno dopo è ancora più buona.",
   prep_minutes: 10,
   cook_minutes: 15,
@@ -44,6 +48,8 @@ export const recipeSummaries: RecipeSummary[] = [pastaRecipe, minimalRecipe].map
   ({
     id,
     title,
+    is_own,
+    author,
     servings,
     prep_minutes,
     cook_minutes,
@@ -54,6 +60,8 @@ export const recipeSummaries: RecipeSummary[] = [pastaRecipe, minimalRecipe].map
   }) => ({
     id,
     title,
+    is_own,
+    author,
     servings,
     prep_minutes,
     cook_minutes,
@@ -78,6 +86,8 @@ export const summariesWithThumbnail: RecipeSummary[] = [
   {
     id: pastaRecipe.id,
     title: pastaRecipe.title,
+    is_own: true,
+    author: anna,
     servings: pastaRecipe.servings,
     prep_minutes: pastaRecipe.prep_minutes,
     cook_minutes: pastaRecipe.cook_minutes,
@@ -96,4 +106,32 @@ export const availableTags: TagResponse[] = [
   { id: "6f1d5a10-0000-4000-8000-000000000006", name: "Vegetariano", is_own: false },
   { id: "6f1d5a10-0000-4000-8000-000000000007", name: "Veloce", is_own: false },
   { id: "aaaaaaaa-0000-4000-8000-000000000001", name: "Natale", is_own: true },
+];
+
+export const sharedRecipe: RecipeResponse = {
+  ...pastaRecipe,
+  id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+  title: "Tiramisù di Bruno",
+  is_own: false,
+  author: { id: "22222222-2222-4222-8222-222222222222", display_name: "Bruno" },
+  tags: [{ id: "6f1d5a10-0000-4000-8000-000000000005", name: "Dolci" }],
+};
+
+export const sharedSummary: RecipeSummary = {
+  id: sharedRecipe.id,
+  title: sharedRecipe.title,
+  is_own: false,
+  author: sharedRecipe.author,
+  servings: sharedRecipe.servings,
+  prep_minutes: sharedRecipe.prep_minutes,
+  cook_minutes: sharedRecipe.cook_minutes,
+  cover_photo_id: null,
+  tags: sharedRecipe.tags,
+  created_at: sharedRecipe.created_at,
+  updated_at: sharedRecipe.updated_at,
+};
+
+export const shareCandidates: ShareCandidate[] = [
+  { user_id: "22222222-2222-4222-8222-222222222222", display_name: "Bruno", shared: true },
+  { user_id: "33333333-3333-4333-8333-333333333333", display_name: "Carla", shared: false },
 ];

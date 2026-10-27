@@ -33,6 +33,9 @@ const API_ERROR_CODES = {
   TAG_ALREADY_EXISTS: true,
   TAG_NOT_FOUND: true,
   TAG_NOT_AVAILABLE: true,
+  RECIPE_READ_ONLY: true,
+  SHARE_NOT_ALLOWED: true,
+  CANNOT_COPY_OWN: true,
 } satisfies Record<ApiErrorCode, true>;
 
 export const isApiErrorCode = (value: unknown): value is ApiErrorCode =>

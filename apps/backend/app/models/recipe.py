@@ -19,6 +19,7 @@ from sqlalchemy.orm import Mapped, deferred, mapped_column, relationship
 from app.core.units import Unit
 from app.models.base import Base
 from app.models.tag import Tag, recipe_tags
+from app.models.user import User
 
 SEARCH_VECTOR = (
     "to_tsvector('bis_italian'::regconfig, {column}) "
@@ -69,6 +70,7 @@ class Recipe(Base):
         passive_deletes=True,
         lazy="raise",
     )
+    owner: Mapped["User"] = relationship(lazy="raise")
     tags: Mapped[list[Tag]] = relationship(
         secondary=recipe_tags,
         order_by=Tag.name,

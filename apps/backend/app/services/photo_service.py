@@ -11,7 +11,7 @@ from app.core.config import Settings, get_settings
 from app.core.errors import PhotoInvalidError, PhotoNotFoundError
 from app.db import get_db
 from app.models import Photo, User
-from app.repositories import photos
+from app.repositories import photos, recipes
 from app.schemas.photo import PhotoUploadResponse
 from app.services.photo_processing import InvalidImageError, process_photo
 from app.services.photo_storage import PhotoSize, PhotoStorage, get_photo_storage
@@ -69,7 +69,7 @@ class PhotoService:
     def _can_view(self, user: User, photo: Photo) -> bool:
         if photo.owner_id == user.id:
             return True
-        return photos.visible_through_recipe_of(self._db, photo.id, user.id)
+        return photos.linked_to_any_of(self._db, photo.id, recipes.visible_recipe_ids(user.id))
 
 
 def delete_unlinked_photos(db: Session, storage: PhotoStorage, cutoff: datetime) -> int:

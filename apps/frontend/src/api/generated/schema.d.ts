@@ -296,6 +296,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/recipes/{recipe_id}/shares": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Shares */
+        get: operations["listRecipeShares"];
+        /** Set Shares */
+        put: operations["setRecipeShares"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/recipes/{recipe_id}/copy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Copy Recipe */
+        post: operations["copyRecipe"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/photos": {
         parameters: {
             query?: never;
@@ -369,11 +404,21 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AuthorSummary */
+        AuthorSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Display Name */
+            display_name: string;
+        };
         /**
          * ErrorCode
          * @enum {string}
          */
-        ErrorCode: "INVALID_CREDENTIALS" | "TOO_MANY_ATTEMPTS" | "EMAIL_ALREADY_REGISTERED" | "RESET_TOKEN_INVALID" | "UNAUTHENTICATED" | "GOOGLE_UNAVAILABLE" | "GOOGLE_STATE_INVALID" | "GOOGLE_CANCELLED" | "GOOGLE_EMAIL_NOT_VERIFIED" | "GOOGLE_ACCOUNT_CONFLICT" | "GOOGLE_FAILED" | "INVITE_NOT_FOUND" | "INVITE_EXPIRED" | "INVITE_USED" | "ALREADY_IN_HOUSEHOLD" | "MUST_LEAVE_HOUSEHOLD" | "OWNER_CANNOT_LEAVE" | "NOT_HOUSEHOLD_OWNER" | "MEMBER_NOT_FOUND" | "CANNOT_REMOVE_SELF" | "RECIPE_NOT_FOUND" | "PHOTO_TOO_LARGE" | "PHOTO_INVALID" | "PHOTO_NOT_FOUND" | "PHOTO_NOT_AVAILABLE" | "TAG_ALREADY_EXISTS" | "TAG_NOT_FOUND" | "TAG_NOT_AVAILABLE";
+        ErrorCode: "INVALID_CREDENTIALS" | "TOO_MANY_ATTEMPTS" | "EMAIL_ALREADY_REGISTERED" | "RESET_TOKEN_INVALID" | "UNAUTHENTICATED" | "GOOGLE_UNAVAILABLE" | "GOOGLE_STATE_INVALID" | "GOOGLE_CANCELLED" | "GOOGLE_EMAIL_NOT_VERIFIED" | "GOOGLE_ACCOUNT_CONFLICT" | "GOOGLE_FAILED" | "INVITE_NOT_FOUND" | "INVITE_EXPIRED" | "INVITE_USED" | "ALREADY_IN_HOUSEHOLD" | "MUST_LEAVE_HOUSEHOLD" | "OWNER_CANNOT_LEAVE" | "NOT_HOUSEHOLD_OWNER" | "MEMBER_NOT_FOUND" | "CANNOT_REMOVE_SELF" | "RECIPE_NOT_FOUND" | "PHOTO_TOO_LARGE" | "PHOTO_INVALID" | "PHOTO_NOT_FOUND" | "PHOTO_NOT_AVAILABLE" | "TAG_ALREADY_EXISTS" | "TAG_NOT_FOUND" | "TAG_NOT_AVAILABLE" | "RECIPE_READ_ONLY" | "SHARE_NOT_ALLOWED" | "CANNOT_COPY_OWN";
         /** ErrorResponse */
         ErrorResponse: {
             code: components["schemas"]["ErrorCode"];
@@ -563,6 +608,9 @@ export interface components {
             id: string;
             /** Title */
             title: string;
+            /** Is Own */
+            is_own: boolean;
+            author: components["schemas"]["AuthorSummary"];
             /** Servings */
             servings: number;
             /** Prep Minutes */
@@ -599,6 +647,9 @@ export interface components {
             id: string;
             /** Title */
             title: string;
+            /** Is Own */
+            is_own: boolean;
+            author: components["schemas"]["AuthorSummary"];
             /** Servings */
             servings: number;
             /** Prep Minutes */
@@ -640,6 +691,23 @@ export interface components {
             token: string;
             /** Password */
             password: string;
+        };
+        /** ShareCandidate */
+        ShareCandidate: {
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /** Display Name */
+            display_name: string;
+            /** Shared */
+            shared: boolean;
+        };
+        /** SharesInput */
+        SharesInput: {
+            /** User Ids */
+            user_ids: string[];
         };
         /** StepInput */
         StepInput: {
@@ -1334,6 +1402,7 @@ export interface operations {
                 q?: string | null;
                 ingredient?: string | null;
                 tag_id?: string | null;
+                scope?: ("mine" | "shared") | null;
             };
             header?: never;
             path?: never;
@@ -1494,6 +1563,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
             /** @description Not Found */
             404: {
                 headers: {
@@ -1541,8 +1619,195 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
             /** @description Not Found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listRecipeShares: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareCandidate"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    setRecipeShares: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SharesInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareCandidate"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    copyRecipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

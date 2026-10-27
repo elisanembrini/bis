@@ -19,3 +19,8 @@ export const recipesQueryOptions = ({ q, ingredient, tag }: RecipesSearch = {}) 
 
 export const recipeQueryOptions = (recipeId: string) =>
   $api.queryOptions("get", "/recipes/{recipe_id}", { params: { path: { recipe_id: recipeId } } });
+
+export const recipeSharesQueryOptions = (recipeId: string) =>
+  $api.queryOptions("get", "/recipes/{recipe_id}/shares", {
+    params: { path: { recipe_id: recipeId } },
+  });

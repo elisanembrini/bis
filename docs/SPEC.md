@@ -108,7 +108,7 @@ Ogni utente appartiene a una sola casa. Chi si registra senza invito diventa pro
   - [ ] Data una propria ricetta, quando l'utente sceglie uno o più membri della casa, allora la ricetta compare nella sezione "Condivise con me" di quei membri.
   - [ ] Data una condivisione, quando l'autrice la revoca, allora la ricetta scompare per quel membro.
   - [ ] Data una ricetta condivisa, quando il destinatario la apre, allora la vede in sola lettura e può usare porzioni e modalità cucina.
-  - [ ] Data una ricetta condivisa, quando il destinatario sceglie "Copia nel mio ricettario", allora ottiene una copia indipendente, foto comprese, che può modificare.
+  - [ ] Data una ricetta condivisa, quando il destinatario sceglie "Fai il bis", allora ottiene una copia indipendente, foto comprese, che può modificare.
   - [ ] Le modifiche successive all'originale non cambiano le copie.
 
 ### F8: Modalità cucina

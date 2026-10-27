@@ -1,4 +1,4 @@
-import { Center, Group, Image, List, Loader, Paper, Stack, Text, Title } from "@mantine/core";
+import { List, Loader, Paper, Stack, Text, Title } from "@mantine/core";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -7,11 +7,9 @@ import { photoUrl } from "../../../api/photos";
 import { AnchorLink } from "../../../components/AnchorLink";
 import { ButtonLink } from "../../../components/ButtonLink";
 import { FormError } from "../../../components/FormError";
-import { PhotoIcon, PlusIcon } from "../../../components/icons";
-import { useFormatDuration } from "../hooks/useFormatDuration";
+import { PlusIcon } from "../../../components/icons";
 import type { RecipeSummary } from "../types";
-
-import classes from "./RecipeList.module.css";
+import { RecipeListItem } from "./RecipeListItem";
 
 type RecipeListProps = {
   recipes: RecipeSummary[] | undefined;
@@ -22,9 +20,27 @@ type RecipeListProps = {
   filters?: ReactNode;
 };
 
-const THUMBNAIL_SIZE = 72;
-
 const defaultThumbnailSrc = (photoId: string) => photoUrl(photoId, "thumb");
+
+function RecipeItems({
+  recipes,
+  label,
+  thumbnailSrc,
+}: {
+  recipes: RecipeSummary[];
+  label: string;
+  thumbnailSrc: (photoId: string) => string;
+}) {
+  return (
+    <List listStyleType="none" spacing="sm" p={0} m={0} aria-label={label}>
+      {recipes.map((recipe) => (
+        <List.Item key={recipe.id}>
+          <RecipeListItem recipe={recipe} thumbnailSrc={thumbnailSrc} />
+        </List.Item>
+      ))}
+    </List>
+  );
+}
 
 export function RecipeList({
   recipes,
@@ -35,7 +51,8 @@ export function RecipeList({
   filters,
 }: RecipeListProps) {
   const { t } = useTranslation("recipes");
-  const formatDuration = useFormatDuration();
+  const own = recipes?.filter((recipe) => recipe.is_own) ?? [];
+  const shared = recipes?.filter((recipe) => !recipe.is_own) ?? [];
 
   return (
     <Stack gap="md">
@@ -56,7 +73,7 @@ export function RecipeList({
           </Stack>
         </Paper>
       )}
-      {recipes?.length === 0 && !isFiltered && (
+      {recipes !== undefined && own.length === 0 && !isFiltered && (
         <Paper withBorder p="lg">
           <Stack gap="sm" align="flex-start">
             <Text>{t("list.empty")}</Text>
@@ -64,59 +81,16 @@ export function RecipeList({
           </Stack>
         </Paper>
       )}
-      {recipes !== undefined && recipes.length > 0 && (
-        <List listStyleType="none" spacing="sm" p={0} m={0}>
-          {recipes.map((recipe) => {
-            const totalMinutes = (recipe.prep_minutes ?? 0) + (recipe.cook_minutes ?? 0);
-            return (
-              <List.Item key={recipe.id}>
-                <Paper withBorder p="sm">
-                  <Group gap="md" wrap="nowrap">
-                    {recipe.cover_photo_id === null ? (
-                      <Center
-                        w={THUMBNAIL_SIZE}
-                        h={THUMBNAIL_SIZE}
-                        bg="gray.1"
-                        c="gray.5"
-                        className={classes.thumbnail}
-                      >
-                        <PhotoIcon size={28} />
-                      </Center>
-                    ) : (
-                      <Image
-                        src={thumbnailSrc(recipe.cover_photo_id)}
-                        alt=""
-                        w={THUMBNAIL_SIZE}
-                        h={THUMBNAIL_SIZE}
-                        radius="md"
-                        fit="cover"
-                        className={classes.thumbnail}
-                      />
-                    )}
-                    <Stack gap={4}>
-                      <AnchorLink
-                        to="/recipes/$recipeId"
-                        params={{ recipeId: recipe.id }}
-                        fw={600}
-                        size="lg"
-                      >
-                        {recipe.title}
-                      </AnchorLink>
-                      <Text size="sm" c="dimmed">
-                        {[
-                          t("list.servings", { count: recipe.servings }),
-                          totalMinutes > 0 ? formatDuration(totalMinutes * 60) : null,
-                        ]
-                          .filter((part) => part !== null)
-                          .join(" · ")}
-                      </Text>
-                    </Stack>
-                  </Group>
-                </Paper>
-              </List.Item>
-            );
-          })}
-        </List>
+      {own.length > 0 && (
+        <RecipeItems recipes={own} label={t("list.title")} thumbnailSrc={thumbnailSrc} />
+      )}
+      {shared.length > 0 && (
+        <Stack gap="sm" mt="md">
+          <Title order={2} size="h3">
+            {t("list.shared")}
+          </Title>
+          <RecipeItems recipes={shared} label={t("list.shared")} thumbnailSrc={thumbnailSrc} />
+        </Stack>
       )}
     </Stack>
   );

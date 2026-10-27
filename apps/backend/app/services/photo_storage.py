@@ -1,6 +1,7 @@
 import logging
 import os
 import secrets
+import shutil
 from pathlib import Path
 from typing import Annotated, Literal
 
@@ -33,6 +34,15 @@ class PhotoStorage:
             temporary = target.with_name(f".{target.name}.tmp")
             temporary.write_bytes(content)
             os.replace(temporary, target)
+
+    def duplicate(self, key: str) -> str:
+        new_key = self.new_key()
+        sizes: tuple[PhotoSize, ...] = ("full", "thumb")
+        for size in sizes:
+            target = self.path(new_key, size)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(self.path(key, size), target)
+        return new_key
 
     def delete(self, key: str) -> None:
         sizes: tuple[PhotoSize, ...] = ("full", "thumb")

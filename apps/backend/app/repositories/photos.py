@@ -2,7 +2,7 @@ import uuid
 from collections.abc import Collection
 from datetime import datetime
 
-from sqlalchemy import delete, exists, select
+from sqlalchemy import CompoundSelect, Select, delete, exists, select
 from sqlalchemy.orm import Session
 
 from app.models import Photo, Recipe, Step
@@ -32,13 +32,11 @@ def used_by_other_recipe(db: Session, photo_id: uuid.UUID, recipe_id: uuid.UUID 
     return db.scalar(select(exists(cover) | exists(step))) or False
 
 
-def visible_through_recipe_of(db: Session, photo_id: uuid.UUID, owner_id: uuid.UUID) -> bool:
-    cover = select(Recipe.id).where(Recipe.cover_photo_id == photo_id, Recipe.owner_id == owner_id)
-    step = (
-        select(Step.id)
-        .join(Recipe, Recipe.id == Step.recipe_id)
-        .where(Step.photo_id == photo_id, Recipe.owner_id == owner_id)
-    )
+def linked_to_any_of(
+    db: Session, photo_id: uuid.UUID, recipe_ids: Select[uuid.UUID] | CompoundSelect[uuid.UUID]
+) -> bool:
+    cover = select(Recipe.id).where(Recipe.cover_photo_id == photo_id, Recipe.id.in_(recipe_ids))
+    step = select(Step.id).where(Step.photo_id == photo_id, Step.recipe_id.in_(recipe_ids))
     return db.scalar(select(exists(cover) | exists(step))) or False
 
 

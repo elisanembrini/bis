@@ -108,6 +108,8 @@ describe("recipeToForm", () => {
     const recipe: RecipeResponse = {
       id: "r1",
       title: "Pasta",
+      is_own: true,
+      author: { id: "u1", display_name: "Anna" },
       notes: null,
       prep_minutes: null,
       cook_minutes: 15,
