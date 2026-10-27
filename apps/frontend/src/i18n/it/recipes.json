@@ -5,14 +5,14 @@
     "empty": "Non hai ancora nessuna ricetta.",
     "emptyAction": "Scrivi la tua prima ricetta",
     "servings_one": "{{count}} porzione",
-    "servings_other": "{{count}} porzioni"
+    "servings_other": "{{count}} porzioni",
+    "noResults": "Nessuna ricetta trovata.",
+    "noResultsHint": "Prova con un'altra parola o togli il filtro."
   },
   "detail": {
     "ingredients": "Ingredienti",
     "steps": "Procedimento",
     "notes": "Note",
-    "servings_one": "Per {{count}} porzione",
-    "servings_other": "Per {{count}} porzioni",
     "prep": "Preparazione: {{duration}}",
     "cook": "Cottura: {{duration}}",
     "timer": "Timer: {{duration}}",
@@ -24,7 +24,8 @@
     "deleteConfirm": "Elimina",
     "quantoBasta": "q.b.",
     "coverAlt": "Foto di {{title}}",
-    "stepPhotoAlt": "Foto del passaggio {{number}}"
+    "stepPhotoAlt": "Foto del passaggio {{number}}",
+    "tags": "Etichette"
   },
   "editor": {
     "newTitle": "Nuova ricetta",
@@ -97,5 +98,22 @@
     "hours": "{{count}} h",
     "minutes": "{{count}} min",
     "seconds": "{{count}} s"
+  },
+  "search": {
+    "label": "Cerca ricette",
+    "placeholderTitle": "Cerca per nome",
+    "placeholderIngredient": "Cerca per ingrediente",
+    "mode": "Cerca per",
+    "byTitle": "Nome",
+    "byIngredient": "Ingrediente"
+  },
+  "servings": {
+    "label": "Porzioni",
+    "less": "Una porzione in meno",
+    "more": "Una porzione in più",
+    "value_one": "{{count}} porzione",
+    "value_other": "{{count}} porzioni",
+    "reset_one": "Torna a {{count}} porzione",
+    "reset_other": "Torna a {{count}} porzioni"
   }
 }

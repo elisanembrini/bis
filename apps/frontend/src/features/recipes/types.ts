@@ -6,6 +6,8 @@ export type RecipeSummary = components["schemas"]["RecipeSummary"];
 export type IngredientResponse = components["schemas"]["IngredientResponse"];
 export type StepResponse = components["schemas"]["StepResponse"];
 export type Unit = components["schemas"]["Unit"];
+export type TagSummary = components["schemas"]["TagSummary"];
+export type TagResponse = components["schemas"]["TagResponse"];
 
 const unitList = [
   "g",

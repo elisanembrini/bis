@@ -24,6 +24,7 @@ export type RecipeFormValues = {
   cookMinutes: string;
   servings: string;
   coverPhotoId: string | null;
+  tagIds: string[];
   ingredients: IngredientFormValue[];
   steps: StepFormValue[];
 };
@@ -68,6 +69,7 @@ export const emptyRecipeForm = (newKey: () => string): RecipeFormValues => ({
   cookMinutes: "",
   servings: "4",
   coverPhotoId: null,
+  tagIds: [],
   ingredients: [emptyIngredient(newKey())],
   steps: [emptyStep(newKey())],
 });
@@ -79,6 +81,7 @@ export const recipeToForm = (recipe: RecipeResponse): RecipeFormValues => ({
   cookMinutes: recipe.cook_minutes === null ? "" : String(recipe.cook_minutes),
   servings: String(recipe.servings),
   coverPhotoId: recipe.cover_photo_id,
+  tagIds: recipe.tags.map((tag) => tag.id),
   ingredients: recipe.ingredients.map((ingredient) => ({
     key: ingredient.id,
     quantity: quantityToInput(ingredient.quantity),
@@ -158,6 +161,7 @@ export const formToRecipeInput = (values: RecipeFormValues): RecipeInput => ({
   cook_minutes: optionalWholeNumber(values.cookMinutes) ?? null,
   servings: Number(values.servings.trim()),
   cover_photo_id: values.coverPhotoId,
+  tag_ids: values.tagIds,
   ingredients: values.ingredients.map((ingredient) => {
     const parsed = parseQuantity(ingredient.quantity);
     return {

@@ -1,4 +1,4 @@
-import type { RecipeResponse, RecipeSummary } from "../types";
+import type { RecipeResponse, RecipeSummary, TagResponse } from "../types";
 
 export const pastaRecipe: RecipeResponse = {
   id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
@@ -8,6 +8,10 @@ export const pastaRecipe: RecipeResponse = {
   cook_minutes: 15,
   servings: 4,
   cover_photo_id: null,
+  tags: [
+    { id: "6f1d5a10-0000-4000-8000-000000000002", name: "Primi" },
+    { id: "6f1d5a10-0000-4000-8000-000000000007", name: "Veloce" },
+  ],
   created_at: "2026-10-20T18:00:00Z",
   updated_at: "2026-10-20T18:00:00Z",
   ingredients: [
@@ -31,6 +35,7 @@ export const minimalRecipe: RecipeResponse = {
   prep_minutes: null,
   cook_minutes: null,
   servings: 1,
+  tags: [],
   ingredients: [{ id: "i5", quantity: null, unit: null, name: "uovo" }],
   steps: [{ id: "s4", text: "Cuoci in acqua bollente.", timer_seconds: 540, photo_id: null }],
 };
@@ -43,6 +48,7 @@ export const recipeSummaries: RecipeSummary[] = [pastaRecipe, minimalRecipe].map
     prep_minutes,
     cook_minutes,
     cover_photo_id,
+    tags,
     created_at,
     updated_at,
   }) => ({
@@ -52,6 +58,7 @@ export const recipeSummaries: RecipeSummary[] = [pastaRecipe, minimalRecipe].map
     prep_minutes,
     cook_minutes,
     cover_photo_id,
+    tags,
     created_at,
     updated_at,
   }),
@@ -75,8 +82,18 @@ export const summariesWithThumbnail: RecipeSummary[] = [
     prep_minutes: pastaRecipe.prep_minutes,
     cook_minutes: pastaRecipe.cook_minutes,
     cover_photo_id: "cover-photo",
+    tags: pastaRecipe.tags,
     created_at: pastaRecipe.created_at,
     updated_at: pastaRecipe.updated_at,
   },
   ...recipeSummaries.slice(1),
+];
+
+export const availableTags: TagResponse[] = [
+  { id: "6f1d5a10-0000-4000-8000-000000000001", name: "Antipasti", is_own: false },
+  { id: "6f1d5a10-0000-4000-8000-000000000002", name: "Primi", is_own: false },
+  { id: "6f1d5a10-0000-4000-8000-000000000005", name: "Dolci", is_own: false },
+  { id: "6f1d5a10-0000-4000-8000-000000000006", name: "Vegetariano", is_own: false },
+  { id: "6f1d5a10-0000-4000-8000-000000000007", name: "Veloce", is_own: false },
+  { id: "aaaaaaaa-0000-4000-8000-000000000001", name: "Natale", is_own: true },
 ];

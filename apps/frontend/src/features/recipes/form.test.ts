@@ -22,6 +22,7 @@ const validForm = (): RecipeFormValues => ({
   cookMinutes: "",
   servings: "4",
   coverPhotoId: null,
+  tagIds: ["t1"],
   ingredients: [
     { key: "a", quantity: "1,5", unit: "cucchiaio", name: " olio " },
     { key: "b", quantity: "", unit: "", name: "sale" },
@@ -89,6 +90,7 @@ describe("formToRecipeInput", () => {
       cook_minutes: null,
       servings: 4,
       cover_photo_id: null,
+      tag_ids: ["t1"],
       ingredients: [
         { quantity: "1.5", unit: "cucchiaio", name: "olio" },
         { quantity: null, unit: null, name: "sale" },
@@ -111,6 +113,7 @@ describe("recipeToForm", () => {
       cook_minutes: 15,
       servings: 2,
       cover_photo_id: "p1",
+      tags: [{ id: "t2", name: "Dolci" }],
       created_at: "2026-01-01T00:00:00Z",
       updated_at: "2026-01-01T00:00:00Z",
       ingredients: [{ id: "i1", quantity: "1.500", unit: "kg", name: "farina" }],
@@ -121,6 +124,7 @@ describe("recipeToForm", () => {
 
     expect(form.ingredients[0]).toEqual({ key: "i1", quantity: "1,5", unit: "kg", name: "farina" });
     expect(form.coverPhotoId).toBe("p1");
+    expect(form.tagIds).toEqual(["t2"]);
     expect(form.steps[0]).toEqual({
       key: "s1",
       text: "Impasta",

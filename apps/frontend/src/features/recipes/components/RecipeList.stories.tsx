@@ -40,6 +40,14 @@ export const Empty: Story = {
   },
 };
 
+export const NoSearchResults: Story = {
+  args: { recipes: [], isFiltered: true },
+  play: async ({ canvas }) => {
+    await expect(await canvas.findByText("Nessuna ricetta trovata.")).toBeVisible();
+    await expect(canvas.queryByText("Non hai ancora nessuna ricetta.")).toBeNull();
+  },
+};
+
 export const Loading: Story = {
   args: { recipes: undefined, isLoading: true },
 };

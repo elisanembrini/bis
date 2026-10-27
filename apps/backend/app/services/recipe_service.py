@@ -5,11 +5,12 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.core.clock import Clock, get_clock
-from app.core.errors import PhotoNotAvailableError, RecipeNotFoundError
+from app.core.errors import PhotoNotAvailableError, RecipeNotFoundError, TagNotAvailableError
 from app.core.units import Unit
 from app.db import get_db
-from app.models import Ingredient, Recipe, Step, User
-from app.repositories import photos, recipes
+from app.models import Ingredient, Recipe, Step, Tag, User
+from app.repositories import photos, recipes, tags
+from app.repositories.search import search_words
 from app.schemas.recipe import (
     IngredientInput,
     IngredientResponse,
@@ -19,6 +20,7 @@ from app.schemas.recipe import (
     StepInput,
     StepResponse,
 )
+from app.schemas.tag import TagSummary
 from app.services.photo_storage import PhotoStorage, get_photo_storage
 
 
@@ -28,17 +30,32 @@ class RecipeService:
         self._clock = clock
         self._storage = storage
 
-    def list_own(self, user: User) -> list[RecipeSummary]:
-        return [_summary(recipe) for recipe in recipes.list_for_owner(self._db, user.id)]
+    def search(
+        self,
+        user: User,
+        *,
+        title: str | None,
+        ingredient: str | None,
+        tag_id: uuid.UUID | None,
+    ) -> list[RecipeSummary]:
+        found = recipes.search(
+            self._db,
+            visible=recipes.visible_recipe_ids(user.id),
+            title_words=search_words(title),
+            ingredient_words=search_words(ingredient),
+            tag_id=tag_id,
+        )
+        return [_summary(recipe) for recipe in found]
 
     def get_own(self, user: User, recipe_id: uuid.UUID) -> RecipeResponse:
         return _detail(self._own(user, recipe_id))
 
     def create(self, user: User, body: RecipeInput) -> RecipeResponse:
         self._check_photos(user, body, recipe_id=None)
+        selected_tags = self._visible_tags(user, body)
         now = self._clock.now()
         recipe = Recipe(owner_id=user.id, created_at=now, updated_at=now)
-        _apply(recipe, body)
+        _apply(recipe, body, selected_tags)
         recipes.add(self._db, recipe)
         self._db.commit()
         return _detail(recipe)
@@ -46,8 +63,9 @@ class RecipeService:
     def update(self, user: User, recipe_id: uuid.UUID, body: RecipeInput) -> RecipeResponse:
         recipe = self._own(user, recipe_id)
         self._check_photos(user, body, recipe_id=recipe.id)
+        selected_tags = self._visible_tags(user, body)
         previous = _photo_ids(recipe)
-        _apply(recipe, body)
+        _apply(recipe, body, selected_tags)
         recipe.updated_at = self._clock.now()
         self._db.flush()
         removed_keys = photos.delete_many(self._db, previous - _photo_ids(recipe))
@@ -76,6 +94,13 @@ class RecipeService:
         ):
             raise PhotoNotAvailableError
 
+    def _visible_tags(self, user: User, body: RecipeInput) -> list[Tag]:
+        requested = set(body.tag_ids)
+        found = tags.get_visible_many(self._db, user.id, requested)
+        if len(found) != len(requested):
+            raise TagNotAvailableError
+        return sorted(found, key=lambda tag: tag.name.lower())
+
     def _delete_files(self, keys: list[str]) -> None:
         for key in keys:
             self._storage.delete(key)
@@ -87,13 +112,14 @@ class RecipeService:
         return recipe
 
 
-def _apply(recipe: Recipe, body: RecipeInput) -> None:
+def _apply(recipe: Recipe, body: RecipeInput, selected_tags: list[Tag]) -> None:
     recipe.title = body.title
     recipe.notes = body.notes
     recipe.prep_minutes = body.prep_minutes
     recipe.cook_minutes = body.cook_minutes
     recipe.servings = body.servings
     recipe.cover_photo_id = body.cover_photo_id
+    recipe.tags = selected_tags
     recipe.ingredients = [
         _ingredient(position, ingredient) for position, ingredient in enumerate(body.ingredients)
     ]
@@ -128,6 +154,7 @@ def _summary(recipe: Recipe) -> RecipeSummary:
         prep_minutes=recipe.prep_minutes,
         cook_minutes=recipe.cook_minutes,
         cover_photo_id=recipe.cover_photo_id,
+        tags=[TagSummary(id=tag.id, name=tag.name) for tag in recipe.tags],
         created_at=recipe.created_at,
         updated_at=recipe.updated_at,
     )

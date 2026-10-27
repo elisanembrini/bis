@@ -30,6 +30,9 @@ const API_ERROR_CODES = {
   PHOTO_INVALID: true,
   PHOTO_NOT_FOUND: true,
   PHOTO_NOT_AVAILABLE: true,
+  TAG_ALREADY_EXISTS: true,
+  TAG_NOT_FOUND: true,
+  TAG_NOT_AVAILABLE: true,
 } satisfies Record<ApiErrorCode, true>;
 
 export const isApiErrorCode = (value: unknown): value is ApiErrorCode =>

@@ -1,9 +1,11 @@
 import { Container } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { errorCodeOf } from "../../../api/errors";
+import { tagsQueryOptions } from "../../tags/queries";
 import type { RecipeFormValues } from "../form";
 import { useRecipeDraft } from "../hooks/useRecipeDraft";
 import { useRecipeMutations } from "../hooks/useRecipeMutations";
@@ -24,12 +26,14 @@ export function RecipeEditorPage({ userId, recipeId, createInitialValues }: Reci
   const [initialValues] = useState(() => createInitialValues(newKey));
   const { create, update } = useRecipeMutations(draft.clear);
   const mutation = recipeId === undefined ? create : update;
+  const tags = useQuery(tagsQueryOptions());
 
   return (
     <Container size="sm">
       <RecipeEditor
         heading={recipeId === undefined ? t("editor.newTitle") : t("editor.editTitle")}
         initialValues={initialValues}
+        availableTags={tags.data ?? []}
         newKey={newKey}
         onChange={draft.save}
         pendingDraft={draft.pendingDraft}

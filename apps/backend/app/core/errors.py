@@ -132,6 +132,24 @@ class PhotoNotAvailableError(DomainError):
     message = "Una delle foto non è disponibile per questa ricetta."
 
 
+class TagAlreadyExistsError(DomainError):
+    status_code = 409
+    code = ErrorCode.TAG_ALREADY_EXISTS
+    message = "Esiste già un'etichetta con questo nome."
+
+
+class TagNotFoundError(DomainError):
+    status_code = 404
+    code = ErrorCode.TAG_NOT_FOUND
+    message = "Etichetta non trovata."
+
+
+class TagNotAvailableError(DomainError):
+    status_code = 422
+    code = ErrorCode.TAG_NOT_AVAILABLE
+    message = "Una delle etichette non è disponibile."
+
+
 class GoogleLoginError(Exception):
     def __init__(self, code: ErrorCode) -> None:
         super().__init__(code)

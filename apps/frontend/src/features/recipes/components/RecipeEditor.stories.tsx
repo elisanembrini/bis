@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "storybook/test";
 
 import { emptyRecipeForm, recipeToForm } from "../form";
-import { pastaRecipe } from "./fixtures";
+import { availableTags, pastaRecipe } from "./fixtures";
 import { RecipeEditor } from "./RecipeEditor";
 
 let counter = 0;
@@ -16,6 +16,7 @@ const meta = {
   args: {
     heading: "Nuova ricetta",
     initialValues: emptyRecipeForm(newKey),
+    availableTags,
     newKey,
     onSubmit: fn(),
     onCancel: fn(),
@@ -45,6 +46,10 @@ export const CreateRecipe: Story = {
     await userEvent.type(step.getByLabelText("Descrizione"), "Sbatti le uova.");
     await userEvent.type(step.getByLabelText("secondi"), "30");
 
+    const tags = within(canvas.getByRole("group", { name: "Etichette" }));
+    await userEvent.click(tags.getByRole("checkbox", { name: "Vegetariano" }));
+    await userEvent.click(tags.getByRole("checkbox", { name: "Natale" }));
+
     await userEvent.click(canvas.getByRole("button", { name: "Salva ricetta" }));
 
     await expect(args.onSubmit).toHaveBeenCalledWith({
@@ -54,6 +59,7 @@ export const CreateRecipe: Story = {
       cook_minutes: null,
       servings: 4,
       cover_photo_id: null,
+      tag_ids: ["6f1d5a10-0000-4000-8000-000000000006", "aaaaaaaa-0000-4000-8000-000000000001"],
       ingredients: [
         { quantity: "1.5", unit: "cucchiaio", name: "olio" },
         { quantity: null, unit: null, name: "sale" },
@@ -86,6 +92,16 @@ export const ReorderAndRemove: Story = {
         ],
       }),
     );
+  },
+};
+
+export const ExistingTagsAreSelected: Story = {
+  args: { initialValues: recipeToForm(pastaRecipe) },
+  play: async ({ canvas }) => {
+    const tags = within(await canvas.findByRole("group", { name: "Etichette" }));
+    await expect(tags.getByRole("checkbox", { name: "Primi" })).toBeChecked();
+    await expect(tags.getByRole("checkbox", { name: "Veloce" })).toBeChecked();
+    await expect(tags.getByRole("checkbox", { name: "Dolci" })).not.toBeChecked();
   },
 };
 

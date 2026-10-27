@@ -1,4 +1,5 @@
 import { Center, Group, Image, List, Loader, Paper, Stack, Text, Title } from "@mantine/core";
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
@@ -17,6 +18,8 @@ type RecipeListProps = {
   isLoading?: boolean;
   errorCode?: AppErrorCode | undefined;
   thumbnailSrc?: (photoId: string) => string;
+  isFiltered?: boolean;
+  filters?: ReactNode;
 };
 
 const THUMBNAIL_SIZE = 72;
@@ -28,6 +31,8 @@ export function RecipeList({
   isLoading = false,
   errorCode,
   thumbnailSrc = defaultThumbnailSrc,
+  isFiltered = false,
+  filters,
 }: RecipeListProps) {
   const { t } = useTranslation("recipes");
   const formatDuration = useFormatDuration();
@@ -38,9 +43,20 @@ export function RecipeList({
       <ButtonLink to="/recipes/new" leftSection={<PlusIcon />}>
         {t("list.new")}
       </ButtonLink>
+      {filters}
       {isLoading && <Loader />}
       <FormError code={errorCode} />
-      {recipes?.length === 0 && (
+      {recipes?.length === 0 && isFiltered && (
+        <Paper withBorder p="lg">
+          <Stack gap={4}>
+            <Text fw={500}>{t("list.noResults")}</Text>
+            <Text size="sm" c="dimmed">
+              {t("list.noResultsHint")}
+            </Text>
+          </Stack>
+        </Paper>
+      )}
+      {recipes?.length === 0 && !isFiltered && (
         <Paper withBorder p="lg">
           <Stack gap="sm" align="flex-start">
             <Text>{t("list.empty")}</Text>

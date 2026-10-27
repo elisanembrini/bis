@@ -1,0 +1,24 @@
+{
+  "page": {
+    "title": "Etichette",
+    "starter": "Etichette di partenza",
+    "starterHint": "Sono disponibili per tutti e non si possono eliminare.",
+    "own": "Le tue etichette",
+    "ownEmpty": "Non hai ancora creato etichette personali.",
+    "newLabel": "Nuova etichetta",
+    "add": "Aggiungi",
+    "deleteAria": "Elimina l'etichetta {{name}}",
+    "deleteTitle": "Eliminare l'etichetta «{{name}}»?",
+    "deleteBody": "Verrà tolta dalle ricette che la usano. Le ricette restano.",
+    "deleteConfirm": "Elimina",
+    "nameRequired": "Scrivi il nome dell'etichetta"
+  },
+  "filter": {
+    "label": "Filtra per etichetta",
+    "manage": "Gestisci etichette"
+  },
+  "picker": {
+    "label": "Etichette",
+    "manage": "Gestisci etichette"
+  }
+}

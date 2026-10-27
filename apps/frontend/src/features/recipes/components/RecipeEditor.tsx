@@ -18,6 +18,8 @@ import type { AppErrorCode } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
 import { PlusIcon } from "../../../components/icons";
 import { formatDate } from "../../../i18n/formatDate";
+import { TagPicker } from "../../tags/components/TagPicker";
+import type { TagResponse } from "../../tags/types";
 import type { RecipeDraft } from "../draft";
 import {
   type RecipeFormValues,
@@ -33,6 +35,7 @@ import { RowActions } from "./RowActions";
 type RecipeEditorProps = {
   heading: string;
   initialValues: RecipeFormValues;
+  availableTags: TagResponse[];
   newKey: () => string;
   onSubmit: (recipe: RecipeInput) => void;
   onCancel: () => void;
@@ -47,6 +50,7 @@ type RecipeEditorProps = {
 export function RecipeEditor({
   heading,
   initialValues,
+  availableTags,
   newKey,
   onSubmit,
   onCancel,
@@ -73,7 +77,7 @@ export function RecipeEditor({
     { value: "", label: t("editor.noUnit") },
     ...UNITS.map((unit) => ({ value: unit, label: t(`units.${unit}`, { count: 1 }) })),
   ];
-  const { ingredients, steps, coverPhotoId } = form.getValues();
+  const { ingredients, steps, coverPhotoId, tagIds } = form.getValues();
   const [uploads, setUploads] = useState<Record<string, boolean>>({});
   const isUploading = Object.values(uploads).some(Boolean);
   const trackUpload = (field: string) => (uploading: boolean) =>
@@ -257,6 +261,12 @@ export function RecipeEditor({
             {t("editor.addStep")}
           </Button>
         </Stack>
+
+        <TagPicker
+          tags={availableTags}
+          value={tagIds}
+          onChange={(selected) => form.setFieldValue("tagIds", selected)}
+        />
 
         <Textarea
           label={t("editor.notes")}

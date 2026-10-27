@@ -3,6 +3,7 @@ import common from "./it/common.json";
 import health from "./it/health.json";
 import household from "./it/household.json";
 import recipes from "./it/recipes.json";
+import tags from "./it/tags.json";
 
 export const defaultNamespace = "common";
 
@@ -13,5 +14,6 @@ export const resources = {
     health,
     household,
     recipes,
+    tags,
   },
 } as const;

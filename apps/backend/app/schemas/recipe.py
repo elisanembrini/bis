@@ -6,6 +6,7 @@ from typing import Annotated
 from pydantic import BaseModel, Field, StringConstraints, field_validator
 
 from app.core.units import Unit
+from app.schemas.tag import TagSummary
 
 TITLE_MAX_LENGTH = 200
 NAME_MAX_LENGTH = 200
@@ -14,6 +15,8 @@ MAX_ITEMS = 100
 TIMER_MAX_SECONDS = 86400
 MINUTES_MAX = 10000
 SERVINGS_MAX = 100
+MAX_TAGS = 20
+SEARCH_MAX_LENGTH = 200
 
 Title = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=TITLE_MAX_LENGTH)
@@ -49,6 +52,7 @@ class RecipeInput(BaseModel):
     ingredients: Annotated[list[IngredientInput], Field(min_length=1, max_length=MAX_ITEMS)]
     steps: Annotated[list[StepInput], Field(min_length=1, max_length=MAX_ITEMS)]
     cover_photo_id: uuid.UUID | None = None
+    tag_ids: Annotated[list[uuid.UUID], Field(max_length=MAX_TAGS)] = []
 
     @field_validator("notes")
     @classmethod
@@ -80,6 +84,7 @@ class RecipeSummary(BaseModel):
     prep_minutes: int | None
     cook_minutes: int | None
     cover_photo_id: uuid.UUID | None
+    tags: list[TagSummary]
     created_at: datetime
     updated_at: datetime
 

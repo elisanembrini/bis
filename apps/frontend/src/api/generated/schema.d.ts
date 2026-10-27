@@ -330,6 +330,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Tags */
+        get: operations["listTags"];
+        put?: never;
+        /** Create Tag */
+        post: operations["createTag"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tags/{tag_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Tag */
+        delete: operations["deleteTag"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -338,7 +373,7 @@ export interface components {
          * ErrorCode
          * @enum {string}
          */
-        ErrorCode: "INVALID_CREDENTIALS" | "TOO_MANY_ATTEMPTS" | "EMAIL_ALREADY_REGISTERED" | "RESET_TOKEN_INVALID" | "UNAUTHENTICATED" | "GOOGLE_UNAVAILABLE" | "GOOGLE_STATE_INVALID" | "GOOGLE_CANCELLED" | "GOOGLE_EMAIL_NOT_VERIFIED" | "GOOGLE_ACCOUNT_CONFLICT" | "GOOGLE_FAILED" | "INVITE_NOT_FOUND" | "INVITE_EXPIRED" | "INVITE_USED" | "ALREADY_IN_HOUSEHOLD" | "MUST_LEAVE_HOUSEHOLD" | "OWNER_CANNOT_LEAVE" | "NOT_HOUSEHOLD_OWNER" | "MEMBER_NOT_FOUND" | "CANNOT_REMOVE_SELF" | "RECIPE_NOT_FOUND" | "PHOTO_TOO_LARGE" | "PHOTO_INVALID" | "PHOTO_NOT_FOUND" | "PHOTO_NOT_AVAILABLE";
+        ErrorCode: "INVALID_CREDENTIALS" | "TOO_MANY_ATTEMPTS" | "EMAIL_ALREADY_REGISTERED" | "RESET_TOKEN_INVALID" | "UNAUTHENTICATED" | "GOOGLE_UNAVAILABLE" | "GOOGLE_STATE_INVALID" | "GOOGLE_CANCELLED" | "GOOGLE_EMAIL_NOT_VERIFIED" | "GOOGLE_ACCOUNT_CONFLICT" | "GOOGLE_FAILED" | "INVITE_NOT_FOUND" | "INVITE_EXPIRED" | "INVITE_USED" | "ALREADY_IN_HOUSEHOLD" | "MUST_LEAVE_HOUSEHOLD" | "OWNER_CANNOT_LEAVE" | "NOT_HOUSEHOLD_OWNER" | "MEMBER_NOT_FOUND" | "CANNOT_REMOVE_SELF" | "RECIPE_NOT_FOUND" | "PHOTO_TOO_LARGE" | "PHOTO_INVALID" | "PHOTO_NOT_FOUND" | "PHOTO_NOT_AVAILABLE" | "TAG_ALREADY_EXISTS" | "TAG_NOT_FOUND" | "TAG_NOT_AVAILABLE";
         /** ErrorResponse */
         ErrorResponse: {
             code: components["schemas"]["ErrorCode"];
@@ -513,6 +548,11 @@ export interface components {
             steps: components["schemas"]["StepInput"][];
             /** Cover Photo Id */
             cover_photo_id?: string | null;
+            /**
+             * Tag Ids
+             * @default []
+             */
+            tag_ids: string[];
         };
         /** RecipeResponse */
         RecipeResponse: {
@@ -531,6 +571,8 @@ export interface components {
             cook_minutes: number | null;
             /** Cover Photo Id */
             cover_photo_id: string | null;
+            /** Tags */
+            tags: components["schemas"]["TagSummary"][];
             /**
              * Created At
              * Format: date-time
@@ -565,6 +607,8 @@ export interface components {
             cook_minutes: number | null;
             /** Cover Photo Id */
             cover_photo_id: string | null;
+            /** Tags */
+            tags: components["schemas"]["TagSummary"][];
             /**
              * Created At
              * Format: date-time
@@ -619,6 +663,33 @@ export interface components {
             timer_seconds: number | null;
             /** Photo Id */
             photo_id: string | null;
+        };
+        /** TagInput */
+        TagInput: {
+            /** Name */
+            name: string;
+        };
+        /** TagResponse */
+        TagResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Is Own */
+            is_own: boolean;
+        };
+        /** TagSummary */
+        TagSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
         };
         /**
          * Unit
@@ -1259,7 +1330,11 @@ export interface operations {
     };
     listRecipes: {
         parameters: {
-            query?: never;
+            query?: {
+                q?: string | null;
+                ingredient?: string | null;
+                tag_id?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1282,6 +1357,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1549,6 +1633,133 @@ export interface operations {
                 content: {
                     "image/webp": unknown;
                 };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listTags: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TagResponse"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    createTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TagInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TagResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    deleteTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tag_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unauthorized */
             401: {

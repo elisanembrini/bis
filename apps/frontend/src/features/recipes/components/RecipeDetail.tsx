@@ -1,4 +1,4 @@
-import { Button, Group, Image, List, Stack, Text, Title } from "@mantine/core";
+import { Badge, Button, Group, Image, List, Stack, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,7 +9,9 @@ import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { FormError } from "../../../components/FormError";
 import { useFormatDuration } from "../hooks/useFormatDuration";
 import { useFormatAmount } from "../hooks/useFormatIngredient";
+import { scaleQuantity } from "../servings";
 import type { RecipeResponse } from "../types";
+import { ServingsSelector } from "./ServingsSelector";
 
 import classes from "./RecipeDetail.module.css";
 
@@ -34,6 +36,15 @@ export function RecipeDetail({
   const formatDuration = useFormatDuration();
   const formatAmount = useFormatAmount();
   const [confirming, setConfirming] = useState(false);
+  const [servings, setServings] = useState(recipe.servings);
+  const times = [
+    recipe.prep_minutes
+      ? t("detail.prep", { duration: formatDuration(recipe.prep_minutes * 60) })
+      : null,
+    recipe.cook_minutes
+      ? t("detail.cook", { duration: formatDuration(recipe.cook_minutes * 60) })
+      : null,
+  ].filter((part) => part !== null);
 
   return (
     <Stack gap="lg">
@@ -46,21 +57,18 @@ export function RecipeDetail({
           fit="cover"
         />
       )}
-      <Stack gap={4}>
+      <Stack gap="xs">
         <Title order={1}>{recipe.title}</Title>
-        <Text c="dimmed">
-          {[
-            t("detail.servings", { count: recipe.servings }),
-            recipe.prep_minutes
-              ? t("detail.prep", { duration: formatDuration(recipe.prep_minutes * 60) })
-              : null,
-            recipe.cook_minutes
-              ? t("detail.cook", { duration: formatDuration(recipe.cook_minutes * 60) })
-              : null,
-          ]
-            .filter((part) => part !== null)
-            .join(" · ")}
-        </Text>
+        {times.length > 0 && <Text c="dimmed">{times.join(" · ")}</Text>}
+        {recipe.tags.length > 0 && (
+          <Group gap="xs" aria-label={t("detail.tags")}>
+            {recipe.tags.map((tag) => (
+              <Badge key={tag.id} variant="light">
+                {tag.name}
+              </Badge>
+            ))}
+          </Group>
+        )}
       </Stack>
       <FormError code={errorCode} />
       <Group grow>
@@ -81,11 +89,20 @@ export function RecipeDetail({
         <Title order={2} size="h3">
           {t("detail.ingredients")}
         </Title>
+        <ServingsSelector value={servings} original={recipe.servings} onChange={setServings} />
         <List spacing="xs" aria-label={t("detail.ingredients")}>
           {recipe.ingredients.map((ingredient) => (
             <List.Item key={ingredient.id}>
               <Text span fw={600}>
-                {formatAmount(ingredient)}
+                {formatAmount({
+                  quantity: scaleQuantity(
+                    ingredient.quantity,
+                    ingredient.unit,
+                    recipe.servings,
+                    servings,
+                  ),
+                  unit: ingredient.unit,
+                })}
               </Text>{" "}
               {ingredient.name}
             </List.Item>

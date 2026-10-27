@@ -11,6 +11,19 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
   ],
+  optimizeDeps: {
+    include: [
+      "@mantine/core",
+      "@mantine/form",
+      "@mantine/hooks",
+      "@tanstack/react-query",
+      "@tanstack/react-router",
+      "i18next",
+      "openapi-fetch",
+      "openapi-react-query",
+      "react-i18next",
+    ],
+  },
   server: {
     host: true,
     port: 5173,

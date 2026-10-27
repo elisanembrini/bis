@@ -1,11 +1,11 @@
 import uuid
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from app.core.security import Authenticated, get_authenticated
 from app.schemas.errors import ErrorResponse
-from app.schemas.recipe import RecipeInput, RecipeResponse, RecipeSummary
+from app.schemas.recipe import SEARCH_MAX_LENGTH, RecipeInput, RecipeResponse, RecipeSummary
 from app.services.recipe_service import RecipeService, get_recipe_service
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -25,8 +25,14 @@ NOT_FOUND: Responses = {
 @router.get(
     "", response_model=list[RecipeSummary], responses=UNAUTHENTICATED, operation_id="listRecipes"
 )
-def list_recipes(current: CurrentUser, service: Service) -> list[RecipeSummary]:
-    return service.list_own(current.user)
+def list_recipes(
+    current: CurrentUser,
+    service: Service,
+    q: Annotated[str | None, Query(max_length=SEARCH_MAX_LENGTH)] = None,
+    ingredient: Annotated[str | None, Query(max_length=SEARCH_MAX_LENGTH)] = None,
+    tag_id: uuid.UUID | None = None,
+) -> list[RecipeSummary]:
+    return service.search(current.user, title=q, ingredient=ingredient, tag_id=tag_id)
 
 
 @router.post(

@@ -16,9 +16,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Complete: Story = {
   play: async ({ canvas }) => {
-    await expect(
-      await canvas.findByText("Per 4 porzioni · Preparazione: 10 min · Cottura: 15 min"),
-    ).toBeVisible();
+    await expect(await canvas.findByText("Preparazione: 10 min · Cottura: 15 min")).toBeVisible();
+    await expect(canvas.getByText("Primi")).toBeVisible();
     const ingredients = within(canvas.getByRole("list", { name: "Ingredienti" }));
     const items = ingredients.getAllByRole("listitem").map((item) => item.textContent);
     await expect(items).toEqual([
@@ -50,8 +49,33 @@ export const WithPhotos: Story = {
 export const WithoutNotesAndTimes: Story = {
   args: { recipe: minimalRecipe },
   play: async ({ canvas }) => {
-    await expect(await canvas.findByText("Per 1 porzione")).toBeVisible();
+    await expect(await canvas.findByText("1 porzione")).toBeVisible();
     await expect(canvas.queryByRole("heading", { name: "Note" })).toBeNull();
+  },
+};
+
+export const ChangeServings: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const ingredients = () =>
+      within(canvas.getByRole("list", { name: "Ingredienti" }))
+        .getAllByRole("listitem")
+        .map((item) => item.textContent);
+
+    await userEvent.click(await canvas.findByRole("button", { name: "Una porzione in meno" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Una porzione in meno" }));
+
+    await expect(canvas.getByText("2 porzioni")).toBeVisible();
+    await expect(ingredients()).toEqual([
+      "160 g spaghetti",
+      "0,75 cucchiai olio extravergine",
+      "0,5 spicchi aglio",
+      "q.b. sale",
+    ]);
+
+    await userEvent.click(canvas.getByRole("button", { name: "Torna a 4 porzioni" }));
+
+    await expect(ingredients()[0]).toBe("320 g spaghetti");
+    await expect(canvas.queryByRole("button", { name: "Torna a 4 porzioni" })).toBeNull();
   },
 };
 
