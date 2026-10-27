@@ -35,6 +35,8 @@ export function ShareDialog({
       onClose={onClose}
       title={t("share.title", { title: recipeTitle })}
       centered
+      shadow="none"
+      radius="md"
     >
       {loadErrorCode !== undefined && <FormError code={loadErrorCode} />}
       {candidates === undefined && loadErrorCode === undefined && <Loader />}

@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Fieldset, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Button, Fieldset, Group, Paper, Stack, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 import { MinusIcon, PlusIcon } from "../../../components/icons";
@@ -15,32 +15,30 @@ export function ServingsSelector({ value, original, onChange }: ServingsSelector
 
   return (
     <Fieldset legend={t("servings.label")} variant="unstyled">
-      <Stack gap={4} align="flex-start">
-        <Group gap="sm">
-          <ActionIcon
-            variant="default"
-            size="xl"
-            aria-label={t("servings.less")}
-            disabled={value <= SERVINGS_MIN}
-            onClick={() => onChange(value - 1)}
-          >
-            <MinusIcon />
-          </ActionIcon>
-          <Text fw={600} miw={96} ta="center" aria-live="polite">
-            {t("servings.value", { count: value })}
-          </Text>
-          <ActionIcon
-            variant="default"
-            size="xl"
-            aria-label={t("servings.more")}
-            disabled={value >= SERVINGS_MAX}
-            onClick={() => onChange(value + 1)}
-          >
-            <PlusIcon />
-          </ActionIcon>
-        </Group>
+      <Stack gap="xs" align="flex-start">
+        <Paper withBorder bg="white" p="xs">
+          <Group gap="sm" wrap="nowrap">
+            <ActionIcon
+              aria-label={t("servings.less")}
+              disabled={value <= SERVINGS_MIN}
+              onClick={() => onChange(value - 1)}
+            >
+              <MinusIcon />
+            </ActionIcon>
+            <Text fw={600} miw={96} ta="center" aria-live="polite">
+              {t("servings.value", { count: value })}
+            </Text>
+            <ActionIcon
+              aria-label={t("servings.more")}
+              disabled={value >= SERVINGS_MAX}
+              onClick={() => onChange(value + 1)}
+            >
+              <PlusIcon />
+            </ActionIcon>
+          </Group>
+        </Paper>
         {value !== original && (
-          <Button variant="subtle" size="compact-sm" onClick={() => onChange(original)}>
+          <Button variant="subtle" onClick={() => onChange(original)}>
             {t("servings.reset", { count: original })}
           </Button>
         )}

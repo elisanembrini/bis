@@ -1,0 +1,6 @@
+.title {
+  font-family: var(--bis-font-scrittura-a-mano);
+  font-weight: 700;
+  color: var(--mantine-color-inchiostro-6);
+  line-height: 1.2;
+}

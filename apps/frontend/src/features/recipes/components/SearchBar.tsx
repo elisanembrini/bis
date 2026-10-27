@@ -1,6 +1,8 @@
 import { Box, SegmentedControl, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
+import { SearchIcon } from "../../../components/icons";
+
 export type SearchMode = "title" | "ingredient";
 
 type SearchBarProps = {
@@ -28,6 +30,7 @@ export function SearchBar({ value, mode, onChange, onModeChange }: SearchBarProp
           value={value}
           onChange={(event) => onChange(event.currentTarget.value)}
           size="md"
+          leftSection={<SearchIcon />}
         />
         <SegmentedControl
           aria-label={t("search.mode")}

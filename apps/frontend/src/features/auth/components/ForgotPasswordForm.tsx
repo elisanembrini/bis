@@ -1,10 +1,11 @@
-import { Alert, Button, Stack, Text, TextInput } from "@mantine/core";
+import { Button, Stack, Text, TextInput } from "@mantine/core";
 import { isEmail, useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
 import { FormError } from "../../../components/FormError";
+import { SuccessMessage } from "../../../components/Messages";
 import type { ForgotPasswordRequest } from "../types";
 
 type ForgotPasswordFormProps = {
@@ -30,10 +31,8 @@ export function ForgotPasswordForm({
   if (isSent) {
     return (
       <Stack gap="md">
-        <Alert color="green" title={t("forgotPassword.sent")} />
-        <AnchorLink to="/login" size="sm">
-          {t("forgotPassword.backToLogin")}
-        </AnchorLink>
+        <SuccessMessage title={t("forgotPassword.sent")} />
+        <AnchorLink to="/login">{t("forgotPassword.backToLogin")}</AnchorLink>
       </Stack>
     );
   }
@@ -41,7 +40,7 @@ export function ForgotPasswordForm({
   return (
     <form noValidate onSubmit={form.onSubmit((values) => onSubmit(values))}>
       <Stack gap="md">
-        <Text size="sm">{t("forgotPassword.description")}</Text>
+        <Text>{t("forgotPassword.description")}</Text>
         <FormError code={errorCode} />
         <TextInput
           label={t("fields.email")}
@@ -53,9 +52,7 @@ export function ForgotPasswordForm({
         <Button type="submit" loading={isSubmitting}>
           {t("forgotPassword.submit")}
         </Button>
-        <AnchorLink to="/login" size="sm">
-          {t("forgotPassword.backToLogin")}
-        </AnchorLink>
+        <AnchorLink to="/login">{t("forgotPassword.backToLogin")}</AnchorLink>
       </Stack>
     </form>
   );

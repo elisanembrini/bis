@@ -1,3 +1,7 @@
+import "@fontsource/figtree/400.css";
+import "@fontsource/figtree/600.css";
+import "@fontsource/figtree/700.css";
+import "@fontsource/kalam/700.css";
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import type { Decorator, Preview } from "@storybook/react-vite";
@@ -11,7 +15,7 @@ import {
 import { I18nextProvider } from "react-i18next";
 
 import i18n from "../src/i18n";
-import { theme } from "../src/theme";
+import { cssVariablesResolver, theme } from "../src/theme";
 
 const withRouter: Decorator = (Story) => {
   const router = createRouter({
@@ -27,7 +31,11 @@ const withProviders: Decorator = (Story) => {
   });
   return (
     <I18nextProvider i18n={i18n}>
-      <MantineProvider theme={theme}>
+      <MantineProvider
+        theme={theme}
+        cssVariablesResolver={cssVariablesResolver}
+        forceColorScheme="light"
+      >
         <QueryClientProvider client={queryClient}>
           <Story />
         </QueryClientProvider>

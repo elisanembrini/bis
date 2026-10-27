@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Group, List, Paper, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -6,6 +6,8 @@ import type { AppErrorCode } from "../../../api/errors";
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { FormError } from "../../../components/FormError";
 import { CloseIcon } from "../../../components/icons";
+import { PlainList } from "../../../components/PlainList";
+import { SectionTitle } from "../../../components/SectionTitle";
 import type { HouseholdMember } from "../types";
 
 type MemberListProps = {
@@ -30,15 +32,13 @@ export function MemberList({
 
   return (
     <Stack gap="sm">
-      <Title order={2} size="h3">
-        {t("members.title")}
-      </Title>
+      <SectionTitle>{t("members.title")}</SectionTitle>
       <FormError code={errorCode} />
-      <List listStyleType="none" spacing="xs" p={0} m={0}>
+      <PlainList label={t("members.title")}>
         {members.map((member) => {
           const isCurrentUser = member.user_id === currentUserId;
           return (
-            <List.Item key={member.user_id}>
+            <li key={member.user_id}>
               <Paper withBorder p="sm">
                 <Group justify="space-between" wrap="nowrap">
                   <Group gap="xs">
@@ -48,15 +48,13 @@ export function MemberList({
                         ({t("members.you")})
                       </Text>
                     )}
-                    <Badge variant="light" color={member.role === "owner" ? "orange" : "gray"}>
+                    <Badge tt="none" variant={member.role === "owner" ? "light" : "outline"}>
                       {t(`roles.${member.role}`)}
                     </Badge>
                   </Group>
                   {canRemove && !isCurrentUser && (
                     <ActionIcon
-                      variant="subtle"
-                      color="red"
-                      size="lg"
+                      variant="default"
                       aria-label={t("members.removeAria", { name: member.display_name })}
                       loading={removingUserId === member.user_id}
                       onClick={() => setPending(member)}
@@ -66,10 +64,10 @@ export function MemberList({
                   )}
                 </Group>
               </Paper>
-            </List.Item>
+            </li>
           );
         })}
-      </List>
+      </PlainList>
       <ConfirmDialog
         opened={pending !== null}
         title={t("members.removeTitle", { name: pending?.display_name ?? "" })}

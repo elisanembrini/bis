@@ -20,7 +20,7 @@ export function TagFilter({ tags, selectedTagId, onChange }: TagFilterProps) {
           {tags.map((tag) => (
             <Chip
               key={tag.id}
-              size="sm"
+              size="lg"
               checked={tag.id === selectedTagId}
               onChange={() => onChange(tag.id === selectedTagId ? undefined : tag.id)}
             >
@@ -28,9 +28,7 @@ export function TagFilter({ tags, selectedTagId, onChange }: TagFilterProps) {
             </Chip>
           ))}
         </Group>
-        <AnchorLink to="/tags" size="sm">
-          {t("filter.manage")}
-        </AnchorLink>
+        <AnchorLink to="/tags">{t("filter.manage")}</AnchorLink>
       </Stack>
     </Fieldset>
   );

@@ -1,11 +1,9 @@
 import {
-  Alert,
   Button,
   Fieldset,
   Group,
   NativeSelect,
   Stack,
-  Text,
   TextInput,
   Textarea,
   Title,
@@ -17,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import type { AppErrorCode } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
 import { PlusIcon } from "../../../components/icons";
+import { ErrorMessage, InfoMessage } from "../../../components/Messages";
+import { SectionTitle } from "../../../components/SectionTitle";
 import { formatDate } from "../../../i18n/formatDate";
 import { TagPicker } from "../../tags/components/TagPicker";
 import type { TagResponse } from "../../tags/types";
@@ -88,13 +88,9 @@ export function RecipeEditor({
       <Stack gap="lg">
         <Title order={1}>{heading}</Title>
         {pendingDraft !== undefined && (
-          <Alert
-            color="yellow"
-            title={t("editor.draftFound", { date: formatDate(pendingDraft.savedAt) })}
-          >
+          <InfoMessage title={t("editor.draftFound", { date: formatDate(pendingDraft.savedAt) })}>
             <Group gap="sm" mt="xs">
               <Button
-                size="sm"
                 onClick={() => {
                   form.setValues(pendingDraft.values);
                   onRestoreDraft?.();
@@ -102,11 +98,11 @@ export function RecipeEditor({
               >
                 {t("editor.restoreDraft")}
               </Button>
-              <Button size="sm" variant="default" onClick={() => onDiscardDraft?.()}>
+              <Button variant="default" onClick={() => onDiscardDraft?.()}>
                 {t("editor.discardDraft")}
               </Button>
             </Group>
-          </Alert>
+          </InfoMessage>
         )}
         <FormError code={errorCode} />
 
@@ -144,13 +140,9 @@ export function RecipeEditor({
         </Group>
 
         <Stack gap="sm">
-          <Title order={2} size="h3">
-            {t("editor.ingredients")}
-          </Title>
+          <SectionTitle>{t("editor.ingredients")}</SectionTitle>
           {typeof form.errors["ingredients"] === "string" && (
-            <Text c="red" size="sm" role="alert">
-              {form.errors["ingredients"]}
-            </Text>
+            <ErrorMessage title={form.errors["ingredients"]} />
           )}
           {ingredients.map((ingredient, index) => (
             <Fieldset
@@ -203,13 +195,9 @@ export function RecipeEditor({
         </Stack>
 
         <Stack gap="sm">
-          <Title order={2} size="h3">
-            {t("editor.steps")}
-          </Title>
+          <SectionTitle>{t("editor.steps")}</SectionTitle>
           {typeof form.errors["steps"] === "string" && (
-            <Text c="red" size="sm" role="alert">
-              {form.errors["steps"]}
-            </Text>
+            <ErrorMessage title={form.errors["steps"]} />
           )}
           {steps.map((step, index) => (
             <Fieldset key={step.key} legend={t("editor.stepLegend", { number: index + 1 })}>

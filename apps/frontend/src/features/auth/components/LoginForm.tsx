@@ -45,12 +45,8 @@ export function LoginForm({ onSubmit, isSubmitting = false, errorCode }: LoginFo
           {t("login.submit")}
         </Button>
         <Group justify="space-between">
-          <AnchorLink to="/forgot-password" size="sm">
-            {t("login.forgotPassword")}
-          </AnchorLink>
-          <AnchorLink to="/register" size="sm">
-            {t("login.register")}
-          </AnchorLink>
+          <AnchorLink to="/forgot-password">{t("login.forgotPassword")}</AnchorLink>
+          <AnchorLink to="/register">{t("login.register")}</AnchorLink>
         </Group>
       </Stack>
     </form>

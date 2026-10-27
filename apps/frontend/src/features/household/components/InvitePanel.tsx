@@ -1,8 +1,10 @@
-import { Button, CopyButton, Group, Stack, Text, TextInput, Title } from "@mantine/core";
+import { Button, CopyButton, Group, Stack, Text, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
+import { SuccessIcon } from "../../../components/icons";
+import { SectionTitle } from "../../../components/SectionTitle";
 import { formatDate } from "../../../i18n/formatDate";
 import type { InviteCreated } from "../types";
 
@@ -23,9 +25,7 @@ export function InvitePanel({
 
   return (
     <Stack gap="sm">
-      <Title order={2} size="h3">
-        {t("invite.title")}
-      </Title>
+      <SectionTitle>{t("invite.title")}</SectionTitle>
       <Text size="sm">{t("invite.description")}</Text>
       <FormError code={errorCode} />
       {invite !== undefined && (
@@ -41,8 +41,9 @@ export function InvitePanel({
             <CopyButton value={invite.url}>
               {({ copied, copy }) => (
                 <Button
-                  variant={copied ? "filled" : "light"}
-                  color={copied ? "teal" : "orange"}
+                  variant={copied ? "light" : "default"}
+                  color={copied ? "green.8" : "inchiostro"}
+                  leftSection={copied ? <SuccessIcon /> : null}
                   onClick={copy}
                 >
                   {copied ? t("invite.copied") : t("invite.copy")}

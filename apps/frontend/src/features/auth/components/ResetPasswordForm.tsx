@@ -1,10 +1,11 @@
-import { Alert, Button, PasswordInput, Stack } from "@mantine/core";
+import { Button, PasswordInput, Stack } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
 import { FormError } from "../../../components/FormError";
+import { SuccessMessage } from "../../../components/Messages";
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "../constants";
 import type { NewPasswordValues } from "../types";
 
@@ -36,7 +37,7 @@ export function ResetPasswordForm({
   if (isDone) {
     return (
       <Stack gap="md">
-        <Alert color="green" title={t("resetPassword.success")} />
+        <SuccessMessage title={t("resetPassword.success")} />
         <AnchorLink to="/login">{t("resetPassword.goToLogin")}</AnchorLink>
       </Stack>
     );
@@ -47,9 +48,7 @@ export function ResetPasswordForm({
       <Stack gap="md">
         <FormError code={errorCode} />
         {errorCode === "RESET_TOKEN_INVALID" && (
-          <AnchorLink to="/forgot-password" size="sm">
-            {t("resetPassword.requestNew")}
-          </AnchorLink>
+          <AnchorLink to="/forgot-password">{t("resetPassword.requestNew")}</AnchorLink>
         )}
         <PasswordInput
           label={t("fields.newPassword")}

@@ -85,9 +85,9 @@ test("search by ingredient and by name, filter by tag and change servings", asyn
 
   await frittata.click();
   const ingredients = page.getByRole("list", { name: "Ingredienti" }).getByRole("listitem");
-  await expect(ingredients).toHaveText(["4 uova", "300 g zucchine"]);
+  await expect(ingredients).toHaveText(["uova 4", "zucchine 300 g"]);
   await page.getByRole("button", { name: "Una porzione in meno" }).click();
   await page.getByRole("button", { name: "Una porzione in meno" }).click();
   await expect(page.getByText("2 porzioni")).toBeVisible();
-  await expect(ingredients).toHaveText(["2 uova", "150 g zucchine"]);
+  await expect(ingredients).toHaveText(["uova 2", "zucchine 150 g"]);
 });

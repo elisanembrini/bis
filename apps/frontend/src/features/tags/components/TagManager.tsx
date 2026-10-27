@@ -3,7 +3,6 @@ import {
   Badge,
   Button,
   Group,
-  List,
   Paper,
   Stack,
   Text,
@@ -16,8 +15,11 @@ import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
+import { EmptyState } from "../../../components/EmptyState";
 import { FormError } from "../../../components/FormError";
 import { CloseIcon } from "../../../components/icons";
+import { PlainList } from "../../../components/PlainList";
+import { SectionTitle } from "../../../components/SectionTitle";
 import type { TagResponse } from "../types";
 
 type TagManagerProps = {
@@ -76,22 +78,18 @@ export function TagManager({
       </form>
 
       <Stack gap="xs">
-        <Title order={2} size="h3">
-          {t("page.own")}
-        </Title>
+        <SectionTitle>{t("page.own")}</SectionTitle>
         {ownTags.length === 0 ? (
-          <Text c="dimmed">{t("page.ownEmpty")}</Text>
+          <EmptyState title={t("page.ownEmpty")} />
         ) : (
-          <List listStyleType="none" spacing="xs" p={0} m={0} aria-label={t("page.own")}>
+          <PlainList label={t("page.own")}>
             {ownTags.map((tag) => (
-              <List.Item key={tag.id}>
+              <li key={tag.id}>
                 <Paper withBorder p="xs" pl="md">
                   <Group justify="space-between" wrap="nowrap">
                     <Text>{tag.name}</Text>
                     <ActionIcon
-                      variant="subtle"
-                      color="red"
-                      size="xl"
+                      variant="default"
                       aria-label={t("page.deleteAria", { name: tag.name })}
                       loading={deletingTagId === tag.id}
                       onClick={() => setPending(tag)}
@@ -100,22 +98,20 @@ export function TagManager({
                     </ActionIcon>
                   </Group>
                 </Paper>
-              </List.Item>
+              </li>
             ))}
-          </List>
+          </PlainList>
         )}
       </Stack>
 
       <Stack gap="xs">
-        <Title order={2} size="h3">
-          {t("page.starter")}
-        </Title>
+        <SectionTitle>{t("page.starter")}</SectionTitle>
         <Text size="sm" c="dimmed">
           {t("page.starterHint")}
         </Text>
         <Group gap="xs">
           {starterTags.map((tag) => (
-            <Badge key={tag.id} variant="light" size="lg">
+            <Badge key={tag.id} tt="none">
               {tag.name}
             </Badge>
           ))}

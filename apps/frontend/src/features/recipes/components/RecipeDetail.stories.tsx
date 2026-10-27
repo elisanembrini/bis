@@ -21,10 +21,10 @@ export const Complete: Story = {
     const ingredients = within(canvas.getByRole("list", { name: "Ingredienti" }));
     const items = ingredients.getAllByRole("listitem").map((item) => item.textContent);
     await expect(items).toEqual([
-      "320 g spaghetti",
-      "1,5 cucchiai olio extravergine",
-      "1 spicchio aglio",
-      "q.b. sale",
+      "spaghetti 320 g",
+      "olio extravergine 1,5 cucchiai",
+      "aglio 1 spicchio",
+      "sale q.b.",
     ]);
     await expect(canvas.getByText("Timer: 9 min 30 s")).toBeVisible();
   },
@@ -66,15 +66,15 @@ export const ChangeServings: Story = {
 
     await expect(canvas.getByText("2 porzioni")).toBeVisible();
     await expect(ingredients()).toEqual([
-      "160 g spaghetti",
-      "0,75 cucchiai olio extravergine",
-      "0,5 spicchi aglio",
-      "q.b. sale",
+      "spaghetti 160 g",
+      "olio extravergine 0,75 cucchiai",
+      "aglio 0,5 spicchi",
+      "sale q.b.",
     ]);
 
     await userEvent.click(canvas.getByRole("button", { name: "Torna a 4 porzioni" }));
 
-    await expect(ingredients()[0]).toBe("320 g spaghetti");
+    await expect(ingredients()[0]).toBe("spaghetti 320 g");
     await expect(canvas.queryByRole("button", { name: "Torna a 4 porzioni" })).toBeNull();
   },
 };
@@ -141,7 +141,7 @@ export const SharedServingsStillWork: Story = {
     const first = within(canvas.getByRole("list", { name: "Ingredienti" })).getAllByRole(
       "listitem",
     )[0];
-    await expect(first).toHaveTextContent("400 g spaghetti");
+    await expect(first).toHaveTextContent("spaghetti 400 g");
   },
 };
 

@@ -19,15 +19,13 @@ export function TagPicker({ tags, value, onChange }: TagPickerProps) {
         <Chip.Group multiple value={value} onChange={onChange}>
           <Group gap="xs">
             {tags.map((tag) => (
-              <Chip key={tag.id} value={tag.id} size="sm">
+              <Chip key={tag.id} value={tag.id} size="lg">
                 {tag.name}
               </Chip>
             ))}
           </Group>
         </Chip.Group>
-        <AnchorLink to="/tags" size="sm">
-          {t("picker.manage")}
-        </AnchorLink>
+        <AnchorLink to="/tags">{t("picker.manage")}</AnchorLink>
       </Stack>
     </Fieldset>
   );

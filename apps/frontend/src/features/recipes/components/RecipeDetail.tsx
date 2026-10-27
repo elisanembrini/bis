@@ -1,4 +1,15 @@
-import { Alert, Badge, Button, Group, Image, List, Stack, Text, Title } from "@mantine/core";
+import {
+  AspectRatio,
+  Badge,
+  Box,
+  Button,
+  Group,
+  Image,
+  List,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -7,6 +18,11 @@ import { photoUrl } from "../../../api/photos";
 import { ButtonLink } from "../../../components/ButtonLink";
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { FormError } from "../../../components/FormError";
+import { HandwrittenTitle } from "../../../components/HandwrittenTitle";
+import { ShareIcon } from "../../../components/icons";
+import { InfoMessage, SuccessMessage } from "../../../components/Messages";
+import { FullBleed } from "../../../components/PageContainer";
+import { SectionTitle } from "../../../components/SectionTitle";
 import { useFormatDuration } from "../hooks/useFormatDuration";
 import { useFormatAmount } from "../hooks/useFormatIngredient";
 import { scaleQuantity } from "../servings";
@@ -63,38 +79,38 @@ export function RecipeDetail({
   return (
     <Stack gap="lg">
       {recipe.cover_photo_id !== null && (
-        <Image
-          src={photoSrc(recipe.cover_photo_id)}
-          alt={t("detail.coverAlt", { title: recipe.title })}
-          radius="md"
-          mah={420}
-          fit="cover"
-        />
+        <FullBleed>
+          <AspectRatio ratio={16 / 10}>
+            <Image
+              src={photoSrc(recipe.cover_photo_id)}
+              alt={t("detail.coverAlt", { title: recipe.title })}
+              radius={0}
+              fit="cover"
+            />
+          </AspectRatio>
+        </FullBleed>
       )}
       <Stack gap="xs">
-        <Title order={1}>{recipe.title}</Title>
+        <HandwrittenTitle>{recipe.title}</HandwrittenTitle>
         {times.length > 0 && <Text c="dimmed">{times.join(" · ")}</Text>}
         {recipe.tags.length > 0 && (
           <Group gap="xs" aria-label={t("detail.tags")}>
             {recipe.tags.map((tag) => (
-              <Badge key={tag.id} variant="light">
+              <Badge key={tag.id} tt="none">
                 {tag.name}
               </Badge>
             ))}
           </Group>
         )}
       </Stack>
-      {justCopied && <Alert color="green" title={t("detail.copied")} />}
+      {justCopied && <SuccessMessage title={t("detail.copied")} />}
       {!recipe.is_own && (
-        <Alert
-          color="orange"
-          title={t("detail.sharedWithMe", { name: recipe.author.display_name })}
-        />
+        <InfoMessage title={t("detail.sharedWithMe", { name: recipe.author.display_name })} />
       )}
       <FormError code={errorCode} />
       {recipe.is_own ? (
         <Stack gap="xs">
-          <Group grow>
+          <SimpleGrid cols={2} spacing="sm">
             <ButtonLink
               to="/recipes/$recipeId/edit"
               params={{ recipeId: recipe.id }}
@@ -102,18 +118,18 @@ export function RecipeDetail({
             >
               {t("detail.edit")}
             </ButtonLink>
-            <Button variant="default" onClick={onShare}>
+            <Button variant="default" onClick={onShare} leftSection={<ShareIcon />}>
               {t("detail.share")}
             </Button>
-            <Button
-              color="red"
-              variant="light"
-              onClick={() => setConfirming(true)}
-              loading={isDeleting}
-            >
-              {t("detail.delete")}
-            </Button>
-          </Group>
+          </SimpleGrid>
+          <Button
+            variant="subtle"
+            color="inchiostro"
+            onClick={() => setConfirming(true)}
+            loading={isDeleting}
+          >
+            {t("detail.delete")}
+          </Button>
           {sharedWith.length > 0 && (
             <Text size="sm" c="dimmed">
               {t("detail.sharedWith", { names: listFormatter.format(sharedWith) })}
@@ -121,20 +137,19 @@ export function RecipeDetail({
           )}
         </Stack>
       ) : (
-        <Button onClick={onCopy} loading={isCopying} size="md">
+        <Button variant="outline" color="pomodoro" onClick={onCopy} loading={isCopying}>
           {t("detail.copy")}
         </Button>
       )}
 
       <Stack gap="xs">
-        <Title order={2} size="h3">
-          {t("detail.ingredients")}
-        </Title>
+        <SectionTitle>{t("detail.ingredients")}</SectionTitle>
         <ServingsSelector value={servings} original={recipe.servings} onChange={setServings} />
-        <List spacing="xs" aria-label={t("detail.ingredients")}>
+        <Box component="ul" p={0} m={0} aria-label={t("detail.ingredients")}>
           {recipe.ingredients.map((ingredient) => (
-            <List.Item key={ingredient.id}>
-              <Text span fw={600}>
+            <li key={ingredient.id} className={classes.ingredient}>
+              <span>{ingredient.name}</span>{" "}
+              <span className={classes.amount}>
                 {formatAmount({
                   quantity: scaleQuantity(
                     ingredient.quantity,
@@ -144,21 +159,18 @@ export function RecipeDetail({
                   ),
                   unit: ingredient.unit,
                 })}
-              </Text>{" "}
-              {ingredient.name}
-            </List.Item>
+              </span>
+            </li>
           ))}
-        </List>
+        </Box>
       </Stack>
 
       <Stack gap="xs">
-        <Title order={2} size="h3">
-          {t("detail.steps")}
-        </Title>
+        <SectionTitle>{t("detail.steps")}</SectionTitle>
         <List type="ordered" spacing="md" aria-label={t("detail.steps")}>
           {recipe.steps.map((step, index) => (
             <List.Item key={step.id}>
-              <Text>{step.text}</Text>
+              <Text className={classes.stepText}>{step.text}</Text>
               {step.photo_id !== null && (
                 <Image
                   src={photoSrc(step.photo_id)}
@@ -181,9 +193,7 @@ export function RecipeDetail({
 
       {recipe.notes !== null && (
         <Stack gap="xs">
-          <Title order={2} size="h3">
-            {t("detail.notes")}
-          </Title>
+          <SectionTitle>{t("detail.notes")}</SectionTitle>
           <Text className={classes.notes}>{recipe.notes}</Text>
         </Stack>
       )}

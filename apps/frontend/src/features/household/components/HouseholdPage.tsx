@@ -1,9 +1,10 @@
-import { Container, Divider, Loader, Stack, Title } from "@mantine/core";
+import { Divider, Loader, Stack, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { errorCodeOf } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
+import { PageContainer } from "../../../components/PageContainer";
 import { useMe } from "../../auth/hooks/useMe";
 import { useHouseholdMutations } from "../hooks/useHouseholdMutations";
 import { householdQueryOptions } from "../queries";
@@ -27,7 +28,7 @@ export function HouseholdPage() {
   const isOwner = household.data.role === "owner";
 
   return (
-    <Container size="sm">
+    <PageContainer>
       <Stack gap="xl">
         <Title order={1}>{t("title")}</Title>
         <MemberList
@@ -64,6 +65,6 @@ export function HouseholdPage() {
           </>
         )}
       </Stack>
-    </Container>
+    </PageContainer>
   );
 }

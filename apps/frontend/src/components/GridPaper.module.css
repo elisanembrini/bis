@@ -1,0 +1,7 @@
+.grid {
+  background-color: var(--mantine-color-body);
+  background-image:
+    linear-gradient(var(--bis-color-griglia-sfondo) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bis-color-griglia-sfondo) 1px, transparent 1px);
+  background-size: 24px 24px;
+}

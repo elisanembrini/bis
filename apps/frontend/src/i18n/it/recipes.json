@@ -14,7 +14,7 @@
   },
   "detail": {
     "ingredients": "Ingredienti",
-    "steps": "Procedimento",
+    "steps": "Passaggi",
     "notes": "Note",
     "prep": "Preparazione: {{duration}}",
     "cook": "Cottura: {{duration}}",
@@ -50,7 +50,7 @@
     "noUnit": "—",
     "ingredientName": "Ingrediente",
     "addIngredient": "Aggiungi ingrediente",
-    "steps": "Procedimento",
+    "steps": "Passaggi",
     "timerMinutes": "Timer: minuti",
     "timerSeconds": "secondi",
     "addStep": "Aggiungi passaggio",

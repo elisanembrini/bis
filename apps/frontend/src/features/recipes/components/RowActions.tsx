@@ -26,7 +26,6 @@ export function RowActions({
     <Group gap="xs" justify="flex-end">
       <ActionIcon
         variant="default"
-        size="xl"
         aria-label={t("editor.moveUp")}
         disabled={isFirst}
         onClick={onMoveUp}
@@ -35,7 +34,6 @@ export function RowActions({
       </ActionIcon>
       <ActionIcon
         variant="default"
-        size="xl"
         aria-label={t("editor.moveDown")}
         disabled={isLast}
         onClick={onMoveDown}
@@ -43,9 +41,7 @@ export function RowActions({
         <ArrowDownIcon />
       </ActionIcon>
       <ActionIcon
-        variant="light"
-        color="red"
-        size="xl"
+        variant="default"
         aria-label={t("editor.remove")}
         disabled={!canRemove}
         onClick={onRemove}

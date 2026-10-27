@@ -23,7 +23,7 @@ export function LeaveHouseholdButton({
   return (
     <Stack gap="sm">
       <FormError code={errorCode} />
-      <Button color="red" variant="light" onClick={() => setConfirming(true)} loading={isLeaving}>
+      <Button variant="default" onClick={() => setConfirming(true)} loading={isLeaving}>
         {t("leave.button")}
       </Button>
       <ConfirmDialog

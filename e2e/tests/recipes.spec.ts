@@ -36,8 +36,8 @@ test("create, edit and delete a recipe", async ({ page }) => {
 
   await expect(page.getByRole("heading", { name: "Pane di casa" })).toBeVisible();
   const ingredients = page.getByRole("list", { name: "Ingredienti" }).getByRole("listitem");
-  await expect(ingredients).toHaveText(["1,5 kg farina", "q.b. sale"]);
-  const steps = page.getByRole("list", { name: "Procedimento" }).getByRole("listitem");
+  await expect(ingredients).toHaveText(["farina 1,5 kg", "sale q.b."]);
+  const steps = page.getByRole("list", { name: "Passaggi" }).getByRole("listitem");
   await expect(steps).toHaveText(["Impasta tutto.", /Inforna\.\s*Timer: 40 min/]);
 
   await page.getByRole("link", { name: "Modifica" }).click();

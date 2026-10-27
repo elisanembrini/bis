@@ -23,14 +23,14 @@ export function ConfirmDialog({
   const { t } = useTranslation();
 
   return (
-    <Modal opened={opened} onClose={onCancel} title={title} centered>
+    <Modal opened={opened} onClose={onCancel} title={title} centered shadow="none" radius="md">
       <Stack gap="lg">
         <Text>{body}</Text>
         <Group justify="flex-end">
           <Button variant="default" onClick={onCancel} disabled={isConfirming}>
             {t("actions.cancel")}
           </Button>
-          <Button color="red" onClick={onConfirm} loading={isConfirming}>
+          <Button color="pomodoro.8" onClick={onConfirm} loading={isConfirming}>
             {confirmLabel}
           </Button>
         </Group>

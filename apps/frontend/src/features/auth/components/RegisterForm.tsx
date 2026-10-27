@@ -57,10 +57,8 @@ export function RegisterForm({ onSubmit, isSubmitting = false, errorCode }: Regi
           {t("register.submit")}
         </Button>
         <Group gap="xs">
-          <Text size="sm">{t("register.hasAccount")}</Text>
-          <AnchorLink to="/login" size="sm">
-            {t("register.login")}
-          </AnchorLink>
+          <Text>{t("register.hasAccount")}</Text>
+          <AnchorLink to="/login">{t("register.login")}</AnchorLink>
         </Group>
       </Stack>
     </form>

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
+import { EmptyState } from "../../../components/EmptyState";
 import { FormError } from "../../../components/FormError";
 import type { ShareCandidate } from "../types";
 
@@ -29,10 +30,10 @@ export function MemberPicker({
 
   if (candidates.length === 0) {
     return (
-      <Stack gap="sm">
-        <Text>{t("share.noMembers")}</Text>
-        <AnchorLink to="/household">{t("share.invite")}</AnchorLink>
-      </Stack>
+      <EmptyState
+        title={t("share.noMembers")}
+        action={<AnchorLink to="/household">{t("share.invite")}</AnchorLink>}
+      />
     );
   }
 

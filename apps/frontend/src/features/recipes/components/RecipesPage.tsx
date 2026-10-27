@@ -1,9 +1,10 @@
-import { Container, Stack } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { errorCodeOf } from "../../../api/errors";
+import { PageContainer } from "../../../components/PageContainer";
 import { TagFilter } from "../../tags/components/TagFilter";
 import { tagsQueryOptions } from "../../tags/queries";
 import { type RecipesSearch, recipesQueryOptions } from "../queries";
@@ -33,7 +34,7 @@ export function RecipesPage({ search, onSearchChange }: RecipesPageProps) {
   const isFiltered = Object.keys(search).length > 0;
 
   return (
-    <Container size="sm">
+    <PageContainer>
       <RecipeList
         recipes={recipes.data}
         isLoading={recipes.isPending}
@@ -66,6 +67,6 @@ export function RecipesPage({ search, onSearchChange }: RecipesPageProps) {
           </Stack>
         }
       />
-    </Container>
+    </PageContainer>
   );
 }

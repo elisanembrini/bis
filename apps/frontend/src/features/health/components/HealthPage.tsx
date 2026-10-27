@@ -1,5 +1,4 @@
-import { Container } from "@mantine/core";
-
+import { PageContainer } from "../../../components/PageContainer";
 import { toHealthState } from "../healthState";
 import { useHealth } from "../hooks/useHealth";
 import { HealthStatus } from "./HealthStatus";
@@ -8,16 +7,16 @@ export function HealthPage() {
   const { isPending, isError } = useHealth();
 
   return (
-    <Container size="sm" py="xl">
+    <PageContainer>
       <HealthStatus state={toHealthState({ isPending, isError })} />
-    </Container>
+    </PageContainer>
   );
 }
 
 export function HealthErrorPage() {
   return (
-    <Container size="sm" py="xl">
+    <PageContainer>
       <HealthStatus state="error" />
-    </Container>
+    </PageContainer>
   );
 }

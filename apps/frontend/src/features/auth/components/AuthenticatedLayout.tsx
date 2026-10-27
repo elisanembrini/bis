@@ -1,9 +1,12 @@
-import { AppShell, Button, Group, Title } from "@mantine/core";
+import { AppShell, Button, Group } from "@mantine/core";
 import { Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { AnchorLink } from "../../../components/AnchorLink";
+import { Logo } from "../../../components/Logo";
 import { useLogout } from "../hooks/useLogout";
+
+const HEADER_HEIGHT = 84;
 
 export function AuthenticatedLayout() {
   const { t } = useTranslation();
@@ -11,17 +14,26 @@ export function AuthenticatedLayout() {
   const logout = useLogout();
 
   return (
-    <AppShell header={{ height: 56 }} padding="md">
+    <AppShell header={{ height: HEADER_HEIGHT }} padding={0}>
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Group gap="lg">
-            <Title order={2} size="h4">
-              {t("appName")}
-            </Title>
-            <AnchorLink to="/recipes">{t("nav.recipes")}</AnchorLink>
-            <AnchorLink to="/household">{t("nav.household")}</AnchorLink>
+        <Group h="100%" pr="md" justify="space-between" wrap="nowrap">
+          <Group gap="md" wrap="nowrap">
+            <AnchorLink to="/recipes">
+              <Logo />
+            </AnchorLink>
+            <AnchorLink to="/recipes" fw={600}>
+              {t("nav.recipes")}
+            </AnchorLink>
+            <AnchorLink to="/household" fw={600}>
+              {t("nav.household")}
+            </AnchorLink>
           </Group>
-          <Button variant="subtle" loading={logout.isPending} onClick={() => logout.mutate({})}>
+          <Button
+            variant="subtle"
+            color="inchiostro"
+            loading={logout.isPending}
+            onClick={() => logout.mutate({})}
+          >
             {tAuth("logout")}
           </Button>
         </Group>

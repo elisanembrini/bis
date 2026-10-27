@@ -1,10 +1,11 @@
-import { Alert, Button, Group, Stack, Text, Title } from "@mantine/core";
+import { Button, Group, Stack, Text, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
 import { ButtonLink } from "../../../components/ButtonLink";
 import { FormError } from "../../../components/FormError";
+import { InfoMessage } from "../../../components/Messages";
 import { GoogleSignInButton } from "../../auth/components/GoogleSignInButton";
 import { OrDivider } from "../../auth/components/OrDivider";
 import type { InviteState } from "../inviteState";
@@ -53,7 +54,7 @@ export function InviteCard({
       )}
       {state.kind === "canJoin" && (
         <Stack gap="md">
-          <Alert color="yellow" title={t("invitePage.replaceWarning")} />
+          <InfoMessage title={t("invitePage.replaceWarning")} />
           <Button onClick={onAccept} loading={isAccepting}>
             {t("invitePage.accept")}
           </Button>

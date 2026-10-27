@@ -1,6 +1,7 @@
-import { Alert, Box, Group, Loader, Stack, Title } from "@mantine/core";
+import { Box, Group, Loader, Stack, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
+import { ErrorMessage, SuccessMessage } from "../../../components/Messages";
 import type { HealthState } from "../healthState";
 
 type HealthStatusProps = {
@@ -16,12 +17,12 @@ export function HealthStatus({ state }: HealthStatusProps) {
       <Box component="output" aria-live="polite">
         {state === "loading" && (
           <Group gap="xs">
-            <Loader size="sm" aria-hidden />
+            <Loader aria-hidden />
             {t("status.loading")}
           </Group>
         )}
-        {state === "ok" && <Alert color="green" title={t("status.ok")} />}
-        {state === "error" && <Alert color="red" title={t("status.error")} />}
+        {state === "ok" && <SuccessMessage title={t("status.ok")} />}
+        {state === "error" && <ErrorMessage title={t("status.error")} />}
       </Box>
     </Stack>
   );

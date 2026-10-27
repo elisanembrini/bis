@@ -1,4 +1,4 @@
-import { Container, Loader } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { useState } from "react";
 import { $api } from "../../../api/client";
 import { errorCodeOf } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
+import { PageContainer } from "../../../components/PageContainer";
 import { useDeleteRecipe } from "../hooks/useRecipeMutations";
 import { recipeQueryOptions, recipeSharesQueryOptions, recipesQueryOptions } from "../queries";
 import { RecipeDetail } from "./RecipeDetail";
@@ -52,7 +53,7 @@ export function RecipeDetailPage({ recipeId, justCopied }: RecipeDetailPageProps
   const failed = deleteRecipe.isError ? deleteRecipe.error : copy.isError ? copy.error : undefined;
 
   return (
-    <Container size="sm">
+    <PageContainer>
       <RecipeDetail
         key={recipe.data.id}
         recipe={recipe.data}
@@ -90,6 +91,6 @@ export function RecipeDetailPage({ recipeId, justCopied }: RecipeDetailPageProps
           saveErrorCode={saveShares.isError ? errorCodeOf(saveShares.error) : undefined}
         />
       )}
-    </Container>
+    </PageContainer>
   );
 }

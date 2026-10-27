@@ -55,7 +55,7 @@ export function PhotoInput({
               <Button
                 {...props}
                 variant="light"
-                leftSection={<PhotoIcon size={18} />}
+                leftSection={<PhotoIcon />}
                 disabled={disabled || isUploading}
               >
                 {selectLabel}
@@ -63,7 +63,7 @@ export function PhotoInput({
             )}
           </FileButton>
           {imageSrc !== undefined && !isUploading && (
-            <Button variant="subtle" color="red" onClick={onRemove} disabled={disabled}>
+            <Button variant="subtle" color="inchiostro" onClick={onRemove} disabled={disabled}>
               {t("photo.remove")}
             </Button>
           )}

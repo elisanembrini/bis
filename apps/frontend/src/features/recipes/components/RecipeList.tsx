@@ -1,4 +1,4 @@
-import { List, Loader, Paper, Stack, Text, Title } from "@mantine/core";
+import { Loader, Stack, Title } from "@mantine/core";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -6,8 +6,11 @@ import type { AppErrorCode } from "../../../api/errors";
 import { photoUrl } from "../../../api/photos";
 import { AnchorLink } from "../../../components/AnchorLink";
 import { ButtonLink } from "../../../components/ButtonLink";
+import { EmptyState } from "../../../components/EmptyState";
 import { FormError } from "../../../components/FormError";
 import { PlusIcon } from "../../../components/icons";
+import { PlainList } from "../../../components/PlainList";
+import { SectionTitle } from "../../../components/SectionTitle";
 import type { RecipeSummary } from "../types";
 import { RecipeListItem } from "./RecipeListItem";
 
@@ -32,13 +35,13 @@ function RecipeItems({
   thumbnailSrc: (photoId: string) => string;
 }) {
   return (
-    <List listStyleType="none" spacing="sm" p={0} m={0} aria-label={label}>
+    <PlainList label={label}>
       {recipes.map((recipe) => (
-        <List.Item key={recipe.id}>
+        <li key={recipe.id}>
           <RecipeListItem recipe={recipe} thumbnailSrc={thumbnailSrc} />
-        </List.Item>
+        </li>
       ))}
-    </List>
+    </PlainList>
   );
 }
 
@@ -64,31 +67,20 @@ export function RecipeList({
       {isLoading && <Loader />}
       <FormError code={errorCode} />
       {recipes?.length === 0 && isFiltered && (
-        <Paper withBorder p="lg">
-          <Stack gap={4}>
-            <Text fw={500}>{t("list.noResults")}</Text>
-            <Text size="sm" c="dimmed">
-              {t("list.noResultsHint")}
-            </Text>
-          </Stack>
-        </Paper>
+        <EmptyState title={t("list.noResults")} description={t("list.noResultsHint")} />
       )}
       {recipes !== undefined && own.length === 0 && !isFiltered && (
-        <Paper withBorder p="lg">
-          <Stack gap="sm" align="flex-start">
-            <Text>{t("list.empty")}</Text>
-            <AnchorLink to="/recipes/new">{t("list.emptyAction")}</AnchorLink>
-          </Stack>
-        </Paper>
+        <EmptyState
+          title={t("list.empty")}
+          action={<AnchorLink to="/recipes/new">{t("list.emptyAction")}</AnchorLink>}
+        />
       )}
       {own.length > 0 && (
         <RecipeItems recipes={own} label={t("list.title")} thumbnailSrc={thumbnailSrc} />
       )}
       {shared.length > 0 && (
         <Stack gap="sm" mt="md">
-          <Title order={2} size="h3">
-            {t("list.shared")}
-          </Title>
+          <SectionTitle>{t("list.shared")}</SectionTitle>
           <RecipeItems recipes={shared} label={t("list.shared")} thumbnailSrc={thumbnailSrc} />
         </Stack>
       )}

@@ -1,9 +1,9 @@
-import { Container } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { $api } from "../../../api/client";
 import { errorCodeOf } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
+import { PageContainer } from "../../../components/PageContainer";
 import { tagsQueryOptions } from "../queries";
 import { TagManager } from "./TagManager";
 
@@ -20,7 +20,7 @@ export function TagsPage() {
   }
 
   return (
-    <Container size="sm">
+    <PageContainer>
       <TagManager
         tags={tags.data ?? []}
         onCreate={(name) => createTag.mutate({ body: { name } })}
@@ -29,6 +29,6 @@ export function TagsPage() {
         deletingTagId={deleteTag.isPending ? deleteTag.variables.params.path.tag_id : undefined}
         errorCode={failed === null ? undefined : errorCodeOf(failed)}
       />
-    </Container>
+    </PageContainer>
   );
 }

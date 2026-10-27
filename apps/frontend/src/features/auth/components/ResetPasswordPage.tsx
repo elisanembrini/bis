@@ -1,9 +1,10 @@
-import { Alert, Stack } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 import { $api } from "../../../api/client";
 import { errorCodeOf } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
+import { ErrorMessage } from "../../../components/Messages";
 import { AuthPageLayout } from "./AuthPageLayout";
 import { ResetPasswordForm } from "./ResetPasswordForm";
 
@@ -19,7 +20,7 @@ export function ResetPasswordPage({ token }: ResetPasswordPageProps) {
     <AuthPageLayout title={t("resetPassword.title")}>
       {token === undefined ? (
         <Stack gap="md">
-          <Alert color="red" title={t("resetPassword.missingToken")} />
+          <ErrorMessage title={t("resetPassword.missingToken")} />
           <AnchorLink to="/forgot-password">{t("resetPassword.requestNew")}</AnchorLink>
         </Stack>
       ) : (

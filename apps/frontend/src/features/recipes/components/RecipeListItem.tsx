@@ -2,7 +2,7 @@ import { Badge, Center, Group, Image, Paper, Stack, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 import { AnchorLink } from "../../../components/AnchorLink";
-import { PhotoIcon } from "../../../components/icons";
+import { PhotoIcon, SharedIcon } from "../../../components/icons";
 import { useFormatDuration } from "../hooks/useFormatDuration";
 import type { RecipeSummary } from "../types";
 
@@ -26,14 +26,14 @@ export function RecipeListItem({ recipe, thumbnailSrc }: RecipeListItemProps) {
   ].filter((part) => part !== null);
 
   return (
-    <Paper withBorder p="sm" {...(recipe.is_own ? {} : { bg: "orange.0" })}>
+    <Paper withBorder p="sm" {...(recipe.is_own ? {} : { bg: "inchiostro.0" })}>
       <Group gap="md" wrap="nowrap">
         {recipe.cover_photo_id === null ? (
           <Center
             w={THUMBNAIL_SIZE}
             h={THUMBNAIL_SIZE}
-            bg="gray.1"
-            c="gray.5"
+            bg="inchiostro.0"
+            c="inchiostro.4"
             className={classes.thumbnail}
           >
             <PhotoIcon size={28} />
@@ -55,7 +55,7 @@ export function RecipeListItem({ recipe, thumbnailSrc }: RecipeListItemProps) {
               {recipe.title}
             </AnchorLink>
             {!recipe.is_own && (
-              <Badge size="sm" variant="light" color="orange">
+              <Badge size="md" tt="none" leftSection={<SharedIcon size={14} />}>
                 {t("list.sharedBadge")}
               </Badge>
             )}

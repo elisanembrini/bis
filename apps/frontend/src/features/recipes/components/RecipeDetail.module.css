@@ -1,3 +1,23 @@
 .notes {
   white-space: pre-line;
 }
+
+.ingredient {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--mantine-spacing-md);
+  padding-block: var(--mantine-spacing-xs);
+  border-bottom: 1px dashed var(--bis-color-riga-quaderno);
+}
+
+.amount {
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.stepText {
+  font-size: rem(17px);
+  line-height: 1.5;
+}

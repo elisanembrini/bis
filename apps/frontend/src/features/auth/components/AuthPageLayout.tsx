@@ -1,5 +1,8 @@
-import { Container, Paper, Stack, Title } from "@mantine/core";
+import { Center, Container, Paper, Stack, Title } from "@mantine/core";
 import type { ReactNode } from "react";
+
+import { GridPaper } from "../../../components/GridPaper";
+import { Logo } from "../../../components/Logo";
 
 type AuthPageLayoutProps = {
   title: string;
@@ -8,13 +11,22 @@ type AuthPageLayoutProps = {
 
 export function AuthPageLayout({ title, children }: AuthPageLayoutProps) {
   return (
-    <Container size="xs" py="xl">
-      <Paper withBorder p="lg">
-        <Stack gap="lg">
-          <Title order={1}>{title}</Title>
-          {children}
+    <GridPaper mih="100dvh">
+      <Container size="xs" py="xl">
+        <Stack gap="md">
+          <Center>
+            <Logo width={128} />
+          </Center>
+          <Paper withBorder bg="white" p="lg">
+            <Stack gap="lg">
+              <Title order={1} size="h2">
+                {title}
+              </Title>
+              {children}
+            </Stack>
+          </Paper>
         </Stack>
-      </Paper>
-    </Container>
+      </Container>
+    </GridPaper>
   );
 }
