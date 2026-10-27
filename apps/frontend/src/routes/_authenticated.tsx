@@ -4,6 +4,8 @@ import { AuthenticatedLayout } from "../features/auth/components/AuthenticatedLa
 import { requireAuthentication } from "../features/auth/guard";
 
 export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: ({ context, location }) => requireAuthentication(context.queryClient, location.href),
+  beforeLoad: async ({ context, location }) => ({
+    me: await requireAuthentication(context.queryClient, location.href),
+  }),
   component: AuthenticatedLayout,
 });

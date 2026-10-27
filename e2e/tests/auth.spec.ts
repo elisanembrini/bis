@@ -11,7 +11,7 @@ test("registration, logout and login", async ({ page }) => {
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
   await page.getByRole("button", { name: "Registrati" }).click();
 
-  await expect(page.getByRole("heading", { name: "Ciao, Prova!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Le mie ricette" })).toBeVisible();
 
   await page.getByRole("button", { name: "Esci", exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
@@ -23,8 +23,8 @@ test("registration, logout and login", async ({ page }) => {
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
   await page.getByRole("button", { name: "Accedi" }).click();
 
-  await expect(page).toHaveURL(/\/$/);
-  await expect(page.getByRole("heading", { name: "Ciao, Prova!" })).toBeVisible();
+  await expect(page).toHaveURL(/\/recipes$/);
+  await expect(page.getByRole("heading", { name: "Le mie ricette" })).toBeVisible();
 });
 
 test("wrong credentials show a generic error", async ({ page }) => {

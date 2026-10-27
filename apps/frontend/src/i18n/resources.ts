@@ -1,8 +1,8 @@
 import auth from "./it/auth.json";
 import common from "./it/common.json";
 import health from "./it/health.json";
-import home from "./it/home.json";
 import household from "./it/household.json";
+import recipes from "./it/recipes.json";
 
 export const defaultNamespace = "common";
 
@@ -11,7 +11,7 @@ export const resources = {
     auth,
     common,
     health,
-    home,
     household,
+    recipes,
   },
 } as const;

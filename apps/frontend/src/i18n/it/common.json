@@ -4,7 +4,7 @@
     "cancel": "Annulla"
   },
   "nav": {
-    "home": "Home",
+    "recipes": "Ricette",
     "household": "Casa"
   },
   "errors": {
@@ -28,6 +28,7 @@
     "OWNER_CANNOT_LEAVE": "Chi è titolare della casa non può lasciarla.",
     "NOT_HOUSEHOLD_OWNER": "Solo chi è titolare della casa può farlo.",
     "MEMBER_NOT_FOUND": "Questa persona non fa più parte della casa.",
-    "CANNOT_REMOVE_SELF": "Non puoi rimuoverti dalla casa."
+    "CANNOT_REMOVE_SELF": "Non puoi rimuoverti dalla casa.",
+    "RECIPE_NOT_FOUND": "Questa ricetta non esiste o non è tua."
   }
 }

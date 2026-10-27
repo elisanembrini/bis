@@ -20,7 +20,7 @@ const fillRegistration = async (page: Page, name: string, email: string) => {
 const registerOwnerAndCreateInvite = async (page: Page): Promise<string> => {
   await page.goto("/register");
   await fillRegistration(page, "Anna", uniqueEmail("anna"));
-  await expect(page.getByRole("heading", { name: "Ciao, Anna!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Le mie ricette" })).toBeVisible();
   await page.getByRole("link", { name: "Casa" }).click();
   await page.getByRole("button", { name: "Genera un link di invito" }).click();
   return page.getByLabel("Link di invito").inputValue();

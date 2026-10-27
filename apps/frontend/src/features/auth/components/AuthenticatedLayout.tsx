@@ -18,7 +18,7 @@ export function AuthenticatedLayout() {
             <Title order={2} size="h4">
               {t("appName")}
             </Title>
-            <AnchorLink to="/">{t("nav.home")}</AnchorLink>
+            <AnchorLink to="/recipes">{t("nav.recipes")}</AnchorLink>
             <AnchorLink to="/household">{t("nav.household")}</AnchorLink>
           </Group>
           <Button variant="subtle" loading={logout.isPending} onClick={() => logout.mutate({})}>

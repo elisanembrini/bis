@@ -102,6 +102,12 @@ class CannotRemoveSelfError(DomainError):
     message = "Non puoi rimuoverti dalla casa."
 
 
+class RecipeNotFoundError(DomainError):
+    status_code = 404
+    code = ErrorCode.RECIPE_NOT_FOUND
+    message = "Ricetta non trovata."
+
+
 class GoogleLoginError(Exception):
     def __init__(self, code: ErrorCode) -> None:
         super().__init__(code)

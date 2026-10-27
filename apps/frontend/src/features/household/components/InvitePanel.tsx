@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
-import { formatDate } from "../formatDate";
+import { formatDate } from "../../../i18n/formatDate";
 import type { InviteCreated } from "../types";
 
 type InvitePanelProps = {

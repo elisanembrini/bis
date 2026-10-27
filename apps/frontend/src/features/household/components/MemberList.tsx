@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import type { AppErrorCode } from "../../../api/errors";
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { FormError } from "../../../components/FormError";
+import { CloseIcon } from "../../../components/icons";
 import type { HouseholdMember } from "../types";
 
 type MemberListProps = {
@@ -15,22 +16,6 @@ type MemberListProps = {
   removingUserId?: string | undefined;
   errorCode?: AppErrorCode | undefined;
 };
-
-function RemoveIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <path d="M18 6 6 18M6 6l12 12" />
-    </svg>
-  );
-}
 
 export function MemberList({
   members,
@@ -76,7 +61,7 @@ export function MemberList({
                       loading={removingUserId === member.user_id}
                       onClick={() => setPending(member)}
                     >
-                      <RemoveIcon />
+                      <CloseIcon />
                     </ActionIcon>
                   )}
                 </Group>

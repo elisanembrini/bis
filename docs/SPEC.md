@@ -218,7 +218,7 @@ Schermate principali:
 
 - [x] Nome dell'app: Bis. Da verificare disponibilità di dominio, nomi negli store e marchi registrati.
 - [ ] Le etichette servono anche come filtro nell'elenco ricette, oltre che come informazione?
-- [ ] Elenco delle unità di misura: fisso (g, kg, ml, l, cucchiaio, cucchiaino, tazza, pizzico, pezzi) o anche personalizzabile?
+- [x] Elenco delle unità di misura: fisso (g, kg, ml, l, cucchiaio, cucchiaino, tazza, pizzico, spicchio, pezzi); l'unità è facoltativa.
 - [ ] La ricerca per ingrediente deve trovare "zucchine" scrivendo "zucchina"?
 - [ ] Serve un modo per esportare le proprie ricette, per non dipendere dall'app?
 - [ ] Provider per il VPS, per il dominio e per le email transazionali.

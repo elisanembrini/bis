@@ -259,6 +259,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/recipes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Recipes */
+        get: operations["listRecipes"];
+        put?: never;
+        /** Create Recipe */
+        post: operations["createRecipe"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/recipes/{recipe_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Recipe */
+        get: operations["getRecipe"];
+        /** Update Recipe */
+        put: operations["updateRecipe"];
+        post?: never;
+        /** Delete Recipe */
+        delete: operations["deleteRecipe"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -267,7 +304,7 @@ export interface components {
          * ErrorCode
          * @enum {string}
          */
-        ErrorCode: "INVALID_CREDENTIALS" | "TOO_MANY_ATTEMPTS" | "EMAIL_ALREADY_REGISTERED" | "RESET_TOKEN_INVALID" | "UNAUTHENTICATED" | "GOOGLE_UNAVAILABLE" | "GOOGLE_STATE_INVALID" | "GOOGLE_CANCELLED" | "GOOGLE_EMAIL_NOT_VERIFIED" | "GOOGLE_ACCOUNT_CONFLICT" | "GOOGLE_FAILED" | "INVITE_NOT_FOUND" | "INVITE_EXPIRED" | "INVITE_USED" | "ALREADY_IN_HOUSEHOLD" | "MUST_LEAVE_HOUSEHOLD" | "OWNER_CANNOT_LEAVE" | "NOT_HOUSEHOLD_OWNER" | "MEMBER_NOT_FOUND" | "CANNOT_REMOVE_SELF";
+        ErrorCode: "INVALID_CREDENTIALS" | "TOO_MANY_ATTEMPTS" | "EMAIL_ALREADY_REGISTERED" | "RESET_TOKEN_INVALID" | "UNAUTHENTICATED" | "GOOGLE_UNAVAILABLE" | "GOOGLE_STATE_INVALID" | "GOOGLE_CANCELLED" | "GOOGLE_EMAIL_NOT_VERIFIED" | "GOOGLE_ACCOUNT_CONFLICT" | "GOOGLE_FAILED" | "INVITE_NOT_FOUND" | "INVITE_EXPIRED" | "INVITE_USED" | "ALREADY_IN_HOUSEHOLD" | "MUST_LEAVE_HOUSEHOLD" | "OWNER_CANNOT_LEAVE" | "NOT_HOUSEHOLD_OWNER" | "MEMBER_NOT_FOUND" | "CANNOT_REMOVE_SELF" | "RECIPE_NOT_FOUND";
         /** ErrorResponse */
         ErrorResponse: {
             code: components["schemas"]["ErrorCode"];
@@ -343,6 +380,27 @@ export interface components {
              */
             role: "owner" | "member";
         };
+        /** IngredientInput */
+        IngredientInput: {
+            /** Quantity */
+            quantity?: number | string | null;
+            unit?: components["schemas"]["Unit"] | null;
+            /** Name */
+            name: string;
+        };
+        /** IngredientResponse */
+        IngredientResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Quantity */
+            quantity: string | null;
+            unit: components["schemas"]["Unit"] | null;
+            /** Name */
+            name: string;
+        };
         /** InviteCreatedResponse */
         InviteCreatedResponse: {
             /** Url */
@@ -391,6 +449,81 @@ export interface components {
             display_name: string;
             household: components["schemas"]["HouseholdSummary"];
         };
+        /** RecipeInput */
+        RecipeInput: {
+            /** Title */
+            title: string;
+            /** Notes */
+            notes?: string | null;
+            /** Prep Minutes */
+            prep_minutes?: number | null;
+            /** Cook Minutes */
+            cook_minutes?: number | null;
+            /** Servings */
+            servings: number;
+            /** Ingredients */
+            ingredients: components["schemas"]["IngredientInput"][];
+            /** Steps */
+            steps: components["schemas"]["StepInput"][];
+        };
+        /** RecipeResponse */
+        RecipeResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Servings */
+            servings: number;
+            /** Prep Minutes */
+            prep_minutes: number | null;
+            /** Cook Minutes */
+            cook_minutes: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Notes */
+            notes: string | null;
+            /** Ingredients */
+            ingredients: components["schemas"]["IngredientResponse"][];
+            /** Steps */
+            steps: components["schemas"]["StepResponse"][];
+        };
+        /** RecipeSummary */
+        RecipeSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Servings */
+            servings: number;
+            /** Prep Minutes */
+            prep_minutes: number | null;
+            /** Cook Minutes */
+            cook_minutes: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
         /** RegisterRequest */
         RegisterRequest: {
             /**
@@ -412,6 +545,30 @@ export interface components {
             /** Password */
             password: string;
         };
+        /** StepInput */
+        StepInput: {
+            /** Text */
+            text: string;
+            /** Timer Seconds */
+            timer_seconds?: number | null;
+        };
+        /** StepResponse */
+        StepResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Text */
+            text: string;
+            /** Timer Seconds */
+            timer_seconds: number | null;
+        };
+        /**
+         * Unit
+         * @enum {string}
+         */
+        Unit: "g" | "kg" | "ml" | "l" | "cucchiaio" | "cucchiaino" | "tazza" | "pizzico" | "spicchio" | "pezzi";
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -1040,6 +1197,226 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    listRecipes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeSummary"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    createRecipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipeInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getRecipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updateRecipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipeInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    deleteRecipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

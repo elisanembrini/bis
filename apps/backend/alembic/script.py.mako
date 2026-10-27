@@ -1,7 +1,6 @@
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-
 from alembic import op
 ${imports if imports else ""}
 

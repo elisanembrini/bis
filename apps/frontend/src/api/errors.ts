@@ -25,6 +25,7 @@ const API_ERROR_CODES = {
   NOT_HOUSEHOLD_OWNER: true,
   MEMBER_NOT_FOUND: true,
   CANNOT_REMOVE_SELF: true,
+  RECIPE_NOT_FOUND: true,
 } satisfies Record<ApiErrorCode, true>;
 
 export const isApiErrorCode = (value: unknown): value is ApiErrorCode =>
