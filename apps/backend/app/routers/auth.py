@@ -27,12 +27,19 @@ Service = Annotated[AuthService, Depends(get_auth_service)]
     "/register",
     status_code=status.HTTP_201_CREATED,
     response_model=MeResponse,
-    responses={status.HTTP_409_CONFLICT: {"model": ErrorResponse}},
+    responses={
+        status.HTTP_404_NOT_FOUND: {"model": ErrorResponse},
+        status.HTTP_409_CONFLICT: {"model": ErrorResponse},
+        status.HTTP_410_GONE: {"model": ErrorResponse},
+    },
     operation_id="register",
 )
 def register(body: RegisterRequest, response: Response, service: Service) -> MeResponse:
     opened = service.register(
-        email=body.email, password=body.password, display_name=body.display_name
+        email=body.email,
+        password=body.password,
+        display_name=body.display_name,
+        invite_token=body.invite_token,
     )
     set_session_cookie(response, opened.token, opened.max_age_seconds)
     return service.describe(opened.user)

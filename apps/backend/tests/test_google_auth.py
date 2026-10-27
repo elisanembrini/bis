@@ -8,9 +8,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.security import OAUTH_STATE_COOKIE_NAME, SESSION_COOKIE_NAME
+from app.core.security import INVITE_COOKIE_NAME, OAUTH_STATE_COOKIE_NAME, SESSION_COOKIE_NAME
 from app.main import app
-from app.models import Household, HouseholdMember, User
+from app.models import Household, HouseholdMember, OAuthState, User
 from app.services.google_oauth import (
     GOOGLE_TOKEN_URL,
     GOOGLE_USERINFO_URL,
@@ -392,3 +392,85 @@ def test_http_client_reports_google_errors() -> None:
 
     with pytest.raises(GoogleOAuthError):
         client.exchange(code="scaduto", code_verifier="verifier")
+
+
+def owner_invite_token(client: TestClient) -> str:
+    client.post(
+        "/auth/register",
+        json={"email": "owner@example.com", "password": PASSWORD, "display_name": "Owner"},
+    )
+    url: str = client.post("/household/invites").json()["url"]
+    client.cookies.clear()
+    return url.rsplit("/", 1)[1]
+
+
+def start_with_invite(client: TestClient, invite_token: str) -> tuple[str, str]:
+    response = client.get(
+        "/auth/google/authorize", params={"invite_token": invite_token}, follow_redirects=False
+    )
+    state = parse_qs(urlsplit(response.headers["location"]).query)["state"][0]
+    return state, response.headers.get_list("set-cookie")[-1]
+
+
+def test_authorize_keeps_invite_token_in_http_only_cookie(
+    client: TestClient, google: FakeGoogleClient, db_session: Session
+) -> None:
+    _, invite_cookie = start_with_invite(client, "token-invito")
+
+    assert invite_cookie.startswith(f"{INVITE_COOKIE_NAME}=token-invito")
+    assert "HttpOnly" in invite_cookie
+    assert "Secure" in invite_cookie
+    stored = db_session.scalars(select(OAuthState)).one()
+    assert "token-invito" not in (stored.redirect or "")
+
+
+def test_new_google_user_with_invite_joins_household_directly(
+    client: TestClient, google: FakeGoogleClient, db_session: Session
+) -> None:
+    invite_token = owner_invite_token(client)
+    state, _ = start_with_invite(client, invite_token)
+
+    response = callback(client, state=state, code="auth-code")
+
+    assert response.headers["location"] == f"{FRONTEND_BASE_URL}/household"
+    me = client.get("/me").json()
+    assert me["household"]["role"] == "member"
+    anna = db_session.scalars(select(User).where(User.email == "anna@example.com")).one()
+    assert db_session.scalars(select(Household).where(Household.owner_id == anna.id)).all() == []
+
+
+def test_existing_user_with_invite_returns_to_invite_page_to_confirm(
+    client: TestClient, google: FakeGoogleClient
+) -> None:
+    invite_token = owner_invite_token(client)
+    register_with_password(client)
+    state, _ = start_with_invite(client, invite_token)
+
+    response = callback(client, state=state, code="auth-code")
+
+    assert response.headers["location"] == f"{FRONTEND_BASE_URL}/invite/{invite_token}"
+    assert client.get("/me").json()["household"]["role"] == "owner"
+    assert client.get(f"/household/invites/{invite_token}").status_code == 200
+
+
+def test_new_google_user_with_invalid_invite_gets_own_household(
+    client: TestClient, google: FakeGoogleClient
+) -> None:
+    state, _ = start_with_invite(client, "inventato")
+
+    response = callback(client, state=state, code="auth-code")
+
+    assert response.headers["location"] == f"{FRONTEND_BASE_URL}/invite/inventato"
+    assert client.get("/me").json()["household"]["role"] == "owner"
+
+
+def test_invite_cookie_is_cleared_after_callback(
+    client: TestClient, google: FakeGoogleClient
+) -> None:
+    state, _ = start_with_invite(client, owner_invite_token(client))
+
+    response = callback(client, state=state, code="auth-code")
+
+    cleared = [c for c in response.headers.get_list("set-cookie") if INVITE_COOKIE_NAME in c]
+    assert cleared
+    assert all('=""' in cookie for cookie in cleared)

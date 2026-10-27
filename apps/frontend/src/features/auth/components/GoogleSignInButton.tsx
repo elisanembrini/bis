@@ -5,6 +5,7 @@ import { googleAuthorizeHref } from "../google";
 
 type GoogleSignInButtonProps = {
   redirect?: string | undefined;
+  inviteToken?: string | undefined;
 };
 
 function GoogleLogo() {
@@ -30,13 +31,13 @@ function GoogleLogo() {
   );
 }
 
-export function GoogleSignInButton({ redirect }: GoogleSignInButtonProps) {
+export function GoogleSignInButton({ redirect, inviteToken }: GoogleSignInButtonProps) {
   const { t } = useTranslation("auth");
 
   return (
     <Button
       component="a"
-      href={googleAuthorizeHref(redirect)}
+      href={googleAuthorizeHref({ redirect, inviteToken })}
       variant="default"
       leftSection={<GoogleLogo />}
       fullWidth

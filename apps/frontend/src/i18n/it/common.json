@@ -1,3 +1,33 @@
 {
-  "appName": "Bis"
+  "appName": "Bis",
+  "actions": {
+    "cancel": "Annulla"
+  },
+  "nav": {
+    "home": "Home",
+    "household": "Casa"
+  },
+  "errors": {
+    "INVALID_CREDENTIALS": "Email o password non corretti.",
+    "TOO_MANY_ATTEMPTS": "Troppi tentativi di accesso. Riprova tra qualche minuto.",
+    "EMAIL_ALREADY_REGISTERED": "Esiste già un account con questa email.",
+    "RESET_TOKEN_INVALID": "Il link non è valido, è scaduto o è già stato usato.",
+    "UNAUTHENTICATED": "Devi accedere per continuare.",
+    "UNKNOWN": "Qualcosa è andato storto. Riprova.",
+    "GOOGLE_UNAVAILABLE": "L'accesso con Google non è disponibile.",
+    "GOOGLE_STATE_INVALID": "La richiesta di accesso con Google è scaduta o non è valida. Riprova.",
+    "GOOGLE_CANCELLED": "Accesso con Google annullato.",
+    "GOOGLE_EMAIL_NOT_VERIFIED": "Google non ha verificato questo indirizzo email, quindi non possiamo usarlo per l'accesso. Verifica l'email nel tuo account Google oppure accedi con email e password.",
+    "GOOGLE_ACCOUNT_CONFLICT": "Questa email è già collegata a un altro account Google.",
+    "GOOGLE_FAILED": "Non è stato possibile completare l'accesso con Google. Riprova.",
+    "INVITE_NOT_FOUND": "Questo invito non esiste. Controlla di aver copiato tutto il link.",
+    "INVITE_EXPIRED": "Questo invito è scaduto. Chiedi un nuovo link a chi ti ha invitato.",
+    "INVITE_USED": "Questo invito è già stato usato. Chiedi un nuovo link a chi ti ha invitato.",
+    "ALREADY_IN_HOUSEHOLD": "Fai già parte di questa casa.",
+    "MUST_LEAVE_HOUSEHOLD": "Fai parte di una casa con altre persone: per entrare devi prima lasciarla.",
+    "OWNER_CANNOT_LEAVE": "Chi è titolare della casa non può lasciarla.",
+    "NOT_HOUSEHOLD_OWNER": "Solo chi è titolare della casa può farlo.",
+    "MEMBER_NOT_FOUND": "Questa persona non fa più parte della casa.",
+    "CANNOT_REMOVE_SELF": "Non puoi rimuoverti dalla casa."
+  }
 }

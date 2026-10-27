@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Household, HouseholdMember, User
+from app.models import User
 
 
 def get_by_email(db: Session, email: str) -> User | None:
@@ -35,11 +35,3 @@ def add(
     db.add(user)
     db.flush()
     return user
-
-
-def get_household(db: Session, user_id: uuid.UUID) -> Household | None:
-    return db.scalar(
-        select(Household)
-        .join(HouseholdMember, HouseholdMember.household_id == Household.id)
-        .where(HouseholdMember.user_id == user_id)
-    )

@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
+import { FormError } from "../../../components/FormError";
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "../constants";
 import type { NewPasswordValues } from "../types";
-import { FormError } from "./FormError";
 
 type ResetPasswordFormProps = {
   onSubmit: (values: NewPasswordValues) => void;

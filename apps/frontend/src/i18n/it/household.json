@@ -1,0 +1,43 @@
+{
+  "title": "Casa",
+  "roles": {
+    "owner": "Titolare",
+    "member": "Membro"
+  },
+  "members": {
+    "title": "Chi vive qui",
+    "you": "tu",
+    "remove": "Rimuovi",
+    "removeAria": "Rimuovi {{name}}",
+    "removeTitle": "Rimuovere {{name}} dalla casa?",
+    "removeBody": "{{name}} avrà una nuova casa tutta sua e non vedrà più le ricette condivise in questa casa. Le sue ricette restano sue.",
+    "removeConfirm": "Rimuovi"
+  },
+  "invite": {
+    "title": "Invita qualcuno",
+    "description": "Genera un link e mandalo a chi vive con te. Il link vale 7 giorni e si può usare una sola volta.",
+    "generate": "Genera un link di invito",
+    "generateAnother": "Genera un altro link",
+    "linkLabel": "Link di invito",
+    "copy": "Copia",
+    "copied": "Copiato",
+    "expires": "Valido fino al {{date}}"
+  },
+  "leave": {
+    "button": "Esci dalla casa",
+    "title": "Uscire dalla casa?",
+    "body": "Avrai una nuova casa tutta tua e non vedrai più le ricette condivise in questa casa. Le tue ricette restano tue.",
+    "confirm": "Esci"
+  },
+  "invitePage": {
+    "title": "Invito",
+    "heading": "{{name}} ti invita nella sua casa su Bis",
+    "anonymous": "Per entrare nella casa registrati oppure accedi.",
+    "register": "Registrati",
+    "login": "Accedi",
+    "replaceWarning": "Entrando lascerai la tua casa attuale, dove non ci sono altre persone. Le tue ricette restano tue.",
+    "accept": "Entra nella casa",
+    "goToHousehold": "Vai alla tua casa",
+    "goToHome": "Vai alla pagina iniziale"
+  }
+}

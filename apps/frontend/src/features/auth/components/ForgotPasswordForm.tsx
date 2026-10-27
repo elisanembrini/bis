@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
+import { FormError } from "../../../components/FormError";
 import type { ForgotPasswordRequest } from "../types";
-import { FormError } from "./FormError";
 
 type ForgotPasswordFormProps = {
   onSubmit: (values: ForgotPasswordRequest) => void;

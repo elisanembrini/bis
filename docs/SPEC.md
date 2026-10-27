@@ -134,7 +134,7 @@ Ogni utente appartiene a una sola casa. Chi si registra senza invito diventa pro
 - `users`: id, email (unica), password_hash (nullable), google_sub (nullable, unico), display_name, created_at.
 - `households`: id, owner_id, created_at.
 - `household_members`: household_id, user_id (unico: un utente appartiene a una sola casa), joined_at.
-- `household_invites`: id, household_id, token_hash, created_by, expires_at, used_at (nullable).
+- `household_invites`: id, household_id, token_hash, created_by, created_at, expires_at, used_at (nullable), used_by (nullable). Nel database si salva solo l'hash del token.
 - `recipes`: id, owner_id, title, notes, prep_minutes, cook_minutes, servings (> 0), cover_photo_id (nullable), copied_from_recipe_id (nullable), created_at, updated_at.
 - `ingredients`: id, recipe_id, position, quantity (decimale, nullable per "q.b."), unit (nullable), name.
 - `steps`: id, recipe_id, position, text, timer_seconds (nullable), photo_id (nullable).
@@ -162,6 +162,7 @@ Eliminando una ricetta si eliminano a cascata ingredienti, passaggi, etichette a
 | GET    | /me                               | Autenticato                         | Utente corrente e casa                                                |
 | GET    | /household                        | Membro                              | Casa e membri                                                         |
 | POST   | /household/invites                | Proprietaria                        | Genera link di invito                                                 |
+| GET    | /household/invites/{token}        | Pubblico                            | Anteprima dell'invito: nome di chi invita                             |
 | POST   | /household/invites/{token}/accept | Autenticato                         | Accetta un invito                                                     |
 | DELETE | /household/members/{user_id}      | Proprietaria                        | Rimuove un membro                                                     |
 | POST   | /household/leave                  | Membro                              | Lascia la casa                                                        |

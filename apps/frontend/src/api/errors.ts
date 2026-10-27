@@ -16,6 +16,15 @@ const API_ERROR_CODES = {
   GOOGLE_EMAIL_NOT_VERIFIED: true,
   GOOGLE_ACCOUNT_CONFLICT: true,
   GOOGLE_FAILED: true,
+  INVITE_NOT_FOUND: true,
+  INVITE_EXPIRED: true,
+  INVITE_USED: true,
+  ALREADY_IN_HOUSEHOLD: true,
+  MUST_LEAVE_HOUSEHOLD: true,
+  OWNER_CANNOT_LEAVE: true,
+  NOT_HOUSEHOLD_OWNER: true,
+  MEMBER_NOT_FOUND: true,
+  CANNOT_REMOVE_SELF: true,
 } satisfies Record<ApiErrorCode, true>;
 
 export const isApiErrorCode = (value: unknown): value is ApiErrorCode =>

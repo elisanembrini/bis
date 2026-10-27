@@ -25,3 +25,11 @@ export const WithRedirect: Story = {
     await expect(link).toHaveAttribute("href", "/api/auth/google/authorize?redirect=%2Fricette");
   },
 };
+
+export const WithInvite: Story = {
+  args: { inviteToken: "abc-123" },
+  play: async ({ canvas }) => {
+    const link = await canvas.findByRole("link", { name: "Accedi con Google" });
+    await expect(link).toHaveAttribute("href", "/api/auth/google/authorize?invite_token=abc-123");
+  },
+};

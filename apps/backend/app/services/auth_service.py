@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.clock import Clock, get_clock
 from app.core.config import Settings, get_settings
 from app.core.errors import (
+    DomainError,
     EmailAlreadyRegisteredError,
     GoogleLoginError,
     InvalidCredentialsError,
@@ -28,11 +29,13 @@ from app.repositories import (
     sessions,
     users,
 )
-from app.schemas.auth import HouseholdRole, HouseholdSummary, MeResponse
+from app.schemas.auth import MeResponse
 from app.schemas.errors import ErrorCode
 from app.services.email_sender import EmailSender, get_email_sender
 from app.services.emails import build_password_reset_email, password_reset_link
 from app.services.google_oauth import GoogleIdentity, GoogleOAuthClient, GoogleOAuthError
+from app.services.household_service import HouseholdService
+from app.services.me import describe_user
 from app.services.password_hasher import PasswordHasher, get_password_hasher
 from app.services.pkce import code_challenge_s256, generate_code_verifier
 from app.services.tokens import generate_token, hash_token
@@ -56,6 +59,8 @@ class GoogleLoginStart:
 class GoogleLoginResult:
     opened: OpenedSession
     redirect: str | None
+    is_new_user: bool
+    joined_household: bool
 
 
 DISPLAY_NAME_MAX_LENGTH = 100
@@ -75,10 +80,15 @@ class AuthService:
         self._settings = settings
         self._hasher = hasher
         self._email_sender = email_sender
+        self._households = HouseholdService(db, clock, settings)
 
-    def register(self, *, email: str, password: str, display_name: str) -> OpenedSession:
+    def register(
+        self, *, email: str, password: str, display_name: str, invite_token: str | None = None
+    ) -> OpenedSession:
         if users.get_by_email(self._db, email) is not None:
             raise EmailAlreadyRegisteredError
+        if invite_token is not None:
+            self._households.ensure_invite_usable(invite_token)
         try:
             user = users.add(
                 self._db,
@@ -86,7 +96,7 @@ class AuthService:
                 password_hash=self._hasher.hash(password),
                 display_name=display_name,
             )
-            households.add_with_owner(self._db, user.id)
+            self._place_new_user(user, invite_token)
             opened = self._open_session(user, self._clock.now())
             self._db.commit()
         except IntegrityError as exc:
@@ -187,6 +197,7 @@ class AuthService:
         state_cookie: str | None,
         code: str | None,
         error: str | None,
+        invite_token: str | None = None,
     ) -> GoogleLoginResult:
         if not state or not state_cookie or not secrets.compare_digest(state, state_cookie):
             raise GoogleLoginError(ErrorCode.GOOGLE_STATE_INVALID)
@@ -206,15 +217,24 @@ class AuthService:
             identity = google.exchange(code=code, code_verifier=oauth_state.code_verifier)
         except GoogleOAuthError as exc:
             raise GoogleLoginError(ErrorCode.GOOGLE_FAILED) from exc
-        user = self._find_or_create_google_user(identity)
+        user, is_new_user, joined_household = self._find_or_create_google_user(
+            identity, invite_token
+        )
         opened = self._open_session(user, now)
         self._db.commit()
-        return GoogleLoginResult(opened=opened, redirect=oauth_state.redirect)
+        return GoogleLoginResult(
+            opened=opened,
+            redirect=oauth_state.redirect,
+            is_new_user=is_new_user,
+            joined_household=joined_household,
+        )
 
-    def _find_or_create_google_user(self, identity: GoogleIdentity) -> User:
+    def _find_or_create_google_user(
+        self, identity: GoogleIdentity, invite_token: str | None
+    ) -> tuple[User, bool, bool]:
         user = users.get_by_google_sub(self._db, identity.sub)
         if user is not None:
-            return user
+            return user, False, False
         if not identity.email_verified:
             raise GoogleLoginError(ErrorCode.GOOGLE_EMAIL_NOT_VERIFIED)
         email = identity.email.strip().lower()
@@ -223,7 +243,8 @@ class AuthService:
             if user.google_sub is not None:
                 raise GoogleLoginError(ErrorCode.GOOGLE_ACCOUNT_CONFLICT)
             user.google_sub = identity.sub
-            return user
+            return user, False, False
+        usable_invite = invite_token if self._invite_is_usable(invite_token) else None
         try:
             user = users.add(
                 self._db,
@@ -231,23 +252,29 @@ class AuthService:
                 google_sub=identity.sub,
                 display_name=_display_name_for(identity, email),
             )
-            households.add_with_owner(self._db, user.id)
+            self._place_new_user(user, usable_invite)
         except IntegrityError as exc:
             self._db.rollback()
             raise GoogleLoginError(ErrorCode.GOOGLE_FAILED) from exc
-        return user
+        return user, True, usable_invite is not None
+
+    def _invite_is_usable(self, invite_token: str | None) -> bool:
+        if invite_token is None:
+            return False
+        try:
+            self._households.ensure_invite_usable(invite_token)
+        except DomainError:
+            return False
+        return True
+
+    def _place_new_user(self, user: User, invite_token: str | None) -> None:
+        if invite_token is None:
+            households.add_with_owner(self._db, user.id)
+        else:
+            self._households.join_new_user(user.id, invite_token)
 
     def describe(self, user: User) -> MeResponse:
-        household = users.get_household(self._db, user.id)
-        if household is None:
-            raise RuntimeError(f"User {user.id} has no household")
-        role: HouseholdRole = "owner" if household.owner_id == user.id else "member"
-        return MeResponse(
-            id=user.id,
-            email=user.email,
-            display_name=user.display_name,
-            household=HouseholdSummary(id=household.id, role=role),
-        )
+        return describe_user(self._db, user)
 
     def _open_session(self, user: User, now: datetime) -> OpenedSession:
         token = generate_token()

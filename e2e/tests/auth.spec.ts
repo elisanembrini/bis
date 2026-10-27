@@ -13,7 +13,7 @@ test("registration, logout and login", async ({ page }) => {
 
   await expect(page.getByRole("heading", { name: "Ciao, Prova!" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Esci" }).click();
+  await page.getByRole("button", { name: "Esci", exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
 
   await page.goto("/");

@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
 import { AnchorLink } from "../../../components/AnchorLink";
+import { FormError } from "../../../components/FormError";
 import type { LoginRequest } from "../types";
-import { FormError } from "./FormError";
 
 type LoginFormProps = {
   onSubmit: (values: LoginRequest) => void;

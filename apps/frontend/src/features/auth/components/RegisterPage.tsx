@@ -10,23 +10,31 @@ import { GoogleSignInButton } from "./GoogleSignInButton";
 import { OrDivider } from "./OrDivider";
 import { RegisterForm } from "./RegisterForm";
 
-export function RegisterPage() {
+type RegisterPageProps = {
+  inviteToken: string | undefined;
+};
+
+export function RegisterPage({ inviteToken }: RegisterPageProps) {
   const { t } = useTranslation("auth");
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const register = $api.useMutation("post", "/auth/register", {
     onSuccess: (me) => {
       queryClient.setQueryData(meQueryOptions().queryKey, me);
-      void navigate({ to: "/" });
+      void navigate({ to: inviteToken === undefined ? "/" : "/household" });
     },
   });
 
   return (
     <AuthPageLayout title={t("register.title")}>
-      <GoogleSignInButton />
+      <GoogleSignInButton inviteToken={inviteToken} />
       <OrDivider />
       <RegisterForm
-        onSubmit={(body) => register.mutate({ body })}
+        onSubmit={(values) =>
+          register.mutate({
+            body: inviteToken === undefined ? values : { ...values, invite_token: inviteToken },
+          })
+        }
         isSubmitting={register.isPending}
         errorCode={register.isError ? errorCodeOf(register.error) : undefined}
       />

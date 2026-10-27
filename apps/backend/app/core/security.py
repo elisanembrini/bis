@@ -7,14 +7,16 @@ from fastapi.security import APIKeyCookie
 from sqlalchemy.orm import Session
 
 from app.core.clock import Clock, get_clock
-from app.core.errors import UnauthenticatedError
+from app.core.errors import NotHouseholdOwnerError, UnauthenticatedError
 from app.db import get_db
 from app.models import User
-from app.repositories import sessions, users
+from app.repositories import households, sessions, users
+from app.services.household_service import Membership
 from app.services.tokens import hash_token
 
 SESSION_COOKIE_NAME = "bis_session"
 OAUTH_STATE_COOKIE_NAME = "bis_oauth_state"
+INVITE_COOKIE_NAME = "bis_invite"
 
 session_cookie = APIKeyCookie(name=SESSION_COOKIE_NAME, auto_error=False)
 
@@ -57,6 +59,22 @@ def _clear_cookie(response: Response, name: str) -> None:
     response.delete_cookie(key=name, path="/", httponly=True, secure=True, samesite="lax")
 
 
+def get_membership(
+    authenticated: Annotated[Authenticated, Depends(get_authenticated)],
+    db: Annotated[Session, Depends(get_db)],
+) -> Membership:
+    household = households.get_for_user(db, authenticated.user.id)
+    if household is None:
+        raise RuntimeError(f"User {authenticated.user.id} has no household")
+    return Membership(user=authenticated.user, household=household)
+
+
+def require_owner(membership: Annotated[Membership, Depends(get_membership)]) -> Membership:
+    if not membership.is_owner:
+        raise NotHouseholdOwnerError
+    return membership
+
+
 def set_session_cookie(response: Response, token: str, max_age_seconds: int) -> None:
     _set_cookie(response, SESSION_COOKIE_NAME, token, max_age_seconds)
 
@@ -71,3 +89,11 @@ def set_oauth_state_cookie(response: Response, state: str, max_age_seconds: int)
 
 def clear_oauth_state_cookie(response: Response) -> None:
     _clear_cookie(response, OAUTH_STATE_COOKIE_NAME)
+
+
+def set_invite_cookie(response: Response, token: str, max_age_seconds: int) -> None:
+    _set_cookie(response, INVITE_COOKIE_NAME, token, max_age_seconds)
+
+
+def clear_invite_cookie(response: Response) -> None:
+    _clear_cookie(response, INVITE_COOKIE_NAME)

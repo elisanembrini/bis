@@ -1,14 +1,14 @@
 import { Alert } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
-import type { AppErrorCode } from "../../../api/errors";
+import type { AppErrorCode } from "../api/errors";
 
 type FormErrorProps = {
   code: AppErrorCode | undefined;
 };
 
 export function FormError({ code }: FormErrorProps) {
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation();
 
   if (code === undefined) {
     return null;

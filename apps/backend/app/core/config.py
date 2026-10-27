@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     session_ttl_days: int = 30
 
     password_reset_ttl_minutes: int = 60
+    invite_ttl_days: int = 7
 
     login_window_minutes: int = 15
     login_max_failures_per_email: int = 5

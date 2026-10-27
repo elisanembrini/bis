@@ -20,6 +20,7 @@ class RegisterRequest(BaseModel):
     email: NormalizedEmail
     password: NewPassword
     display_name: DisplayName
+    invite_token: Annotated[str, Field(min_length=1, max_length=200)] | None = None
 
 
 class LoginRequest(BaseModel):

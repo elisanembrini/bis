@@ -48,6 +48,60 @@ class UnauthenticatedError(DomainError):
     message = "Accesso richiesto."
 
 
+class InviteNotFoundError(DomainError):
+    status_code = 404
+    code = ErrorCode.INVITE_NOT_FOUND
+    message = "Questo invito non esiste."
+
+
+class InviteExpiredError(DomainError):
+    status_code = 410
+    code = ErrorCode.INVITE_EXPIRED
+    message = "Questo invito è scaduto."
+
+
+class InviteUsedError(DomainError):
+    status_code = 410
+    code = ErrorCode.INVITE_USED
+    message = "Questo invito è già stato usato."
+
+
+class AlreadyInHouseholdError(DomainError):
+    status_code = 409
+    code = ErrorCode.ALREADY_IN_HOUSEHOLD
+    message = "Fai già parte di questa casa."
+
+
+class MustLeaveHouseholdError(DomainError):
+    status_code = 409
+    code = ErrorCode.MUST_LEAVE_HOUSEHOLD
+    message = "Per entrare in questa casa devi prima lasciare quella attuale."
+
+
+class OwnerCannotLeaveError(DomainError):
+    status_code = 409
+    code = ErrorCode.OWNER_CANNOT_LEAVE
+    message = "Chi è titolare della casa non può lasciarla."
+
+
+class NotHouseholdOwnerError(DomainError):
+    status_code = 403
+    code = ErrorCode.NOT_HOUSEHOLD_OWNER
+    message = "Solo chi è titolare della casa può farlo."
+
+
+class MemberNotFoundError(DomainError):
+    status_code = 404
+    code = ErrorCode.MEMBER_NOT_FOUND
+    message = "Questa persona non fa parte della casa."
+
+
+class CannotRemoveSelfError(DomainError):
+    status_code = 400
+    code = ErrorCode.CANNOT_REMOVE_SELF
+    message = "Non puoi rimuoverti dalla casa."
+
+
 class GoogleLoginError(Exception):
     def __init__(self, code: ErrorCode) -> None:
         super().__init__(code)
