@@ -7,6 +7,7 @@ import { $api } from "../../../api/client";
 import { errorCodeOf } from "../../../api/errors";
 import { FormError } from "../../../components/FormError";
 import { PageContainer } from "../../../components/PageContainer";
+import { unlockAudio } from "../../cooking/audio";
 import { useDeleteRecipe } from "../hooks/useRecipeMutations";
 import { recipeQueryOptions, recipeSharesQueryOptions, recipesQueryOptions } from "../queries";
 import { RecipeDetail } from "./RecipeDetail";
@@ -15,9 +16,16 @@ import { ShareDialog } from "./ShareDialog";
 type RecipeDetailPageProps = {
   recipeId: string;
   justCopied: boolean;
+  servings: number | undefined;
+  onServingsChange: (servings: number) => void;
 };
 
-export function RecipeDetailPage({ recipeId, justCopied }: RecipeDetailPageProps) {
+export function RecipeDetailPage({
+  recipeId,
+  justCopied,
+  servings,
+  onServingsChange,
+}: RecipeDetailPageProps) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [sharing, setSharing] = useState(false);
@@ -66,6 +74,9 @@ export function RecipeDetailPage({ recipeId, justCopied }: RecipeDetailPageProps
         isDeleting={deleteRecipe.isPending}
         isCopying={copy.isPending}
         justCopied={justCopied}
+        servings={servings}
+        onServingsChange={onServingsChange}
+        onStartCooking={unlockAudio}
         sharedWith={
           shares.data
             ?.filter((candidate) => candidate.shared)

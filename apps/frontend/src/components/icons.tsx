@@ -11,6 +11,13 @@ import {
   IconShare,
   IconUsers,
   IconX,
+  IconClock,
+  IconMicrophone,
+  IconMicrophoneOff,
+  IconArrowLeft,
+  IconArrowRight,
+  IconList,
+  IconChefHat,
   type IconProps,
 } from "@tabler/icons-react";
 
@@ -65,4 +72,32 @@ export function SuccessIcon(props: BisIconProps) {
 
 export function InfoIcon(props: BisIconProps) {
   return <IconInfoCircle size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
+}
+
+export function ClockIcon(props: BisIconProps) {
+  return <IconClock size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
+}
+
+export function MicrophoneIcon(props: BisIconProps) {
+  return <IconMicrophone size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
+}
+
+export function MicrophoneOffIcon(props: BisIconProps) {
+  return <IconMicrophoneOff size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
+}
+
+export function ArrowLeftIcon(props: BisIconProps) {
+  return <IconArrowLeft size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
+}
+
+export function ArrowRightIcon(props: BisIconProps) {
+  return <IconArrowRight size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
+}
+
+export function ListIcon(props: BisIconProps) {
+  return <IconList size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
+}
+
+export function ChefIcon(props: BisIconProps) {
+  return <IconChefHat size={ICON_SIZE} stroke={ICON_STROKE} aria-hidden {...props} />;
 }

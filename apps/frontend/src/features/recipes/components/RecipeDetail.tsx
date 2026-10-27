@@ -1,7 +1,6 @@
 import {
   AspectRatio,
   Badge,
-  Box,
   Button,
   Group,
   Image,
@@ -10,6 +9,7 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+import { useUncontrolled } from "@mantine/hooks";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,14 +19,13 @@ import { ButtonLink } from "../../../components/ButtonLink";
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { FormError } from "../../../components/FormError";
 import { HandwrittenTitle } from "../../../components/HandwrittenTitle";
-import { ShareIcon } from "../../../components/icons";
+import { ChefIcon, ShareIcon } from "../../../components/icons";
 import { InfoMessage, SuccessMessage } from "../../../components/Messages";
 import { FullBleed } from "../../../components/PageContainer";
 import { SectionTitle } from "../../../components/SectionTitle";
 import { useFormatDuration } from "../hooks/useFormatDuration";
-import { useFormatAmount } from "../hooks/useFormatIngredient";
-import { scaleQuantity } from "../servings";
 import type { RecipeResponse } from "../types";
+import { IngredientList } from "./IngredientList";
 import { ServingsSelector } from "./ServingsSelector";
 
 import classes from "./RecipeDetail.module.css";
@@ -42,6 +41,9 @@ type RecipeDetailProps = {
   sharedWith?: string[];
   errorCode?: AppErrorCode | undefined;
   photoSrc?: (photoId: string) => string;
+  servings?: number | undefined;
+  onServingsChange?: (servings: number) => void;
+  onStartCooking?: () => void;
 };
 
 const NOBODY: string[] = [];
@@ -61,12 +63,19 @@ export function RecipeDetail({
   sharedWith = NOBODY,
   errorCode,
   photoSrc = defaultPhotoSrc,
+  servings: controlledServings,
+  onServingsChange,
+  onStartCooking,
 }: RecipeDetailProps) {
   const { t } = useTranslation("recipes");
   const formatDuration = useFormatDuration();
-  const formatAmount = useFormatAmount();
   const [confirming, setConfirming] = useState(false);
-  const [servings, setServings] = useState(recipe.servings);
+  const [servings, setServings] = useUncontrolled({
+    ...(controlledServings === undefined ? {} : { value: controlledServings }),
+    ...(onServingsChange === undefined ? {} : { onChange: onServingsChange }),
+    defaultValue: recipe.servings,
+    finalValue: recipe.servings,
+  });
   const times = [
     recipe.prep_minutes
       ? t("detail.prep", { duration: formatDuration(recipe.prep_minutes * 60) })
@@ -103,6 +112,15 @@ export function RecipeDetail({
           </Group>
         )}
       </Stack>
+      <ButtonLink
+        to="/recipes/$recipeId/cook"
+        params={{ recipeId: recipe.id }}
+        search={{ step: 1, servings }}
+        onClick={onStartCooking}
+        leftSection={<ChefIcon />}
+      >
+        {t("detail.startCooking")}
+      </ButtonLink>
       {justCopied && <SuccessMessage title={t("detail.copied")} />}
       {!recipe.is_own && (
         <InfoMessage title={t("detail.sharedWithMe", { name: recipe.author.display_name })} />
@@ -145,24 +163,11 @@ export function RecipeDetail({
       <Stack gap="xs">
         <SectionTitle>{t("detail.ingredients")}</SectionTitle>
         <ServingsSelector value={servings} original={recipe.servings} onChange={setServings} />
-        <Box component="ul" p={0} m={0} aria-label={t("detail.ingredients")}>
-          {recipe.ingredients.map((ingredient) => (
-            <li key={ingredient.id} className={classes.ingredient}>
-              <span>{ingredient.name}</span>{" "}
-              <span className={classes.amount}>
-                {formatAmount({
-                  quantity: scaleQuantity(
-                    ingredient.quantity,
-                    ingredient.unit,
-                    recipe.servings,
-                    servings,
-                  ),
-                  unit: ingredient.unit,
-                })}
-              </span>
-            </li>
-          ))}
-        </Box>
+        <IngredientList
+          ingredients={recipe.ingredients}
+          originalServings={recipe.servings}
+          servings={servings}
+        />
       </Stack>
 
       <Stack gap="xs">

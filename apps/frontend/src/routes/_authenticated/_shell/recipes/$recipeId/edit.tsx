@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { RecipeEditorPage } from "../../../../features/recipes/components/RecipeEditorPage";
-import { recipeToForm } from "../../../../features/recipes/form";
-import { recipeQueryOptions } from "../../../../features/recipes/queries";
-import { tagsQueryOptions } from "../../../../features/tags/queries";
+import { RecipeEditorPage } from "../../../../../features/recipes/components/RecipeEditorPage";
+import { recipeToForm } from "../../../../../features/recipes/form";
+import { recipeQueryOptions } from "../../../../../features/recipes/queries";
+import { tagsQueryOptions } from "../../../../../features/tags/queries";
 
-export const Route = createFileRoute("/_authenticated/recipes/$recipeId/edit")({
+export const Route = createFileRoute("/_authenticated/_shell/recipes/$recipeId/edit")({
   loader: async ({ context, params }) => {
     await context.queryClient.ensureQueryData(tagsQueryOptions());
     return context.queryClient.ensureQueryData(recipeQueryOptions(params.recipeId));

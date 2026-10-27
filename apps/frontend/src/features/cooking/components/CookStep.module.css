@@ -1,0 +1,12 @@
+.number {
+  font-family: var(--bis-font-scrittura-a-mano);
+  font-weight: 700;
+  font-size: rem(48px);
+  line-height: 1;
+  color: var(--mantine-color-inchiostro-6);
+}
+
+.text {
+  font-size: rem(28px);
+  line-height: 1.4;
+}

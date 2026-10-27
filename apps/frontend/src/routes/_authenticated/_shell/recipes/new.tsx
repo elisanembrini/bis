@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { RecipeEditorPage } from "../../../features/recipes/components/RecipeEditorPage";
-import { emptyRecipeForm } from "../../../features/recipes/form";
-import { tagsQueryOptions } from "../../../features/tags/queries";
+import { RecipeEditorPage } from "../../../../features/recipes/components/RecipeEditorPage";
+import { emptyRecipeForm } from "../../../../features/recipes/form";
+import { tagsQueryOptions } from "../../../../features/tags/queries";
 
-export const Route = createFileRoute("/_authenticated/recipes/new")({
+export const Route = createFileRoute("/_authenticated/_shell/recipes/new")({
   loader: ({ context }) => context.queryClient.ensureQueryData(tagsQueryOptions()),
   component: NewRecipeRoute,
 });

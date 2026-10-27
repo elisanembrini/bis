@@ -30,6 +30,17 @@ export const Complete: Story = {
   },
 };
 
+export const StartCooking: Story = {
+  args: { servings: 2, onServingsChange: fn() },
+  play: async ({ canvas }) => {
+    await expect(await canvas.findByText("2 porzioni")).toBeVisible();
+    await expect(canvas.getByRole("link", { name: "Inizia a cucinare" })).toHaveAttribute(
+      "href",
+      "/recipes/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa/cook?step=1&servings=2",
+    );
+  },
+};
+
 export const WithPhotos: Story = {
   args: {
     recipe: pastaWithPhotos,

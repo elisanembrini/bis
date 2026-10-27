@@ -1,0 +1,33 @@
+{
+  "start": "Inizia a cucinare",
+  "stepOf": "Passaggio {{current}} di {{total}}",
+  "stepNumberOf": "di {{total}}",
+  "ingredients": "Ingredienti",
+  "exit": "Esci",
+  "previous": "Indietro",
+  "next": "Avanti",
+  "finish": "Fine",
+  "startTimer": "Avvia timer · {{time}}",
+  "timerRunning": "Timer in corso",
+  "timers": "Timer",
+  "timerLabel": "Passaggio {{number}}",
+  "stopTimer": "Ferma il timer del passaggio {{number}}",
+  "timerFinished": "Timer finito: passaggio {{number}}",
+  "dismiss": "OK",
+  "photoAlt": "Foto del passaggio {{number}}",
+  "exitTitle": "Uscire dalla modalità cucina?",
+  "exitBody_one": "Hai un timer in corso: uscendo si ferma.",
+  "exitBody_other": "Hai {{count}} timer in corso: uscendo si fermano.",
+  "exitConfirm": "Esci",
+  "voice": {
+    "label": "Comandi vocali",
+    "enable": "Attiva i comandi vocali",
+    "disable": "Disattiva i comandi vocali",
+    "listening": "In ascolto: di' «avanti», «indietro», «ripeti» o «avvia timer».",
+    "speaking": "Sto leggendo il passaggio…",
+    "note": "Il riconoscimento vocale può usare servizi del browser.",
+    "unsupported": "Questo browser non riconosce i comandi vocali: usa i pulsanti.",
+    "denied": "Il microfono non è autorizzato. Puoi abilitarlo dalle impostazioni del browser; intanto usa i pulsanti.",
+    "error": "Il riconoscimento vocale si è interrotto e riprova da solo. Puoi sempre usare i pulsanti."
+  }
+}

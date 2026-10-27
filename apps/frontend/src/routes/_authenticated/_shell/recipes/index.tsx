@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { RecipesPage } from "../../../features/recipes/components/RecipesPage";
-import { recipesQueryOptions } from "../../../features/recipes/queries";
-import { validateRecipesSearch } from "../../../features/recipes/recipesSearch";
-import { tagsQueryOptions } from "../../../features/tags/queries";
+import { RecipesPage } from "../../../../features/recipes/components/RecipesPage";
+import { recipesQueryOptions } from "../../../../features/recipes/queries";
+import { validateRecipesSearch } from "../../../../features/recipes/recipesSearch";
+import { tagsQueryOptions } from "../../../../features/tags/queries";
 
-export const Route = createFileRoute("/_authenticated/recipes/")({
+export const Route = createFileRoute("/_authenticated/_shell/recipes/")({
   validateSearch: validateRecipesSearch,
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) =>

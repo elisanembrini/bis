@@ -33,7 +33,8 @@
     "copy": "Fai il bis",
     "copied": "Fatto! Ora la ricetta è nel tuo ricettario e puoi modificarla.",
     "share": "Condividi",
-    "sharedWith": "Condivisa con {{names}}"
+    "sharedWith": "Condivisa con {{names}}",
+    "startCooking": "Inizia a cucinare"
   },
   "editor": {
     "newTitle": "Nuova ricetta",

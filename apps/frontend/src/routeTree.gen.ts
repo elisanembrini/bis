@@ -15,14 +15,16 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as StatusRouteImport } from './routes/status'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedHouseholdRouteImport } from './routes/_authenticated/household'
-import { Route as AuthenticatedTagsRouteImport } from './routes/_authenticated/tags'
+import { Route as AuthenticatedShellRouteImport } from './routes/_authenticated/_shell'
 import { Route as InviteTokenRouteImport } from './routes/invite/$token'
-import { Route as AuthenticatedRecipesIndexRouteImport } from './routes/_authenticated/recipes/index'
-import { Route as AuthenticatedRecipesNewRouteImport } from './routes/_authenticated/recipes/new'
-import { Route as AuthenticatedRecipesRecipeIdIndexRouteImport } from './routes/_authenticated/recipes/$recipeId/index'
-import { Route as AuthenticatedRecipesRecipeIdEditRouteImport } from './routes/_authenticated/recipes/$recipeId/edit'
+import { Route as AuthenticatedShellIndexRouteImport } from './routes/_authenticated/_shell/index'
+import { Route as AuthenticatedShellHouseholdRouteImport } from './routes/_authenticated/_shell/household'
+import { Route as AuthenticatedShellTagsRouteImport } from './routes/_authenticated/_shell/tags'
+import { Route as AuthenticatedShellRecipesIndexRouteImport } from './routes/_authenticated/_shell/recipes/index'
+import { Route as AuthenticatedShellRecipesNewRouteImport } from './routes/_authenticated/_shell/recipes/new'
+import { Route as AuthenticatedRecipesRecipeIdCookRouteImport } from './routes/_authenticated/recipes.$recipeId.cook'
+import { Route as AuthenticatedShellRecipesRecipeIdIndexRouteImport } from './routes/_authenticated/_shell/recipes/$recipeId/index'
+import { Route as AuthenticatedShellRecipesRecipeIdEditRouteImport } from './routes/_authenticated/_shell/recipes/$recipeId/edit'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -53,19 +55,8 @@ const StatusRoute = StatusRouteImport.update({
   path: '/status',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedHouseholdRoute = AuthenticatedHouseholdRouteImport.update({
-  id: '/household',
-  path: '/household',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedTagsRoute = AuthenticatedTagsRouteImport.update({
-  id: '/tags',
-  path: '/tags',
+const AuthenticatedShellRoute = AuthenticatedShellRouteImport.update({
+  id: '/_shell',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const InviteTokenRoute = InviteTokenRouteImport.update({
@@ -73,59 +64,84 @@ const InviteTokenRoute = InviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRecipesIndexRoute =
-  AuthenticatedRecipesIndexRouteImport.update({
+const AuthenticatedShellIndexRoute = AuthenticatedShellIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedShellRoute,
+} as any)
+const AuthenticatedShellHouseholdRoute =
+  AuthenticatedShellHouseholdRouteImport.update({
+    id: '/household',
+    path: '/household',
+    getParentRoute: () => AuthenticatedShellRoute,
+  } as any)
+const AuthenticatedShellTagsRoute = AuthenticatedShellTagsRouteImport.update({
+  id: '/tags',
+  path: '/tags',
+  getParentRoute: () => AuthenticatedShellRoute,
+} as any)
+const AuthenticatedShellRecipesIndexRoute =
+  AuthenticatedShellRecipesIndexRouteImport.update({
     id: '/recipes/',
     path: '/recipes/',
+    getParentRoute: () => AuthenticatedShellRoute,
+  } as any)
+const AuthenticatedShellRecipesNewRoute =
+  AuthenticatedShellRecipesNewRouteImport.update({
+    id: '/recipes/new',
+    path: '/recipes/new',
+    getParentRoute: () => AuthenticatedShellRoute,
+  } as any)
+const AuthenticatedRecipesRecipeIdCookRoute =
+  AuthenticatedRecipesRecipeIdCookRouteImport.update({
+    id: '/recipes/$recipeId/cook',
+    path: '/recipes/$recipeId/cook',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedRecipesNewRoute = AuthenticatedRecipesNewRouteImport.update({
-  id: '/recipes/new',
-  path: '/recipes/new',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedRecipesRecipeIdIndexRoute =
-  AuthenticatedRecipesRecipeIdIndexRouteImport.update({
+const AuthenticatedShellRecipesRecipeIdIndexRoute =
+  AuthenticatedShellRecipesRecipeIdIndexRouteImport.update({
     id: '/recipes/$recipeId/',
     path: '/recipes/$recipeId/',
-    getParentRoute: () => AuthenticatedRoute,
+    getParentRoute: () => AuthenticatedShellRoute,
   } as any)
-const AuthenticatedRecipesRecipeIdEditRoute =
-  AuthenticatedRecipesRecipeIdEditRouteImport.update({
+const AuthenticatedShellRecipesRecipeIdEditRoute =
+  AuthenticatedShellRecipesRecipeIdEditRouteImport.update({
     id: '/recipes/$recipeId/edit',
     path: '/recipes/$recipeId/edit',
-    getParentRoute: () => AuthenticatedRoute,
+    getParentRoute: () => AuthenticatedShellRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedIndexRoute
+  '/': typeof AuthenticatedShellIndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/status': typeof StatusRoute
-  '/household': typeof AuthenticatedHouseholdRoute
-  '/tags': typeof AuthenticatedTagsRoute
   '/invite/$token': typeof InviteTokenRoute
-  '/recipes/new': typeof AuthenticatedRecipesNewRoute
-  '/recipes/': typeof AuthenticatedRecipesIndexRoute
-  '/recipes/$recipeId/edit': typeof AuthenticatedRecipesRecipeIdEditRoute
-  '/recipes/$recipeId/': typeof AuthenticatedRecipesRecipeIdIndexRoute
+  '/household': typeof AuthenticatedShellHouseholdRoute
+  '/tags': typeof AuthenticatedShellTagsRoute
+  '/recipes/new': typeof AuthenticatedShellRecipesNewRoute
+  '/recipes/$recipeId/cook': typeof AuthenticatedRecipesRecipeIdCookRoute
+  '/recipes/': typeof AuthenticatedShellRecipesIndexRoute
+  '/recipes/$recipeId/edit': typeof AuthenticatedShellRecipesRecipeIdEditRoute
+  '/recipes/$recipeId/': typeof AuthenticatedShellRecipesRecipeIdIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof AuthenticatedShellIndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/status': typeof StatusRoute
-  '/household': typeof AuthenticatedHouseholdRoute
-  '/tags': typeof AuthenticatedTagsRoute
   '/invite/$token': typeof InviteTokenRoute
-  '/': typeof AuthenticatedIndexRoute
-  '/recipes/new': typeof AuthenticatedRecipesNewRoute
-  '/recipes': typeof AuthenticatedRecipesIndexRoute
-  '/recipes/$recipeId/edit': typeof AuthenticatedRecipesRecipeIdEditRoute
-  '/recipes/$recipeId': typeof AuthenticatedRecipesRecipeIdIndexRoute
+  '/household': typeof AuthenticatedShellHouseholdRoute
+  '/tags': typeof AuthenticatedShellTagsRoute
+  '/recipes/new': typeof AuthenticatedShellRecipesNewRoute
+  '/recipes/$recipeId/cook': typeof AuthenticatedRecipesRecipeIdCookRoute
+  '/recipes': typeof AuthenticatedShellRecipesIndexRoute
+  '/recipes/$recipeId/edit': typeof AuthenticatedShellRecipesRecipeIdEditRoute
+  '/recipes/$recipeId': typeof AuthenticatedShellRecipesRecipeIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -135,14 +151,16 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/status': typeof StatusRoute
-  '/_authenticated/household': typeof AuthenticatedHouseholdRoute
-  '/_authenticated/tags': typeof AuthenticatedTagsRoute
+  '/_authenticated/_shell': typeof AuthenticatedShellRouteWithChildren
   '/invite/$token': typeof InviteTokenRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/recipes/new': typeof AuthenticatedRecipesNewRoute
-  '/_authenticated/recipes/': typeof AuthenticatedRecipesIndexRoute
-  '/_authenticated/recipes/$recipeId/edit': typeof AuthenticatedRecipesRecipeIdEditRoute
-  '/_authenticated/recipes/$recipeId/': typeof AuthenticatedRecipesRecipeIdIndexRoute
+  '/_authenticated/_shell/household': typeof AuthenticatedShellHouseholdRoute
+  '/_authenticated/_shell/tags': typeof AuthenticatedShellTagsRoute
+  '/_authenticated/_shell/': typeof AuthenticatedShellIndexRoute
+  '/_authenticated/_shell/recipes/new': typeof AuthenticatedShellRecipesNewRoute
+  '/_authenticated/recipes/$recipeId/cook': typeof AuthenticatedRecipesRecipeIdCookRoute
+  '/_authenticated/_shell/recipes/': typeof AuthenticatedShellRecipesIndexRoute
+  '/_authenticated/_shell/recipes/$recipeId/edit': typeof AuthenticatedShellRecipesRecipeIdEditRoute
+  '/_authenticated/_shell/recipes/$recipeId/': typeof AuthenticatedShellRecipesRecipeIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -153,25 +171,27 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/status'
+    | '/invite/$token'
     | '/household'
     | '/tags'
-    | '/invite/$token'
     | '/recipes/new'
+    | '/recipes/$recipeId/cook'
     | '/recipes/'
     | '/recipes/$recipeId/edit'
     | '/recipes/$recipeId/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/forgot-password'
     | '/login'
     | '/register'
     | '/reset-password'
     | '/status'
+    | '/invite/$token'
     | '/household'
     | '/tags'
-    | '/invite/$token'
-    | '/'
     | '/recipes/new'
+    | '/recipes/$recipeId/cook'
     | '/recipes'
     | '/recipes/$recipeId/edit'
     | '/recipes/$recipeId'
@@ -183,14 +203,16 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/status'
-    | '/_authenticated/household'
-    | '/_authenticated/tags'
+    | '/_authenticated/_shell'
     | '/invite/$token'
-    | '/_authenticated/'
-    | '/_authenticated/recipes/new'
-    | '/_authenticated/recipes/'
-    | '/_authenticated/recipes/$recipeId/edit'
-    | '/_authenticated/recipes/$recipeId/'
+    | '/_authenticated/_shell/household'
+    | '/_authenticated/_shell/tags'
+    | '/_authenticated/_shell/'
+    | '/_authenticated/_shell/recipes/new'
+    | '/_authenticated/recipes/$recipeId/cook'
+    | '/_authenticated/_shell/recipes/'
+    | '/_authenticated/_shell/recipes/$recipeId/edit'
+    | '/_authenticated/_shell/recipes/$recipeId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -247,25 +269,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatusRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
+    '/_authenticated/_shell': {
+      id: '/_authenticated/_shell'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/household': {
-      id: '/_authenticated/household'
-      path: '/household'
-      fullPath: '/household'
-      preLoaderRoute: typeof AuthenticatedHouseholdRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/tags': {
-      id: '/_authenticated/tags'
-      path: '/tags'
-      fullPath: '/tags'
-      preLoaderRoute: typeof AuthenticatedTagsRouteImport
+      preLoaderRoute: typeof AuthenticatedShellRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/invite/$token': {
@@ -275,56 +283,98 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/recipes/': {
-      id: '/_authenticated/recipes/'
+    '/_authenticated/_shell/': {
+      id: '/_authenticated/_shell/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedShellIndexRouteImport
+      parentRoute: typeof AuthenticatedShellRoute
+    }
+    '/_authenticated/_shell/household': {
+      id: '/_authenticated/_shell/household'
+      path: '/household'
+      fullPath: '/household'
+      preLoaderRoute: typeof AuthenticatedShellHouseholdRouteImport
+      parentRoute: typeof AuthenticatedShellRoute
+    }
+    '/_authenticated/_shell/tags': {
+      id: '/_authenticated/_shell/tags'
+      path: '/tags'
+      fullPath: '/tags'
+      preLoaderRoute: typeof AuthenticatedShellTagsRouteImport
+      parentRoute: typeof AuthenticatedShellRoute
+    }
+    '/_authenticated/_shell/recipes/': {
+      id: '/_authenticated/_shell/recipes/'
       path: '/recipes'
       fullPath: '/recipes/'
-      preLoaderRoute: typeof AuthenticatedRecipesIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      preLoaderRoute: typeof AuthenticatedShellRecipesIndexRouteImport
+      parentRoute: typeof AuthenticatedShellRoute
     }
-    '/_authenticated/recipes/new': {
-      id: '/_authenticated/recipes/new'
+    '/_authenticated/_shell/recipes/new': {
+      id: '/_authenticated/_shell/recipes/new'
       path: '/recipes/new'
       fullPath: '/recipes/new'
-      preLoaderRoute: typeof AuthenticatedRecipesNewRouteImport
+      preLoaderRoute: typeof AuthenticatedShellRecipesNewRouteImport
+      parentRoute: typeof AuthenticatedShellRoute
+    }
+    '/_authenticated/recipes/$recipeId/cook': {
+      id: '/_authenticated/recipes/$recipeId/cook'
+      path: '/recipes/$recipeId/cook'
+      fullPath: '/recipes/$recipeId/cook'
+      preLoaderRoute: typeof AuthenticatedRecipesRecipeIdCookRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/recipes/$recipeId/': {
-      id: '/_authenticated/recipes/$recipeId/'
+    '/_authenticated/_shell/recipes/$recipeId/': {
+      id: '/_authenticated/_shell/recipes/$recipeId/'
       path: '/recipes/$recipeId'
       fullPath: '/recipes/$recipeId/'
-      preLoaderRoute: typeof AuthenticatedRecipesRecipeIdIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      preLoaderRoute: typeof AuthenticatedShellRecipesRecipeIdIndexRouteImport
+      parentRoute: typeof AuthenticatedShellRoute
     }
-    '/_authenticated/recipes/$recipeId/edit': {
-      id: '/_authenticated/recipes/$recipeId/edit'
+    '/_authenticated/_shell/recipes/$recipeId/edit': {
+      id: '/_authenticated/_shell/recipes/$recipeId/edit'
       path: '/recipes/$recipeId/edit'
       fullPath: '/recipes/$recipeId/edit'
-      preLoaderRoute: typeof AuthenticatedRecipesRecipeIdEditRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      preLoaderRoute: typeof AuthenticatedShellRecipesRecipeIdEditRouteImport
+      parentRoute: typeof AuthenticatedShellRoute
     }
   }
 }
 
+interface AuthenticatedShellRouteChildren {
+  AuthenticatedShellHouseholdRoute: typeof AuthenticatedShellHouseholdRoute
+  AuthenticatedShellTagsRoute: typeof AuthenticatedShellTagsRoute
+  AuthenticatedShellIndexRoute: typeof AuthenticatedShellIndexRoute
+  AuthenticatedShellRecipesNewRoute: typeof AuthenticatedShellRecipesNewRoute
+  AuthenticatedShellRecipesIndexRoute: typeof AuthenticatedShellRecipesIndexRoute
+  AuthenticatedShellRecipesRecipeIdEditRoute: typeof AuthenticatedShellRecipesRecipeIdEditRoute
+  AuthenticatedShellRecipesRecipeIdIndexRoute: typeof AuthenticatedShellRecipesRecipeIdIndexRoute
+}
+
+const AuthenticatedShellRouteChildren: AuthenticatedShellRouteChildren = {
+  AuthenticatedShellHouseholdRoute: AuthenticatedShellHouseholdRoute,
+  AuthenticatedShellTagsRoute: AuthenticatedShellTagsRoute,
+  AuthenticatedShellIndexRoute: AuthenticatedShellIndexRoute,
+  AuthenticatedShellRecipesNewRoute: AuthenticatedShellRecipesNewRoute,
+  AuthenticatedShellRecipesIndexRoute: AuthenticatedShellRecipesIndexRoute,
+  AuthenticatedShellRecipesRecipeIdEditRoute:
+    AuthenticatedShellRecipesRecipeIdEditRoute,
+  AuthenticatedShellRecipesRecipeIdIndexRoute:
+    AuthenticatedShellRecipesRecipeIdIndexRoute,
+}
+
+const AuthenticatedShellRouteWithChildren =
+  AuthenticatedShellRoute._addFileChildren(AuthenticatedShellRouteChildren)
+
 interface AuthenticatedRouteChildren {
-  AuthenticatedHouseholdRoute: typeof AuthenticatedHouseholdRoute
-  AuthenticatedTagsRoute: typeof AuthenticatedTagsRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedRecipesNewRoute: typeof AuthenticatedRecipesNewRoute
-  AuthenticatedRecipesIndexRoute: typeof AuthenticatedRecipesIndexRoute
-  AuthenticatedRecipesRecipeIdEditRoute: typeof AuthenticatedRecipesRecipeIdEditRoute
-  AuthenticatedRecipesRecipeIdIndexRoute: typeof AuthenticatedRecipesRecipeIdIndexRoute
+  AuthenticatedShellRoute: typeof AuthenticatedShellRouteWithChildren
+  AuthenticatedRecipesRecipeIdCookRoute: typeof AuthenticatedRecipesRecipeIdCookRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedHouseholdRoute: AuthenticatedHouseholdRoute,
-  AuthenticatedTagsRoute: AuthenticatedTagsRoute,
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedRecipesNewRoute: AuthenticatedRecipesNewRoute,
-  AuthenticatedRecipesIndexRoute: AuthenticatedRecipesIndexRoute,
-  AuthenticatedRecipesRecipeIdEditRoute: AuthenticatedRecipesRecipeIdEditRoute,
-  AuthenticatedRecipesRecipeIdIndexRoute:
-    AuthenticatedRecipesRecipeIdIndexRoute,
+  AuthenticatedShellRoute: AuthenticatedShellRouteWithChildren,
+  AuthenticatedRecipesRecipeIdCookRoute: AuthenticatedRecipesRecipeIdCookRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
