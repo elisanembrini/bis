@@ -36,7 +36,9 @@ class Recipe(Base):
     prep_minutes: Mapped[int | None] = mapped_column(Integer)
     cook_minutes: Mapped[int | None] = mapped_column(Integer)
     servings: Mapped[int] = mapped_column(Integer)
-    cover_photo_id: Mapped[uuid.UUID | None]
+    cover_photo_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("photos.id", ondelete="SET NULL"), index=True
+    )
     copied_from_recipe_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("recipes.id", ondelete="SET NULL")
     )
@@ -87,4 +89,6 @@ class Step(Base):
     position: Mapped[int] = mapped_column(Integer)
     text: Mapped[str] = mapped_column(Text)
     timer_seconds: Mapped[int | None] = mapped_column(Integer)
-    photo_id: Mapped[uuid.UUID | None]
+    photo_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("photos.id", ondelete="SET NULL"), index=True
+    )

@@ -29,6 +29,17 @@
     "NOT_HOUSEHOLD_OWNER": "Solo chi è titolare della casa può farlo.",
     "MEMBER_NOT_FOUND": "Questa persona non fa più parte della casa.",
     "CANNOT_REMOVE_SELF": "Non puoi rimuoverti dalla casa.",
-    "RECIPE_NOT_FOUND": "Questa ricetta non esiste o non è tua."
+    "RECIPE_NOT_FOUND": "Questa ricetta non esiste o non è tua.",
+    "PHOTO_TOO_LARGE": "La foto è troppo grande: il massimo è 10 MB.",
+    "PHOTO_INVALID": "Questo file non è una foto JPEG, PNG, WebP o HEIC valida.",
+    "PHOTO_NOT_FOUND": "Foto non trovata.",
+    "PHOTO_NOT_AVAILABLE": "Una delle foto non è più disponibile. Caricala di nuovo."
+  },
+  "photo": {
+    "add": "Aggiungi foto",
+    "change": "Cambia foto",
+    "remove": "Rimuovi foto",
+    "uploading": "Caricamento della foto",
+    "noPhoto": "Nessuna foto"
   }
 }

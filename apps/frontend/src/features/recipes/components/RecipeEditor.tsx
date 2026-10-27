@@ -11,6 +11,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
@@ -26,6 +27,7 @@ import {
   validateRecipeForm,
 } from "../form";
 import { type RecipeInput, UNITS } from "../types";
+import { PhotoField } from "./PhotoField";
 import { RowActions } from "./RowActions";
 
 type RecipeEditorProps = {
@@ -71,7 +73,11 @@ export function RecipeEditor({
     { value: "", label: t("editor.noUnit") },
     ...UNITS.map((unit) => ({ value: unit, label: t(`units.${unit}`, { count: 1 }) })),
   ];
-  const { ingredients, steps } = form.getValues();
+  const { ingredients, steps, coverPhotoId } = form.getValues();
+  const [uploads, setUploads] = useState<Record<string, boolean>>({});
+  const isUploading = Object.values(uploads).some(Boolean);
+  const trackUpload = (field: string) => (uploading: boolean) =>
+    setUploads((current) => ({ ...current, [field]: uploading }));
 
   return (
     <form noValidate onSubmit={form.onSubmit((values) => onSubmit(formToRecipeInput(values)))}>
@@ -104,6 +110,13 @@ export function RecipeEditor({
           label={t("editor.title")}
           key={form.key("title")}
           {...form.getInputProps("title")}
+        />
+        <PhotoField
+          label={t("editor.coverPhoto")}
+          photoId={coverPhotoId}
+          onChange={(photoId) => form.setFieldValue("coverPhotoId", photoId)}
+          onUploadingChange={trackUpload("cover")}
+          disabled={isSubmitting}
         />
         <Group grow align="flex-start">
           <TextInput
@@ -218,6 +231,13 @@ export function RecipeEditor({
                     {...form.getInputProps(`steps.${index}.timerSeconds`)}
                   />
                 </Group>
+                <PhotoField
+                  label={t("editor.stepPhoto", { number: index + 1 })}
+                  photoId={step.photoId}
+                  onChange={(photoId) => form.setFieldValue(`steps.${index}.photoId`, photoId)}
+                  onUploadingChange={trackUpload(step.key)}
+                  disabled={isSubmitting}
+                />
                 <RowActions
                   isFirst={index === 0}
                   isLast={index === steps.length - 1}
@@ -250,7 +270,7 @@ export function RecipeEditor({
           <Button variant="default" onClick={onCancel} disabled={isSubmitting}>
             {t("editor.cancel")}
           </Button>
-          <Button type="submit" loading={isSubmitting}>
+          <Button type="submit" loading={isSubmitting} disabled={isUploading}>
             {t("editor.save")}
           </Button>
         </Group>

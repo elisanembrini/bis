@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.core.errors import register_exception_handlers
-from app.routers import auth, google_auth, health, household, me, recipes
+from app.routers import auth, google_auth, health, household, me, photos, recipes
 
 
 def create_app() -> FastAPI:
@@ -13,6 +13,7 @@ def create_app() -> FastAPI:
     application.include_router(me.router)
     application.include_router(household.router)
     application.include_router(recipes.router)
+    application.include_router(photos.router)
     return application
 
 

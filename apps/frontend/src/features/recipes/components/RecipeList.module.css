@@ -1,0 +1,4 @@
+.thumbnail {
+  flex-shrink: 0;
+  border-radius: var(--mantine-radius-md);
+}

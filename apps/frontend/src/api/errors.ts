@@ -26,6 +26,10 @@ const API_ERROR_CODES = {
   MEMBER_NOT_FOUND: true,
   CANNOT_REMOVE_SELF: true,
   RECIPE_NOT_FOUND: true,
+  PHOTO_TOO_LARGE: true,
+  PHOTO_INVALID: true,
+  PHOTO_NOT_FOUND: true,
+  PHOTO_NOT_AVAILABLE: true,
 } satisfies Record<ApiErrorCode, true>;
 
 export const isApiErrorCode = (value: unknown): value is ApiErrorCode =>

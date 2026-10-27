@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     google_redirect_uri: str | None = None
     google_state_ttl_minutes: int = 10
 
+    photos_dir: str
+    photo_max_bytes: int = 10 * 1024 * 1024
+    unlinked_photo_ttl_hours: int = 24
+
 
 @lru_cache
 def get_settings() -> Settings:

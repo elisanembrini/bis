@@ -53,11 +53,12 @@ export const CreateRecipe: Story = {
       prep_minutes: null,
       cook_minutes: null,
       servings: 4,
+      cover_photo_id: null,
       ingredients: [
         { quantity: "1.5", unit: "cucchiaio", name: "olio" },
         { quantity: null, unit: null, name: "sale" },
       ],
-      steps: [{ text: "Sbatti le uova.", timer_seconds: 30 }],
+      steps: [{ text: "Sbatti le uova.", timer_seconds: 30, photo_id: null }],
     });
   },
 };
@@ -79,9 +80,9 @@ export const ReorderAndRemove: Story = {
           { quantity: null, unit: null, name: "sale" },
         ],
         steps: [
-          { text: "Porta a bollore l'acqua e sala.", timer_seconds: null },
-          { text: "Condisci con il sugo.", timer_seconds: null },
-          { text: "Cuoci la pasta.", timer_seconds: 570 },
+          { text: "Porta a bollore l'acqua e sala.", timer_seconds: null, photo_id: null },
+          { text: "Condisci con il sugo.", timer_seconds: null, photo_id: null },
+          { text: "Cuoci la pasta.", timer_seconds: 570, photo_id: null },
         ],
       }),
     );

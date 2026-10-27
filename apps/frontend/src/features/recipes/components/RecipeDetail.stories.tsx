@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, screen, waitFor, within } from "storybook/test";
 
-import { minimalRecipe, pastaRecipe } from "./fixtures";
+import { dishImage, stepImage } from "../../../components/storyImages";
+import { minimalRecipe, pastaRecipe, pastaWithPhotos } from "./fixtures";
 import { RecipeDetail } from "./RecipeDetail";
 
 const meta = {
@@ -27,6 +28,22 @@ export const Complete: Story = {
       "q.b. sale",
     ]);
     await expect(canvas.getByText("Timer: 9 min 30 s")).toBeVisible();
+  },
+};
+
+export const WithPhotos: Story = {
+  args: {
+    recipe: pastaWithPhotos,
+    photoSrc: (photoId) => (photoId === "cover-photo" ? dishImage : stepImage),
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      await canvas.findByRole("img", { name: "Foto di Pasta al pomodoro" }),
+    ).toHaveAttribute("src", dishImage);
+    await expect(canvas.getByRole("img", { name: "Foto del passaggio 2" })).toHaveAttribute(
+      "src",
+      stepImage,
+    );
   },
 };
 

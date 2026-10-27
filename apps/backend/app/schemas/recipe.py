@@ -37,6 +37,7 @@ class IngredientInput(BaseModel):
 class StepInput(BaseModel):
     text: StepText
     timer_seconds: Annotated[int, Field(ge=1, le=TIMER_MAX_SECONDS)] | None = None
+    photo_id: uuid.UUID | None = None
 
 
 class RecipeInput(BaseModel):
@@ -47,6 +48,7 @@ class RecipeInput(BaseModel):
     servings: Annotated[int, Field(ge=1, le=SERVINGS_MAX)]
     ingredients: Annotated[list[IngredientInput], Field(min_length=1, max_length=MAX_ITEMS)]
     steps: Annotated[list[StepInput], Field(min_length=1, max_length=MAX_ITEMS)]
+    cover_photo_id: uuid.UUID | None = None
 
     @field_validator("notes")
     @classmethod
@@ -68,6 +70,7 @@ class StepResponse(BaseModel):
     id: uuid.UUID
     text: str
     timer_seconds: int | None
+    photo_id: uuid.UUID | None
 
 
 class RecipeSummary(BaseModel):
@@ -76,6 +79,7 @@ class RecipeSummary(BaseModel):
     servings: int
     prep_minutes: int | None
     cook_minutes: int | None
+    cover_photo_id: uuid.UUID | None
     created_at: datetime
     updated_at: datetime
 

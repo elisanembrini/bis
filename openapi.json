@@ -1132,6 +1132,151 @@
           }
         }
       }
+    },
+    "/photos": {
+      "post": {
+        "tags": [
+          "photos"
+        ],
+        "summary": "Upload Photo",
+        "operationId": "uploadPhoto",
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoUploadResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyCookie": []
+          }
+        ]
+      }
+    },
+    "/photos/{photo_id}": {
+      "get": {
+        "tags": [
+          "photos"
+        ],
+        "summary": "Get Photo",
+        "operationId": "getPhoto",
+        "security": [
+          {
+            "APIKeyCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "photo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Photo Id"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "full",
+                "thumb"
+              ],
+              "type": "string",
+              "default": "full",
+              "title": "Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "image/webp": {}
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1159,7 +1304,11 @@
           "NOT_HOUSEHOLD_OWNER",
           "MEMBER_NOT_FOUND",
           "CANNOT_REMOVE_SELF",
-          "RECIPE_NOT_FOUND"
+          "RECIPE_NOT_FOUND",
+          "PHOTO_TOO_LARGE",
+          "PHOTO_INVALID",
+          "PHOTO_NOT_FOUND",
+          "PHOTO_NOT_AVAILABLE"
         ],
         "title": "ErrorCode"
       },
@@ -1484,6 +1633,30 @@
         ],
         "title": "MeResponse"
       },
+      "PhotoUploadResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "width": {
+            "type": "integer",
+            "title": "Width"
+          },
+          "height": {
+            "type": "integer",
+            "title": "Height"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "width",
+          "height"
+        ],
+        "title": "PhotoUploadResponse"
+      },
       "RecipeInput": {
         "properties": {
           "title": {
@@ -1553,6 +1726,18 @@
             "maxItems": 100,
             "minItems": 1,
             "title": "Steps"
+          },
+          "cover_photo_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Photo Id"
           }
         },
         "type": "object",
@@ -1601,6 +1786,18 @@
             ],
             "title": "Cook Minutes"
           },
+          "cover_photo_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Photo Id"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -1644,6 +1841,7 @@
           "servings",
           "prep_minutes",
           "cook_minutes",
+          "cover_photo_id",
           "created_at",
           "updated_at",
           "notes",
@@ -1689,6 +1887,18 @@
             ],
             "title": "Cook Minutes"
           },
+          "cover_photo_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Photo Id"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -1707,6 +1917,7 @@
           "servings",
           "prep_minutes",
           "cook_minutes",
+          "cover_photo_id",
           "created_at",
           "updated_at"
         ],
@@ -1795,6 +2006,18 @@
               }
             ],
             "title": "Timer Seconds"
+          },
+          "photo_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Id"
           }
         },
         "type": "object",
@@ -1824,13 +2047,26 @@
               }
             ],
             "title": "Timer Seconds"
+          },
+          "photo_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Id"
           }
         },
         "type": "object",
         "required": [
           "id",
           "text",
-          "timer_seconds"
+          "timer_seconds",
+          "photo_id"
         ],
         "title": "StepResponse"
       },

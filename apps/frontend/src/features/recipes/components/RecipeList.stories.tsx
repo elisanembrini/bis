@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
-import { recipeSummaries } from "./fixtures";
+import { dishImage } from "../../../components/storyImages";
+import { recipeSummaries, summariesWithThumbnail } from "./fixtures";
 import { RecipeList } from "./RecipeList";
 
 const meta = {
   component: RecipeList,
-  args: { recipes: recipeSummaries },
+  args: { recipes: recipeSummaries, thumbnailSrc: () => dishImage },
 } satisfies Meta<typeof RecipeList>;
 
 export default meta;
@@ -19,6 +20,15 @@ export const WithRecipes: Story = {
     await expect(links.map((link) => link.textContent)).toEqual(["Pasta al pomodoro", "Uovo sodo"]);
     await expect(canvas.getByText("4 porzioni · 25 min")).toBeVisible();
     await expect(canvas.getByText("1 porzione")).toBeVisible();
+  },
+};
+
+export const WithThumbnails: Story = {
+  args: { recipes: summariesWithThumbnail },
+  play: async ({ canvasElement }) => {
+    const images = canvasElement.querySelectorAll("img");
+    await expect(images).toHaveLength(1);
+    await expect(images[0]).toHaveAttribute("alt", "");
   },
 };
 

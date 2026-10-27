@@ -14,6 +14,7 @@ export type StepFormValue = {
   text: string;
   timerMinutes: string;
   timerSeconds: string;
+  photoId: string | null;
 };
 
 export type RecipeFormValues = {
@@ -22,6 +23,7 @@ export type RecipeFormValues = {
   prepMinutes: string;
   cookMinutes: string;
   servings: string;
+  coverPhotoId: string | null;
   ingredients: IngredientFormValue[];
   steps: StepFormValue[];
 };
@@ -56,6 +58,7 @@ export const emptyStep = (key: string): StepFormValue => ({
   text: "",
   timerMinutes: "",
   timerSeconds: "",
+  photoId: null,
 });
 
 export const emptyRecipeForm = (newKey: () => string): RecipeFormValues => ({
@@ -64,6 +67,7 @@ export const emptyRecipeForm = (newKey: () => string): RecipeFormValues => ({
   prepMinutes: "",
   cookMinutes: "",
   servings: "4",
+  coverPhotoId: null,
   ingredients: [emptyIngredient(newKey())],
   steps: [emptyStep(newKey())],
 });
@@ -74,6 +78,7 @@ export const recipeToForm = (recipe: RecipeResponse): RecipeFormValues => ({
   prepMinutes: recipe.prep_minutes === null ? "" : String(recipe.prep_minutes),
   cookMinutes: recipe.cook_minutes === null ? "" : String(recipe.cook_minutes),
   servings: String(recipe.servings),
+  coverPhotoId: recipe.cover_photo_id,
   ingredients: recipe.ingredients.map((ingredient) => ({
     key: ingredient.id,
     quantity: quantityToInput(ingredient.quantity),
@@ -87,6 +92,7 @@ export const recipeToForm = (recipe: RecipeResponse): RecipeFormValues => ({
       text: step.text,
       timerMinutes: timer.minutes,
       timerSeconds: timer.seconds,
+      photoId: step.photo_id,
     };
   }),
 });
@@ -151,6 +157,7 @@ export const formToRecipeInput = (values: RecipeFormValues): RecipeInput => ({
   prep_minutes: optionalWholeNumber(values.prepMinutes) ?? null,
   cook_minutes: optionalWholeNumber(values.cookMinutes) ?? null,
   servings: Number(values.servings.trim()),
+  cover_photo_id: values.coverPhotoId,
   ingredients: values.ingredients.map((ingredient) => {
     const parsed = parseQuantity(ingredient.quantity);
     return {
@@ -162,5 +169,6 @@ export const formToRecipeInput = (values: RecipeFormValues): RecipeInput => ({
   steps: values.steps.map((step) => ({
     text: step.text.trim(),
     timer_seconds: joinTimer(step.timerMinutes, step.timerSeconds),
+    photo_id: step.photoId,
   })),
 });

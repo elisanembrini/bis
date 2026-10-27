@@ -32,11 +32,13 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GOOGLE_REDIRECT_URI: http://localhost:${FRONTEND_PORT:-5173}/api/auth/google/callback
+      PHOTOS_DIR: /data/photos
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
       - ./apps/backend/app:/app/app
       - ./apps/backend/alembic:/app/alembic
+      - photos-data:/data/photos
     depends_on:
       db:
         condition: service_healthy
@@ -68,6 +70,25 @@ services:
       timeout: 5s
       retries: 20
 
+  photo-cleaner:
+    build:
+      context: ./apps/backend
+    command:
+      - sh
+      - -c
+      - while true; do python -m scripts.cleanup_photos; sleep 3600; done
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      FRONTEND_BASE_URL: http://localhost:${FRONTEND_PORT:-5173}
+      SMTP_HOST: mailpit
+      SMTP_FROM: Bis <noreply@bis.local>
+      PHOTOS_DIR: /data/photos
+    volumes:
+      - photos-data:/data/photos
+    depends_on:
+      backend:
+        condition: service_healthy
+
   mailpit:
     image: axllent/mailpit:v1.31.6
     ports:
@@ -75,3 +96,4 @@ services:
 
 volumes:
   db-data:
+  photos-data:

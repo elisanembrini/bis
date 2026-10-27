@@ -108,6 +108,30 @@ class RecipeNotFoundError(DomainError):
     message = "Ricetta non trovata."
 
 
+class PhotoTooLargeError(DomainError):
+    status_code = 413
+    code = ErrorCode.PHOTO_TOO_LARGE
+    message = "La foto supera i 10 MB."
+
+
+class PhotoInvalidError(DomainError):
+    status_code = 422
+    code = ErrorCode.PHOTO_INVALID
+    message = "Il file non è un'immagine JPEG, PNG, WebP o HEIC valida."
+
+
+class PhotoNotFoundError(DomainError):
+    status_code = 404
+    code = ErrorCode.PHOTO_NOT_FOUND
+    message = "Foto non trovata."
+
+
+class PhotoNotAvailableError(DomainError):
+    status_code = 422
+    code = ErrorCode.PHOTO_NOT_AVAILABLE
+    message = "Una delle foto non è disponibile per questa ricetta."
+
+
 class GoogleLoginError(Exception):
     def __init__(self, code: ErrorCode) -> None:
         super().__init__(code)

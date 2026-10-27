@@ -21,13 +21,14 @@ const validForm = (): RecipeFormValues => ({
   prepMinutes: "10",
   cookMinutes: "",
   servings: "4",
+  coverPhotoId: null,
   ingredients: [
     { key: "a", quantity: "1,5", unit: "cucchiaio", name: " olio " },
     { key: "b", quantity: "", unit: "", name: "sale" },
   ],
   steps: [
-    { key: "c", text: "Cuoci la pasta.", timerMinutes: "9", timerSeconds: "30" },
-    { key: "d", text: "Condisci.", timerMinutes: "", timerSeconds: "" },
+    { key: "c", text: "Cuoci la pasta.", timerMinutes: "9", timerSeconds: "30", photoId: null },
+    { key: "d", text: "Condisci.", timerMinutes: "", timerSeconds: "", photoId: null },
   ],
 });
 
@@ -58,7 +59,7 @@ describe("validateRecipeForm", () => {
     const errors = validateRecipeForm({
       ...form,
       ingredients: [{ key: "a", quantity: "1,2345", unit: "g", name: "" }],
-      steps: [{ key: "c", text: "", timerMinutes: "1", timerSeconds: "75" }],
+      steps: [{ key: "c", text: "", timerMinutes: "1", timerSeconds: "75", photoId: null }],
     });
 
     expect(errors).toEqual({
@@ -72,7 +73,7 @@ describe("validateRecipeForm", () => {
   it("rejects timers longer than a day", () => {
     const errors = validateRecipeForm({
       ...validForm(),
-      steps: [{ key: "c", text: "Lievita", timerMinutes: "1441", timerSeconds: "" }],
+      steps: [{ key: "c", text: "Lievita", timerMinutes: "1441", timerSeconds: "", photoId: null }],
     });
 
     expect(errors).toEqual({ "steps.0.timerMinutes": "timerTooLong" });
@@ -87,13 +88,14 @@ describe("formToRecipeInput", () => {
       prep_minutes: 10,
       cook_minutes: null,
       servings: 4,
+      cover_photo_id: null,
       ingredients: [
         { quantity: "1.5", unit: "cucchiaio", name: "olio" },
         { quantity: null, unit: null, name: "sale" },
       ],
       steps: [
-        { text: "Cuoci la pasta.", timer_seconds: 570 },
-        { text: "Condisci.", timer_seconds: null },
+        { text: "Cuoci la pasta.", timer_seconds: 570, photo_id: null },
+        { text: "Condisci.", timer_seconds: null, photo_id: null },
       ],
     });
   });
@@ -108,22 +110,28 @@ describe("recipeToForm", () => {
       prep_minutes: null,
       cook_minutes: 15,
       servings: 2,
+      cover_photo_id: "p1",
       created_at: "2026-01-01T00:00:00Z",
       updated_at: "2026-01-01T00:00:00Z",
       ingredients: [{ id: "i1", quantity: "1.500", unit: "kg", name: "farina" }],
-      steps: [{ id: "s1", text: "Impasta", timer_seconds: 90 }],
+      steps: [{ id: "s1", text: "Impasta", timer_seconds: 90, photo_id: "p2" }],
     };
 
     const form = recipeToForm(recipe);
 
     expect(form.ingredients[0]).toEqual({ key: "i1", quantity: "1,5", unit: "kg", name: "farina" });
+    expect(form.coverPhotoId).toBe("p1");
     expect(form.steps[0]).toEqual({
       key: "s1",
       text: "Impasta",
       timerMinutes: "1",
       timerSeconds: "30",
+      photoId: "p2",
     });
-    expect(formToRecipeInput(form).ingredients[0]?.quantity).toBe("1.5");
+    const input = formToRecipeInput(form);
+    expect(input.ingredients[0]?.quantity).toBe("1.5");
+    expect(input.cover_photo_id).toBe("p1");
+    expect(input.steps[0]?.photo_id).toBe("p2");
   });
 });
 

@@ -100,12 +100,20 @@ def outbox() -> Outbox:
 
 
 @pytest.fixture
-def settings(database_url: str) -> Settings:
+def photos_dir(tmp_path: Path) -> Path:
+    directory = tmp_path / "photos"
+    directory.mkdir()
+    return directory
+
+
+@pytest.fixture
+def settings(database_url: str, photos_dir: Path) -> Settings:
     return Settings(
         database_url=database_url,
         frontend_base_url=FRONTEND_BASE_URL,
         smtp_host="localhost",
         smtp_from="Bis <noreply@bis.test>",
+        photos_dir=str(photos_dir),
     )
 
 

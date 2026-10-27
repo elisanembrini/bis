@@ -1,8 +1,9 @@
-import { Button, Group, List, Stack, Text, Title } from "@mantine/core";
+import { Button, Group, Image, List, Stack, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { AppErrorCode } from "../../../api/errors";
+import { photoUrl } from "../../../api/photos";
 import { ButtonLink } from "../../../components/ButtonLink";
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { FormError } from "../../../components/FormError";
@@ -17,13 +18,17 @@ type RecipeDetailProps = {
   onDelete: () => void;
   isDeleting?: boolean;
   errorCode?: AppErrorCode | undefined;
+  photoSrc?: (photoId: string) => string;
 };
+
+const defaultPhotoSrc = (photoId: string) => photoUrl(photoId, "full");
 
 export function RecipeDetail({
   recipe,
   onDelete,
   isDeleting = false,
   errorCode,
+  photoSrc = defaultPhotoSrc,
 }: RecipeDetailProps) {
   const { t } = useTranslation("recipes");
   const formatDuration = useFormatDuration();
@@ -32,6 +37,15 @@ export function RecipeDetail({
 
   return (
     <Stack gap="lg">
+      {recipe.cover_photo_id !== null && (
+        <Image
+          src={photoSrc(recipe.cover_photo_id)}
+          alt={t("detail.coverAlt", { title: recipe.title })}
+          radius="md"
+          mah={420}
+          fit="cover"
+        />
+      )}
       <Stack gap={4}>
         <Title order={1}>{recipe.title}</Title>
         <Text c="dimmed">
@@ -84,9 +98,19 @@ export function RecipeDetail({
           {t("detail.steps")}
         </Title>
         <List type="ordered" spacing="md" aria-label={t("detail.steps")}>
-          {recipe.steps.map((step) => (
+          {recipe.steps.map((step, index) => (
             <List.Item key={step.id}>
               <Text>{step.text}</Text>
+              {step.photo_id !== null && (
+                <Image
+                  src={photoSrc(step.photo_id)}
+                  alt={t("detail.stepPhotoAlt", { number: index + 1 })}
+                  radius="md"
+                  mt="xs"
+                  mah={280}
+                  fit="cover"
+                />
+              )}
               {step.timer_seconds !== null && (
                 <Text size="sm" c="dimmed">
                   {t("detail.timer", { duration: formatDuration(step.timer_seconds) })}

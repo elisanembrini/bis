@@ -22,7 +22,9 @@
     "deleteTitle": "Eliminare «{{title}}»?",
     "deleteBody": "La ricetta verrà eliminata definitivamente.",
     "deleteConfirm": "Elimina",
-    "quantoBasta": "q.b."
+    "quantoBasta": "q.b.",
+    "coverAlt": "Foto di {{title}}",
+    "stepPhotoAlt": "Foto del passaggio {{number}}"
   },
   "editor": {
     "newTitle": "Nuova ricetta",
@@ -65,7 +67,9 @@
     },
     "ingredientLegend": "Ingrediente {{number}}",
     "stepLegend": "Passaggio {{number}}",
-    "stepText": "Descrizione"
+    "stepText": "Descrizione",
+    "coverPhoto": "Foto del piatto",
+    "stepPhoto": "Foto del passaggio {{number}}"
   },
   "units": {
     "g_one": "g",
