@@ -20,7 +20,7 @@ def recipe_payload(**overrides: Any) -> dict[str, Any]:
         "servings": 4,
         "ingredients": [
             {"quantity": "320", "unit": "g", "name": "spaghetti"},
-            {"quantity": "1.5", "unit": "cucchiaio", "name": "olio"},
+            {"quantity": "1.5", "unit": "tablespoon", "name": "olio"},
             {"quantity": None, "unit": None, "name": "sale"},
         ],
         "steps": [

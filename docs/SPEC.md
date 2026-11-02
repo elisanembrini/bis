@@ -220,7 +220,7 @@ Main screens:
 
 - [x] App name: Bis. To check: availability of the domain, store names and registered trademarks.
 - [ ] Should tags also work as a filter in the recipe list, besides being information?
-- [x] List of units of measure: fixed (g, kg, ml, l, cucchiaio, cucchiaino, tazza, pizzico, spicchio, pezzi); the unit is optional.
+- [x] List of units of measure: fixed (`g`, `kg`, `ml`, `l`, `tablespoon`, `teaspoon`, `cup`, `pinch`, `clove`, `pieces`, shown in Italian as g, kg, ml, l, cucchiaio, cucchiaino, tazza, pizzico, spicchio, pezzi); the unit is optional.
 - [ ] Should ingredient search find "zucchine" when typing "zucchina"?
 - [ ] Is a way to export your own recipes needed, to avoid depending on the app?
 - [ ] Provider for the VPS, for the domain and for the transactional emails.

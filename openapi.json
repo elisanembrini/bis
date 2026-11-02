@@ -2764,12 +2764,12 @@
           "kg",
           "ml",
           "l",
-          "cucchiaio",
-          "cucchiaino",
-          "tazza",
-          "pizzico",
-          "spicchio",
-          "pezzi"
+          "tablespoon",
+          "teaspoon",
+          "cup",
+          "pinch",
+          "clove",
+          "pieces"
         ],
         "title": "Unit"
       },

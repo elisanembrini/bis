@@ -17,11 +17,11 @@ const stepFor = (unit: Unit | null, value: number): number => {
     case "kg":
     case "l":
       return value < 1 ? 0.05 : 0.1;
-    case "cucchiaio":
-    case "cucchiaino":
-    case "tazza":
+    case "tablespoon":
+    case "teaspoon":
+    case "cup":
       return 0.25;
-    case "pizzico":
+    case "pinch":
       return 1;
     default:
       return value < 10 ? 0.5 : 1;

@@ -61,7 +61,7 @@ export const CreateRecipe: Story = {
       cover_photo_id: null,
       tag_ids: ["6f1d5a10-0000-4000-8000-000000000006", "aaaaaaaa-0000-4000-8000-000000000001"],
       ingredients: [
-        { quantity: "1.5", unit: "cucchiaio", name: "olio" },
+        { quantity: "1.5", unit: "tablespoon", name: "olio" },
         { quantity: null, unit: null, name: "sale" },
       ],
       steps: [{ text: "Sbatti le uova.", timer_seconds: 30, photo_id: null }],
@@ -81,8 +81,8 @@ export const ReorderAndRemove: Story = {
     await expect(args.onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         ingredients: [
-          { quantity: "1.5", unit: "cucchiaio", name: "olio extravergine" },
-          { quantity: "1", unit: "spicchio", name: "aglio" },
+          { quantity: "1.5", unit: "tablespoon", name: "olio extravergine" },
+          { quantity: "1", unit: "clove", name: "aglio" },
           { quantity: null, unit: null, name: "sale" },
         ],
         steps: [

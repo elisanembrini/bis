@@ -20,8 +20,8 @@ export const pastaRecipe: RecipeResponse = {
   updated_at: "2026-10-20T18:00:00Z",
   ingredients: [
     { id: "i1", quantity: "320.000", unit: "g", name: "spaghetti" },
-    { id: "i2", quantity: "1.500", unit: "cucchiaio", name: "olio extravergine" },
-    { id: "i3", quantity: "1.000", unit: "spicchio", name: "aglio" },
+    { id: "i2", quantity: "1.500", unit: "tablespoon", name: "olio extravergine" },
+    { id: "i3", quantity: "1.000", unit: "clove", name: "aglio" },
     { id: "i4", quantity: null, unit: null, name: "sale" },
   ],
   steps: [

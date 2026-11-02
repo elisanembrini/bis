@@ -13,7 +13,7 @@ describe("scaleQuantity", () => {
   it("halves quantities going from 4 to 2 servings", () => {
     expect(scaled("300", "g", 4, 2)).toBe("150");
     expect(scaled("4", null, 4, 2)).toBe("2");
-    expect(scaled("2", "cucchiaio", 4, 2)).toBe("1");
+    expect(scaled("2", "tablespoon", 4, 2)).toBe("1");
   });
 
   it("never changes q.b. ingredients", () => {
@@ -52,28 +52,28 @@ describe("scaleQuantity", () => {
   });
 
   it("rounds spoons and cups to quarters", () => {
-    expect(scaled("1", "cucchiaio", 4, 5)).toBe("1,25");
-    expect(scaled("1", "cucchiaino", 3, 1)).toBe("0,25");
-    expect(scaled("1", "tazza", 4, 2)).toBe("0,5");
-    expect(scaled("1", "tazza", 8, 1)).toBe("0,25");
+    expect(scaled("1", "tablespoon", 4, 5)).toBe("1,25");
+    expect(scaled("1", "teaspoon", 3, 1)).toBe("0,25");
+    expect(scaled("1", "cup", 4, 2)).toBe("0,5");
+    expect(scaled("1", "cup", 8, 1)).toBe("0,25");
   });
 
   it("rounds pieces, cloves and countable ingredients to halves, then to whole numbers", () => {
-    expect(scaled("3", "pezzi", 4, 2)).toBe("1,5");
-    expect(scaled("1", "spicchio", 4, 1)).toBe("0,5");
+    expect(scaled("3", "pieces", 4, 2)).toBe("1,5");
+    expect(scaled("1", "clove", 4, 1)).toBe("0,5");
     expect(scaled("2", null, 4, 3)).toBe("1,5");
     expect(scaled("4", null, 4, 11)).toBe("11");
-    expect(scaled("3", "pezzi", 4, 15)).toBe("11");
+    expect(scaled("3", "pieces", 4, 15)).toBe("11");
   });
 
   it("rounds pinches to whole numbers and keeps at least one", () => {
-    expect(scaled("1", "pizzico", 4, 2)).toBe("1");
-    expect(scaled("1", "pizzico", 2, 5)).toBe("3");
+    expect(scaled("1", "pinch", 4, 2)).toBe("1");
+    expect(scaled("1", "pinch", 2, 5)).toBe("3");
   });
 
   it("never rounds down to zero", () => {
     expect(scaled("1", "g", 100, 1)).toBe("0,1");
-    expect(scaled("1", "pezzi", 100, 1)).toBe("0,5");
+    expect(scaled("1", "pieces", 100, 1)).toBe("0,5");
     expect(scaled("0.1", "kg", 10, 1)).toBe("0,05");
   });
 });

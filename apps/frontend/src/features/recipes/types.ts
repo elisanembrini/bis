@@ -15,12 +15,12 @@ const unitList = [
   "kg",
   "ml",
   "l",
-  "cucchiaio",
-  "cucchiaino",
-  "tazza",
-  "pizzico",
-  "spicchio",
-  "pezzi",
+  "tablespoon",
+  "teaspoon",
+  "cup",
+  "pinch",
+  "clove",
+  "pieces",
 ] as const satisfies readonly Unit[];
 
 type Exhaustive<T extends readonly Unit[]> = Exclude<Unit, T[number]> extends never ? T : never;

@@ -24,7 +24,7 @@ const validForm = (): RecipeFormValues => ({
   coverPhotoId: null,
   tagIds: ["t1"],
   ingredients: [
-    { key: "a", quantity: "1,5", unit: "cucchiaio", name: " olio " },
+    { key: "a", quantity: "1,5", unit: "tablespoon", name: " olio " },
     { key: "b", quantity: "", unit: "", name: "sale" },
   ],
   steps: [
@@ -92,7 +92,7 @@ describe("formToRecipeInput", () => {
       cover_photo_id: null,
       tag_ids: ["t1"],
       ingredients: [
-        { quantity: "1.5", unit: "cucchiaio", name: "olio" },
+        { quantity: "1.5", unit: "tablespoon", name: "olio" },
         { quantity: null, unit: null, name: "sale" },
       ],
       steps: [

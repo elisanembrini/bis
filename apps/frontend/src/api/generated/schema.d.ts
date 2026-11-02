@@ -763,7 +763,7 @@ export interface components {
          * Unit
          * @enum {string}
          */
-        Unit: "g" | "kg" | "ml" | "l" | "cucchiaio" | "cucchiaino" | "tazza" | "pizzico" | "spicchio" | "pezzi";
+        Unit: "g" | "kg" | "ml" | "l" | "tablespoon" | "teaspoon" | "cup" | "pinch" | "clove" | "pieces";
         /** ValidationError */
         ValidationError: {
             /** Location */
