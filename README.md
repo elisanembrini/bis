@@ -6,6 +6,41 @@ Bis is a household recipe book designed for the phone. It grew out of the notebo
 
 It is used by a small group of people who live in the same home. Everyone has their own recipe book and decides what to share, and with whom. The interface is in Italian by default and is ready for more languages: all texts, formats and voice-command phrases live in per-language i18next resources.
 
+## Screenshots
+
+The interface is in Italian. The screenshots are taken on a phone-sized screen, with sample data and illustrations in place of photos.
+
+<table>
+  <tr>
+    <td align="center" valign="top">
+      <img src="docs/screenshots/sign-in.png" width="250" alt="Sign-in page with the Bis logo on a grid-paper background"><br>
+      <sub>Sign-in, on the notebook grid</sub>
+    </td>
+    <td align="center" valign="top">
+      <img src="docs/screenshots/recipe-list.png" width="250" alt="Recipe list with the user's own recipes and a section of recipes shared with them"><br>
+      <sub>Recipe list: your own recipes and the ones shared with you</sub>
+    </td>
+    <td align="center" valign="top">
+      <img src="docs/screenshots/search.png" width="250" alt="Search by ingredient: typing zucchina finds the recipe that contains zucchine"><br>
+      <sub>Search by ingredient: "zucchina" finds "zucchine"</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <img src="docs/screenshots/recipe-detail.png" width="250" alt="Recipe detail with the photo of the dish, tags, actions and the ingredient list"><br>
+      <sub>Recipe detail, with servings that recalculate the quantities</sub>
+    </td>
+    <td align="center" valign="top">
+      <img src="docs/screenshots/shared-recipe.png" width="250" alt="A recipe shared by another member, read-only, with the Fai il bis button to make a copy"><br>
+      <sub>A shared recipe: read-only, with "Fai il bis" to make your own copy</sub>
+    </td>
+    <td align="center" valign="top">
+      <img src="docs/screenshots/cooking-mode.png" width="250" alt="Cooking mode showing one step at a time with two running timers"><br>
+      <sub>Cooking mode: one step at a time, several timers at once</sub>
+    </td>
+  </tr>
+</table>
+
 ## Features
 
 - **Sign-in**: email and password, or Google (OAuth flow handled by the backend, with `state` and PKCE). Server-side sessions with httpOnly cookies, login rate limiting, password recovery by email.
