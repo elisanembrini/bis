@@ -23,6 +23,7 @@ import { ChefIcon, ShareIcon } from "../../../components/icons";
 import { InfoMessage, SuccessMessage } from "../../../components/Messages";
 import { FullBleed } from "../../../components/PageContainer";
 import { SectionTitle } from "../../../components/SectionTitle";
+import { useTagLabel } from "../../tags/useTagLabel";
 import { useFormatDuration } from "../hooks/useFormatDuration";
 import type { RecipeResponse } from "../types";
 import { IngredientList } from "./IngredientList";
@@ -69,6 +70,7 @@ export function RecipeDetail({
 }: RecipeDetailProps) {
   const { t } = useTranslation("recipes");
   const formatDuration = useFormatDuration();
+  const label = useTagLabel();
   const [confirming, setConfirming] = useState(false);
   const [servings, setServings] = useUncontrolled({
     ...(controlledServings === undefined ? {} : { value: controlledServings }),
@@ -106,7 +108,7 @@ export function RecipeDetail({
           <Group gap="xs" aria-label={t("detail.tags")}>
             {recipe.tags.map((tag) => (
               <Badge key={tag.id} tt="none">
-                {tag.name}
+                {label(tag)}
               </Badge>
             ))}
           </Group>

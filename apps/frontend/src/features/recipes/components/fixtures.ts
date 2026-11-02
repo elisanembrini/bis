@@ -13,8 +13,8 @@ export const pastaRecipe: RecipeResponse = {
   servings: 4,
   cover_photo_id: null,
   tags: [
-    { id: "6f1d5a10-0000-4000-8000-000000000002", name: "Primi" },
-    { id: "6f1d5a10-0000-4000-8000-000000000007", name: "Veloce" },
+    { id: "6f1d5a10-0000-4000-8000-000000000002", name: "Primi", key: "first_courses" },
+    { id: "6f1d5a10-0000-4000-8000-000000000007", name: "Veloce", key: "quick" },
   ],
   created_at: "2026-10-20T18:00:00Z",
   updated_at: "2026-10-20T18:00:00Z",
@@ -100,12 +100,22 @@ export const summariesWithThumbnail: RecipeSummary[] = [
 ];
 
 export const availableTags: TagResponse[] = [
-  { id: "6f1d5a10-0000-4000-8000-000000000001", name: "Antipasti", is_own: false },
-  { id: "6f1d5a10-0000-4000-8000-000000000002", name: "Primi", is_own: false },
-  { id: "6f1d5a10-0000-4000-8000-000000000005", name: "Dolci", is_own: false },
-  { id: "6f1d5a10-0000-4000-8000-000000000006", name: "Vegetariano", is_own: false },
-  { id: "6f1d5a10-0000-4000-8000-000000000007", name: "Veloce", is_own: false },
-  { id: "aaaaaaaa-0000-4000-8000-000000000001", name: "Natale", is_own: true },
+  { id: "6f1d5a10-0000-4000-8000-000000000001", name: "Antipasti", key: "starters", is_own: false },
+  {
+    id: "6f1d5a10-0000-4000-8000-000000000002",
+    name: "Primi",
+    key: "first_courses",
+    is_own: false,
+  },
+  { id: "6f1d5a10-0000-4000-8000-000000000005", name: "Dolci", key: "desserts", is_own: false },
+  {
+    id: "6f1d5a10-0000-4000-8000-000000000006",
+    name: "Vegetariano",
+    key: "vegetarian",
+    is_own: false,
+  },
+  { id: "6f1d5a10-0000-4000-8000-000000000007", name: "Veloce", key: "quick", is_own: false },
+  { id: "aaaaaaaa-0000-4000-8000-000000000001", name: "Natale", key: null, is_own: true },
 ];
 
 export const sharedRecipe: RecipeResponse = {
@@ -114,7 +124,7 @@ export const sharedRecipe: RecipeResponse = {
   title: "Tiramisù di Bruno",
   is_own: false,
   author: { id: "22222222-2222-4222-8222-222222222222", display_name: "Bruno" },
-  tags: [{ id: "6f1d5a10-0000-4000-8000-000000000005", name: "Dolci" }],
+  tags: [{ id: "6f1d5a10-0000-4000-8000-000000000005", name: "Dolci", key: "desserts" }],
 };
 
 export const sharedSummary: RecipeSummary = {

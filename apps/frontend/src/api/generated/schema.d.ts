@@ -746,6 +746,8 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /** Key */
+            key: string | null;
             /** Is Own */
             is_own: boolean;
         };
@@ -758,6 +760,8 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /** Key */
+            key: string | null;
         };
         /**
          * Unit

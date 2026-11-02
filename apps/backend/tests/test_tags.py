@@ -36,6 +36,35 @@ def test_every_user_starts_with_the_default_tags(client: TestClient) -> None:
     assert all(tag["is_own"] is False for tag in tags)
 
 
+def test_starter_tags_have_stable_keys_and_personal_tags_have_none(client: TestClient) -> None:
+    anna = register(client, "Anna")
+    created = create_tag(client, anna, "Natale")
+
+    by_name = {tag["name"]: tag["key"] for tag in tags_of(client, anna)}
+
+    assert by_name["Antipasti"] == "starters"
+    assert by_name["Primi"] == "first_courses"
+    assert by_name["Secondi"] == "main_courses"
+    assert by_name["Contorni"] == "side_dishes"
+    assert by_name["Dolci"] == "desserts"
+    assert by_name["Vegetariano"] == "vegetarian"
+    assert by_name["Veloce"] == "quick"
+    assert by_name["Natale"] is None
+    assert created["key"] is None
+
+
+def test_recipes_expose_the_key_of_their_tags(client: TestClient) -> None:
+    anna = register(client, "Anna")
+    natale = create_tag(client, anna, "Natale")
+
+    recipe = create(client, anna, tag_ids=[natale["id"], tag_id(client, anna, "Dolci")])
+
+    assert {tag["name"]: tag["key"] for tag in recipe["tags"]} == {
+        "Dolci": "desserts",
+        "Natale": None,
+    }
+
+
 def test_user_creates_personal_tags_visible_only_to_them(client: TestClient) -> None:
     anna = register(client, "Anna")
     bruno = register(client, "Bruno")

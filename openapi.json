@@ -2725,6 +2725,17 @@
             "type": "string",
             "title": "Name"
           },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
           "is_own": {
             "type": "boolean",
             "title": "Is Own"
@@ -2734,6 +2745,7 @@
         "required": [
           "id",
           "name",
+          "key",
           "is_own"
         ],
         "title": "TagResponse"
@@ -2748,12 +2760,24 @@
           "name": {
             "type": "string",
             "title": "Name"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
           }
         },
         "type": "object",
         "required": [
           "id",
-          "name"
+          "name",
+          "key"
         ],
         "title": "TagSummary"
       },

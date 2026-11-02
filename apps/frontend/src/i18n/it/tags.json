@@ -20,5 +20,14 @@
   "picker": {
     "label": "Etichette",
     "manage": "Gestisci etichette"
+  },
+  "starterTags": {
+    "starters": "Antipasti",
+    "first_courses": "Primi",
+    "main_courses": "Secondi",
+    "side_dishes": "Contorni",
+    "desserts": "Dolci",
+    "vegetarian": "Vegetariano",
+    "quick": "Veloce"
   }
 }

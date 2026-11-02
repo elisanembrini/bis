@@ -17,6 +17,7 @@ class TagInput(BaseModel):
 class TagSummary(BaseModel):
     id: uuid.UUID
     name: str
+    key: str | None
 
 
 class TagResponse(TagSummary):

@@ -21,6 +21,7 @@ import { CloseIcon } from "../../../components/icons";
 import { PlainList } from "../../../components/PlainList";
 import { SectionTitle } from "../../../components/SectionTitle";
 import type { TagResponse } from "../types";
+import { useTagLabel } from "../useTagLabel";
 
 type TagManagerProps = {
   tags: TagResponse[];
@@ -40,6 +41,7 @@ export function TagManager({
   errorCode,
 }: TagManagerProps) {
   const { t } = useTranslation("tags");
+  const label = useTagLabel();
   const [pending, setPending] = useState<TagResponse | null>(null);
   const form = useForm({
     mode: "uncontrolled",
@@ -87,10 +89,10 @@ export function TagManager({
               <li key={tag.id}>
                 <Paper withBorder p="xs" pl="md">
                   <Group justify="space-between" wrap="nowrap">
-                    <Text>{tag.name}</Text>
+                    <Text>{label(tag)}</Text>
                     <ActionIcon
                       variant="default"
-                      aria-label={t("page.deleteAria", { name: tag.name })}
+                      aria-label={t("page.deleteAria", { name: label(tag) })}
                       loading={deletingTagId === tag.id}
                       onClick={() => setPending(tag)}
                     >
@@ -112,7 +114,7 @@ export function TagManager({
         <Group gap="xs">
           {starterTags.map((tag) => (
             <Badge key={tag.id} tt="none">
-              {tag.name}
+              {label(tag)}
             </Badge>
           ))}
         </Group>
@@ -120,7 +122,7 @@ export function TagManager({
 
       <ConfirmDialog
         opened={pending !== null}
-        title={t("page.deleteTitle", { name: pending?.name ?? "" })}
+        title={t("page.deleteTitle", { name: pending === null ? "" : label(pending) })}
         body={t("page.deleteBody")}
         confirmLabel={t("page.deleteConfirm")}
         onCancel={() => setPending(null)}

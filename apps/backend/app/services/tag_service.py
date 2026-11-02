@@ -13,7 +13,7 @@ from app.schemas.tag import TagResponse
 
 
 def _response(tag: Tag, user: User) -> TagResponse:
-    return TagResponse(id=tag.id, name=tag.name, is_own=tag.owner_id == user.id)
+    return TagResponse(id=tag.id, name=tag.name, key=tag.key, is_own=tag.owner_id == user.id)
 
 
 class TagService:

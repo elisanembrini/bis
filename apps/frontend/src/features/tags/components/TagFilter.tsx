@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { AnchorLink } from "../../../components/AnchorLink";
 import type { TagResponse } from "../types";
+import { useTagLabel } from "../useTagLabel";
 
 type TagFilterProps = {
   tags: TagResponse[];
@@ -12,6 +13,7 @@ type TagFilterProps = {
 
 export function TagFilter({ tags, selectedTagId, onChange }: TagFilterProps) {
   const { t } = useTranslation("tags");
+  const label = useTagLabel();
 
   return (
     <Fieldset legend={t("filter.label")} variant="unstyled">
@@ -24,7 +26,7 @@ export function TagFilter({ tags, selectedTagId, onChange }: TagFilterProps) {
               checked={tag.id === selectedTagId}
               onChange={() => onChange(tag.id === selectedTagId ? undefined : tag.id)}
             >
-              {tag.name}
+              {label(tag)}
             </Chip>
           ))}
         </Group>

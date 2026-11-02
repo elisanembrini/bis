@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { AnchorLink } from "../../../components/AnchorLink";
 import type { TagResponse } from "../types";
+import { useTagLabel } from "../useTagLabel";
 
 type TagPickerProps = {
   tags: TagResponse[];
@@ -12,6 +13,7 @@ type TagPickerProps = {
 
 export function TagPicker({ tags, value, onChange }: TagPickerProps) {
   const { t } = useTranslation("tags");
+  const label = useTagLabel();
 
   return (
     <Fieldset legend={t("picker.label")} variant="unstyled">
@@ -20,7 +22,7 @@ export function TagPicker({ tags, value, onChange }: TagPickerProps) {
           <Group gap="xs">
             {tags.map((tag) => (
               <Chip key={tag.id} value={tag.id} size="lg">
-                {tag.name}
+                {label(tag)}
               </Chip>
             ))}
           </Group>

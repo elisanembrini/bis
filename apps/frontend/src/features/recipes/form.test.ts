@@ -115,7 +115,7 @@ describe("recipeToForm", () => {
       cook_minutes: 15,
       servings: 2,
       cover_photo_id: "p1",
-      tags: [{ id: "t2", name: "Dolci" }],
+      tags: [{ id: "t2", name: "Dolci", key: "desserts" }],
       created_at: "2026-01-01T00:00:00Z",
       updated_at: "2026-01-01T00:00:00Z",
       ingredients: [{ id: "i1", quantity: "1.500", unit: "kg", name: "farina" }],

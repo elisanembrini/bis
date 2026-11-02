@@ -280,7 +280,7 @@ def _photo_ids(recipe: Recipe) -> set[uuid.UUID]:
 
 def _visible_tags_for(recipe: Recipe, viewer: User) -> list[TagSummary]:
     return [
-        TagSummary(id=tag.id, name=tag.name)
+        TagSummary(id=tag.id, name=tag.name, key=tag.key)
         for tag in recipe.tags
         if tag.owner_id is None or tag.owner_id == viewer.id
     ]

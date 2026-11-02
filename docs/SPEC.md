@@ -140,7 +140,7 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
 - `recipes`: id, owner_id, title, notes, prep_minutes, cook_minutes, servings (> 0), cover_photo_id (nullable), copied_from_recipe_id (nullable), created_at, updated_at.
 - `ingredients`: id, recipe_id, position, quantity (decimal, nullable for "q.b."), unit (nullable), name.
 - `steps`: id, recipe_id, position, text, timer_seconds (nullable), photo_id (nullable).
-- `tags`: id, owner_id (nullable for the starter tags), name. Unique on (owner_id, name).
+- `tags`: id, owner_id (nullable for the starter tags), name, key (nullable: a stable identifier of the starter tags, used to translate their names). Unique on (owner_id, name) and on key.
 - `recipe_tags`: recipe_id, tag_id.
 - `recipe_shares`: recipe_id, user_id, created_at. Unique on (recipe_id, user_id). The recipient must belong to the same household as the author.
 - `photos`: id, owner_id, storage_key, content_type, width, height, size_bytes, created_at.
