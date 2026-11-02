@@ -4,7 +4,7 @@
 
 Bis is a web recipe book designed for the phone, for a small group of people who live in the same home. Each person keeps their own recipes (with photos, servings and tags), searches them by name or by ingredient, shares them with the other people in the household and follows them step by step in cooking mode, with timers and voice commands.
 
-Status: features F1 to F8 of the specification are implemented (sign-in, household and invitations, recipes with photos, tags, search, servings, sharing and copying, cooking mode). F9 (installable app) is partial: the manifest and icons are in place, the service worker is missing. The app has not been deployed to production yet.
+Status: features F1 to F9 of the specification are implemented (sign-in, household and invitations, recipes with photos, tags, search, servings, sharing and copying, cooking mode, installable app). The app has not been deployed to production yet.
 
 The full specification is in `docs/SPEC.md`, the visual identity in `docs/DESIGN.md`. The product interface is in Italian.
 

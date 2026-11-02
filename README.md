@@ -49,11 +49,12 @@ The interface is in Italian. The screenshots are taken on a phone-sized screen, 
 - **Tags and search**: search by name and by ingredient using PostgreSQL full-text search configured for Italian. "Zucchina" finds "zucchine" (singular and plural match), ignoring case and accents, and it works with incomplete words while typing.
 - **Servings**: quantities are recalculated in the view only, with readable rounding per unit.
 - **Sharing and copying**: a recipe can be shared with household members, who see it read-only. With "Fai il bis" (roughly "have seconds") each of them makes an independent copy, photos included.
+- **Installable app**: web manifest and icons, an install banner (native prompt where available, manual instructions on iOS) and a hand-written service worker that caches static assets and shows an offline page. API responses are never cached, and using recipes offline is not supported yet.
 - **Cooking mode**: one step at a time with large text, screen kept awake, several timers running at once (computed from the end time, so they stay accurate even with the tab in the background) and voice commands in Italian: "avanti" (next), "indietro" (back), "ripeti" (repeat), "avvia timer" (start timer).
 
 ### Status
 
-Features F1 to F8 of the specification are implemented. F9 (installable app) is only partly done: the manifest and icons are in place, the service worker is missing. The app has not been deployed to production yet.
+Features F1 to F9 of the specification are implemented. The app has not been deployed to production yet.
 
 ## Stack
 
@@ -111,7 +112,7 @@ pnpm storybook
 pnpm generate:api     # regenerates the types from openapi.json
 ```
 
-**End to end**, from the root. Install the browser the first time; after that the tests start the stack if it is not already running:
+**End to end**, from the root. Install the browser the first time; after that the tests start the stack if it is not already running. The service worker tests run against a production build served by `vite preview` on port 4173, which the test run builds and starts by itself (set `API_PROXY_TARGET` if the API is not on port 8000):
 
 ```bash
 pnpm --filter bis-e2e exec playwright install chromium

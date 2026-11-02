@@ -129,7 +129,8 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
 
 - Priority: should
 - Acceptance criteria:
-  - [ ] The app can be added to the home screen on Android and iOS and opens full screen.
+  - [x] The app can be added to the home screen on Android and iOS and opens full screen.
+- Implementation notes: a hand-written service worker caches only the static assets (never `/api`) and shows an offline page when a navigation fails; the app offers an install banner (native prompt where the browser provides one, manual instructions on iOS) that can be dismissed for good. Using recipes without a connection is out of scope for now.
 
 ## 6. Data model
 
@@ -207,7 +208,7 @@ Main screens:
 - Security: httpOnly, Secure, SameSite=Lax cookies. Sign-in attempts are rate limited. Authorization is checked on every endpoint: a user accesses only their own recipes and the ones shared with them. Photos are served only to those who can see the recipe. Uploads are limited to 10 MB and to common image formats.
 - Privacy and GDPR: minimal personal data (email, name, optional Google identifier). Account deletion removes recipes, photos and shares. Simple privacy notice.
 - Accessibility: adequate contrast, touch targets of at least 44 px, cooking mode readable from a distance.
-- Internationalization: every interface text, the date, list and number formats, and the voice-command phrases live in per-language i18next resources (`apps/frontend/src/i18n`), with Italian as the default language; the chosen language is kept in the browser. The API returns stable error codes with English messages, and the interface translates them from the code. Starter tags have stable keys so their names can be translated. Known limits for now: the password-recovery email, the search stemming and the PWA manifest are Italian only.
+- Internationalization: every interface text, the date, list and number formats, and the voice-command phrases live in per-language i18next resources (`apps/frontend/src/i18n`), with Italian as the default language; the chosen language is kept in the browser. The API returns stable error codes with English messages, and the interface translates them from the code. Starter tags have stable keys so their names can be translated. Known limits for now: the password-recovery email, the search stemming, the PWA manifest and the offline page are Italian only.
 - Supported browsers and devices: Chrome on Android and Safari on iOS, latest two versions, on phones and tablets. Voice commands and the always-on screen only where the browser supports them.
 
 ## 11. Environments and release

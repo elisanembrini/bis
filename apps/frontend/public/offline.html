@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#23366F" />
+    <title>Bis</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: system-ui, sans-serif;
+        color: #23366f;
+        background-color: #fbfaf6;
+        background-image:
+          linear-gradient(#d8dfee 1px, transparent 1px),
+          linear-gradient(90deg, #d8dfee 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+      main {
+        max-width: 360px;
+        padding: 28px;
+        background: #fbfaf6;
+        border: 1px solid #d8dfee;
+        border-radius: 12px;
+      }
+      img {
+        height: 40px;
+      }
+      h1 {
+        margin: 20px 0 8px;
+        font-size: 24px;
+      }
+      p {
+        margin: 0 0 20px;
+        line-height: 1.5;
+      }
+      button {
+        font: inherit;
+        font-weight: 600;
+        color: #fbfaf6;
+        background: #23366f;
+        border: 0;
+        border-radius: 8px;
+        padding: 12px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/brand/logo.svg" alt="Bis" />
+      <h1>Sei offline</h1>
+      <p>
+        Bis ha bisogno di internet per mostrare le tue ricette. Controlla la connessione e riprova.
+      </p>
+      <button type="button" onclick="location.reload()">Riprova</button>
+    </main>
+  </body>
+</html>

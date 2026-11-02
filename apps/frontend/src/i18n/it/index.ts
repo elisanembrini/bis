@@ -3,6 +3,7 @@ import common from "./common.json";
 import cooking from "./cooking.json";
 import health from "./health.json";
 import household from "./household.json";
+import pwa from "./pwa.json";
 import recipes from "./recipes.json";
 import tags from "./tags.json";
 
@@ -12,6 +13,7 @@ export const it = {
   cooking,
   health,
   household,
+  pwa,
   recipes,
   tags,
 };

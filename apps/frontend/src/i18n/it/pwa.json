@@ -1,0 +1,9 @@
+{
+  "install": {
+    "title": "Tieni Bis sulla schermata Home",
+    "description": "Si apre a schermo intero, come un'app.",
+    "button": "Installa l'app",
+    "ios": "Tocca Condividi, poi Aggiungi alla schermata Home.",
+    "dismiss": "Non ora"
+  }
+}
