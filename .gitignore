@@ -11,3 +11,5 @@ test-results/
 playwright-report/
 *.tsbuildinfo
 apps/backend/var/
+.env.production
+.deploy/

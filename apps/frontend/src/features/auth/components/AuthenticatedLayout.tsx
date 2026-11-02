@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { AnchorLink } from "../../../components/AnchorLink";
 import { LanguageSwitcher } from "../../../components/LanguageSwitcher";
+import { LegalFooter } from "../../../components/LegalFooter";
 import { Logo } from "../../../components/Logo";
 import { InstallPrompt } from "../../pwa/components/InstallPrompt";
 import { useLogout } from "../hooks/useLogout";
@@ -46,6 +47,7 @@ export function AuthenticatedLayout() {
       <AppShell.Main>
         <InstallPrompt />
         <Outlet />
+        <LegalFooter />
       </AppShell.Main>
     </AppShell>
   );

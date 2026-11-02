@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 import { GridPaper } from "../../../components/GridPaper";
 import { LanguageSwitcher } from "../../../components/LanguageSwitcher";
+import { LegalFooter } from "../../../components/LegalFooter";
 import { Logo } from "../../../components/Logo";
 
 type AuthPageLayoutProps = {
@@ -27,6 +28,7 @@ export function AuthPageLayout({ title, children }: AuthPageLayoutProps) {
               {children}
             </Stack>
           </Paper>
+          <LegalFooter />
         </Stack>
       </Container>
     </GridPaper>

@@ -195,6 +195,7 @@ Main screens:
 - Recipe editor, with reordering of ingredients and steps and photo upload.
 - Cooking mode, full screen.
 - Household: members, invitation generation, leaving the household.
+- Privacy notice (`/privacy`): public page, linked from the footer of every page and from the sign-in, sign-up, password recovery and invitation pages.
 
 ## 9. External integrations
 
@@ -215,6 +216,7 @@ Main screens:
 
 - Local: Docker Compose with PostgreSQL, backend and frontend.
 - Production: a VPS with Docker Compose. Caddy as reverse proxy with automatic HTTPS, frontend and API on the same domain. PostgreSQL in a container with a persistent volume. Photos on a persistent volume.
+- Release: `deploy/deploy.sh` runs on the server and does everything in order (backup, build, migrations, start, smoke test); `docs/DEPLOY.md` is the step-by-step guide.
 - Backup: nightly database dump and copy of the photos to storage outside the server, kept for 14 days. Restore tested at least once before using the app with real data.
 - Configuration through environment variables, with an up-to-date `.env.example`.
 

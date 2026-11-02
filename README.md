@@ -121,9 +121,13 @@ pnpm --filter bis-e2e exec playwright install chromium
 pnpm test:e2e
 ```
 
+## Deployment
+
+The production setup (Docker Compose with Caddy and automatic HTTPS, nightly encrypted backups, one-command releases) is in `docker-compose.prod.yml` and `deploy/`. [docs/DEPLOY.md](docs/DEPLOY.md) is the step-by-step guide: preparing an Ubuntu 24.04 server, the first release, later releases, restoring from a backup and what to do when a release goes wrong.
+
 ## Continuous integration
 
-GitHub Actions runs the same checks described above (`.github/workflows/ci.yml`). Every push to `main` and every pull request runs the backend job (Ruff, mypy, pytest on PostgreSQL 18), the frontend job (Oxlint, Oxfmt, type check, Vitest with the Storybook stories, production and Storybook builds) and an API contract job that fails when `openapi.json` or the generated TypeScript types are out of date. The end-to-end tests run only on pushes to `main`.
+GitHub Actions runs the same checks described above (`.github/workflows/ci.yml`). Every push to `main` and every pull request runs the backend job (Ruff, mypy, pytest on PostgreSQL 18), the frontend job (Oxlint, Oxfmt, type check, Vitest with the Storybook stories, production and Storybook builds) and an API contract job that fails when `openapi.json` or the generated TypeScript types are out of date, and a production setup job (ShellCheck on the deploy scripts, validation of `docker-compose.prod.yml` and build of the production images). The end-to-end tests run only on pushes to `main`.
 
 ## Structure
 

@@ -107,6 +107,16 @@ jobs:
         working-directory: apps/frontend
       - run: git diff --exit-code openapi.json apps/frontend/src/api/generated/schema.d.ts
 
+  production:
+    name: Production setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - run: shellcheck -x --source-path=SCRIPTDIR deploy/*.sh deploy/backup/*.sh
+      - run: docker compose --env-file .env.production.example -f docker-compose.prod.yml --profile tools config --quiet
+      - run: docker compose --env-file .env.production.example -f docker-compose.prod.yml build
+
   e2e:
     name: End to end
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
