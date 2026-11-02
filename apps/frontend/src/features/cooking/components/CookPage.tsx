@@ -102,7 +102,7 @@ export function CookPage({
             <Text fw={600} fz="lg" lh={1.3}>
               {recipe.title}
             </Text>
-            <Button variant="subtle" color="inchiostro" onClick={onExit}>
+            <Button variant="subtle" color="ink" onClick={onExit}>
               {t("exit")}
             </Button>
           </Group>

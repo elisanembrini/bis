@@ -30,7 +30,7 @@ export function AuthenticatedLayout() {
           </Group>
           <Button
             variant="subtle"
-            color="inchiostro"
+            color="ink"
             loading={logout.isPending}
             onClick={() => logout.mutate({})}
           >

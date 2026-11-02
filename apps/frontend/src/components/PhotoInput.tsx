@@ -63,7 +63,7 @@ export function PhotoInput({
             )}
           </FileButton>
           {imageSrc !== undefined && !isUploading && (
-            <Button variant="subtle" color="inchiostro" onClick={onRemove} disabled={disabled}>
+            <Button variant="subtle" color="ink" onClick={onRemove} disabled={disabled}>
               {t("photo.remove")}
             </Button>
           )}

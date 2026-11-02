@@ -10,7 +10,7 @@ type MessageProps = {
 
 export function ErrorMessage({ title, children }: MessageProps) {
   return (
-    <Alert color="pomodoro.8" icon={<ErrorIcon />} title={title} role="alert">
+    <Alert color="tomato.8" icon={<ErrorIcon />} title={title} role="alert">
       {children}
     </Alert>
   );
@@ -26,7 +26,7 @@ export function SuccessMessage({ title, children }: MessageProps) {
 
 export function InfoMessage({ title, children }: MessageProps) {
   return (
-    <Alert color="inchiostro" icon={<InfoIcon />} title={title} role="alert">
+    <Alert color="ink" icon={<InfoIcon />} title={title} role="alert">
       {children}
     </Alert>
   );

@@ -1,9 +1,9 @@
 .number {
-  font-family: var(--bis-font-scrittura-a-mano);
+  font-family: var(--bis-font-handwriting);
   font-weight: 700;
   font-size: rem(48px);
   line-height: 1;
-  color: var(--mantine-color-inchiostro-6);
+  color: var(--mantine-color-ink-6);
 }
 
 .text {

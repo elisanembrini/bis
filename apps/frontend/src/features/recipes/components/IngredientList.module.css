@@ -10,7 +10,7 @@
   align-items: baseline;
   gap: var(--mantine-spacing-md);
   padding-block: var(--mantine-spacing-xs);
-  border-bottom: 1px dashed var(--bis-color-riga-quaderno);
+  border-bottom: 1px dashed var(--bis-color-notebook-line);
 }
 
 .amount {

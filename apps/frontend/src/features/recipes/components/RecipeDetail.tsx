@@ -142,7 +142,7 @@ export function RecipeDetail({
           </SimpleGrid>
           <Button
             variant="subtle"
-            color="inchiostro"
+            color="ink"
             onClick={() => setConfirming(true)}
             loading={isDeleting}
           >
@@ -155,7 +155,7 @@ export function RecipeDetail({
           )}
         </Stack>
       ) : (
-        <Button variant="outline" color="pomodoro" onClick={onCopy} loading={isCopying}>
+        <Button variant="outline" color="tomato" onClick={onCopy} loading={isCopying}>
           {t("detail.copy")}
         </Button>
       )}

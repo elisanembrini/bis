@@ -12,7 +12,7 @@ type EmptyStateProps = {
 
 export function EmptyState({ title, description, action }: EmptyStateProps) {
   return (
-    <GridPaper p="xl" bd="1px solid var(--bis-color-quadretti)" bdrs="md">
+    <GridPaper p="xl" bd="1px solid var(--bis-color-squares)" bdrs="md">
       <Stack gap="sm" align="flex-start">
         <HandwrittenTitle order={2} size={24}>
           {title}

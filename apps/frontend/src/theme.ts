@@ -8,7 +8,7 @@ import {
   type MantineColorsTuple,
 } from "@mantine/core";
 
-const inchiostro: MantineColorsTuple = [
+const ink: MantineColorsTuple = [
   "#F2F3F6",
   "#E0E3EB",
   "#C1C7D7",
@@ -21,7 +21,7 @@ const inchiostro: MantineColorsTuple = [
   "#121C3A",
 ];
 
-const pomodoro: MantineColorsTuple = [
+const tomato: MantineColorsTuple = [
   "#FBF3F2",
   "#F6E4E0",
   "#EEC8C1",
@@ -35,20 +35,20 @@ const pomodoro: MantineColorsTuple = [
 ];
 
 export const brand = {
-  carta: "#FBFAF6",
-  quadretti: "#D8DFEE",
-  rigaQuaderno: "#C9D1E4",
-  grigliaSfondo: "#E4E8F2",
-  testo: "#1E2233",
-  testoSecondario: "#4A5168",
-  fontScritturaAMano: "Kalam, cursive",
+  paper: "#FBFAF6",
+  squares: "#D8DFEE",
+  notebookLine: "#C9D1E4",
+  backgroundGrid: "#E4E8F2",
+  text: "#1E2233",
+  textSecondary: "#4A5168",
+  handwritingFont: "Kalam, cursive",
 } as const;
 
 export const theme = createTheme({
-  primaryColor: "inchiostro",
+  primaryColor: "ink",
   primaryShade: 6,
-  colors: { inchiostro, pomodoro },
-  black: brand.testo,
+  colors: { ink, tomato },
+  black: brand.text,
   fontFamily: "Figtree, system-ui, sans-serif",
   headings: {
     fontFamily: "Figtree, system-ui, sans-serif",
@@ -78,16 +78,16 @@ export const theme = createTheme({
 
 export const cssVariablesResolver: CSSVariablesResolver = () => ({
   variables: {
-    "--bis-font-scrittura-a-mano": brand.fontScritturaAMano,
-    "--bis-color-quadretti": brand.quadretti,
-    "--bis-color-riga-quaderno": brand.rigaQuaderno,
-    "--bis-color-griglia-sfondo": brand.grigliaSfondo,
+    "--bis-font-handwriting": brand.handwritingFont,
+    "--bis-color-squares": brand.squares,
+    "--bis-color-notebook-line": brand.notebookLine,
+    "--bis-color-background-grid": brand.backgroundGrid,
   },
   light: {
-    "--mantine-color-body": brand.carta,
-    "--mantine-color-text": brand.testo,
-    "--mantine-color-dimmed": brand.testoSecondario,
-    "--mantine-color-default-border": brand.quadretti,
+    "--mantine-color-body": brand.paper,
+    "--mantine-color-text": brand.text,
+    "--mantine-color-dimmed": brand.textSecondary,
+    "--mantine-color-default-border": brand.squares,
   },
   dark: {},
 });

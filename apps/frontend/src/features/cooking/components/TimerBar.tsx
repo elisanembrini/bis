@@ -24,7 +24,7 @@ export function TimerBar({ timers, now, onCancel, onDismiss }: TimerBarProps) {
     <Box component="section" aria-label={t("timers")}>
       <Stack gap="xs">
         {finished.map((timer) => (
-          <Paper key={timer.id} bg="pomodoro.8" c="white" p="md" role="alert">
+          <Paper key={timer.id} bg="tomato.8" c="white" p="md" role="alert">
             <Group justify="space-between" wrap="nowrap">
               <Group gap="sm" wrap="nowrap">
                 <ClockIcon size={28} />
@@ -32,14 +32,14 @@ export function TimerBar({ timers, now, onCancel, onDismiss }: TimerBarProps) {
                   {t("timerFinished", { number: timer.stepIndex + 1 })}
                 </Text>
               </Group>
-              <Button variant="white" color="pomodoro.8" onClick={() => onDismiss(timer.id)}>
+              <Button variant="white" color="tomato.8" onClick={() => onDismiss(timer.id)}>
                 {t("dismiss")}
               </Button>
             </Group>
           </Paper>
         ))}
         {running.map((timer) => (
-          <Paper key={timer.id} bg="pomodoro.6" c="white" p="sm" pl="md">
+          <Paper key={timer.id} bg="tomato.6" c="white" p="sm" pl="md">
             <Group justify="space-between" wrap="nowrap">
               <Group gap="sm" wrap="nowrap">
                 <ClockIcon size={28} />

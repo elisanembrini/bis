@@ -26,14 +26,14 @@ export function RecipeListItem({ recipe, thumbnailSrc }: RecipeListItemProps) {
   ].filter((part) => part !== null);
 
   return (
-    <Paper withBorder p="sm" {...(recipe.is_own ? {} : { bg: "inchiostro.0" })}>
+    <Paper withBorder p="sm" {...(recipe.is_own ? {} : { bg: "ink.0" })}>
       <Group gap="md" wrap="nowrap">
         {recipe.cover_photo_id === null ? (
           <Center
             w={THUMBNAIL_SIZE}
             h={THUMBNAIL_SIZE}
-            bg="inchiostro.0"
-            c="inchiostro.4"
+            bg="ink.0"
+            c="ink.4"
             className={classes.thumbnail}
           >
             <PhotoIcon size={28} />

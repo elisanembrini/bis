@@ -42,7 +42,7 @@ export function InvitePanel({
               {({ copied, copy }) => (
                 <Button
                   variant={copied ? "light" : "default"}
-                  color={copied ? "green.8" : "inchiostro"}
+                  color={copied ? "green.8" : "ink"}
                   leftSection={copied ? <SuccessIcon /> : null}
                   onClick={copy}
                 >
