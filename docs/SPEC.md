@@ -1,230 +1,232 @@
-# Specifica: Bis
+# Specification: Bis
 
-Versione: MVP 1.0
-Ultimo aggiornamento: 23 ottobre 2026
+Version: MVP 1.0
+Last updated: 2 November 2026
 
-## 1. Problema
+The product interface is in Italian. Interface texts, labels and voice commands are quoted in Italian, with an English gloss where it helps.
 
-Quando una ricetta mi riesce bene la scrivo su un quaderno, perché non ricordo i dettagli e altrimenti non potrei rifarla. Il quaderno ha due problemi: in cucina rischia di sporcarsi e trovare una ricetta richiede tempo. Le app di ricette esistenti sono pensate soprattutto per raccogliere ricette trovate online, non per conservare la propria versione di un piatto e seguirla con le mani occupate.
+## 1. Problem
 
-## 2. Utenti e ruoli
+When a recipe turns out well, I write it down in a notebook, because I won't remember the details otherwise and couldn't make it again. The notebook has two problems: in the kitchen it risks getting dirty, and finding a recipe takes time. Existing recipe apps are mostly designed to collect recipes found online, not to keep your own version of a dish and follow it with your hands full.
 
-L'app è usata da un piccolo gruppo di persone che vivono nella stessa casa. Ognuno ha il proprio ricettario personale e decide cosa condividere e con chi.
+## 2. Users and roles
 
-| Ruolo                   | Può fare                                                                                                                                                                            | Non può fare                                                                         |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Proprietaria della casa | Tutto ciò che fa un membro. Generare link di invito. Rimuovere membri dalla casa.                                                                                                   | Vedere o modificare ricette altrui non condivise con lei.                            |
-| Membro                  | Gestire le proprie ricette ed etichette. Condividere le proprie ricette con membri scelti. Vedere le ricette condivise con lui e copiarle nel proprio ricettario. Lasciare la casa. | Modificare ricette di altri. Invitare persone. Vedere ricette non condivise con lui. |
+The app is used by a small group of people who live in the same home. Everyone has their own recipe book and decides what to share, and with whom.
 
-Ogni utente appartiene a una sola casa. Chi si registra senza invito diventa proprietario di una nuova casa.
+| Role            | Can                                                                                                                                                                                  | Cannot                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Household owner | Everything a member can do. Generate invitation links. Remove members from the household.                                                                                            | View or edit other people's recipes that are not shared with them.                  |
+| Member          | Manage their own recipes and tags. Share their own recipes with chosen members. View the recipes shared with them and copy them into their own recipe book. Leave the household.    | Edit other people's recipes. Invite people. View recipes that are not shared with them. |
 
-## 3. Obiettivi
+Each user belongs to exactly one household. Anyone who signs up without an invitation becomes the owner of a new household.
 
-- Ho trasferito le ricette del quaderno nell'app e ho smesso di usare il quaderno.
-- Trovo qualsiasi ricetta, per nome o per ingrediente, in meno di 10 secondi.
-- Posso seguire una ricetta dall'inizio alla fine senza toccare lo schermo, usando voce e timer, su Chrome per Android.
-- Salvare una nuova ricetta da telefono richiede meno di 5 minuti.
+## 3. Goals
 
-## 4. Non obiettivi
+- I have moved the recipes from the notebook into the app and stopped using the notebook.
+- I find any recipe, by name or by ingredient, in under 10 seconds.
+- I can follow a recipe from start to finish without touching the screen, using voice and timers, on Chrome for Android.
+- Saving a new recipe from a phone takes less than 5 minutes.
 
-- Storico delle volte in cui rifaccio una ricetta e delle modifiche apportate.
-- Dettatura vocale che trasforma un racconto in una ricetta strutturata.
-- Condivisione pubblica o con persone esterne alla casa.
-- Lingue diverse dall'italiano (i testi restano comunque in i18next).
-- Interfaccia ottimizzata per computer.
-- App native per App Store e Google Play.
+## 4. Non-goals
 
-## 5. Funzionalità
+- A history of the times a recipe was made again and of the changes made to it.
+- Voice dictation that turns a spoken account into a structured recipe.
+- Public sharing, or sharing with people outside the household.
+- Languages other than Italian (all texts still go through i18next).
+- An interface optimized for desktop computers.
+- Native apps for the App Store and Google Play.
 
-### F1: Registrazione e accesso
+## 5. Features
 
-- Descrizione: accesso con email e password oppure con Google. Recupero password via email.
-- Priorità: must
-- Criteri di accettazione:
-  - [ ] Dato un nuovo utente, quando si registra con email e password, allora l'account viene creato insieme a una nuova casa di cui è proprietario.
-  - [ ] Dato un utente registrato, quando accede con credenziali corrette, allora entra nell'app e la sessione è mantenuta tramite cookie httpOnly.
-  - [ ] Dato un utente, quando sceglie "Accedi con Google" e autorizza, allora entra nell'app; se l'email esiste già, l'account Google viene collegato a quello esistente.
-  - [ ] Dato un utente che ha dimenticato la password, quando la richiede, allora riceve un link valido per 1 ora per impostarne una nuova.
-  - [ ] Dato un utente collegato, quando esce, allora la sessione è invalidata lato server.
-- Casi limite ed errori: credenziali errate (messaggio generico senza rivelare se l'email esiste), troppi tentativi di accesso (blocco temporaneo), link di recupero scaduto o già usato.
+### F1: Sign-up and sign-in
 
-### F2: Casa e inviti
+- Description: sign in with email and password or with Google. Password recovery by email.
+- Priority: must
+- Acceptance criteria:
+  - [ ] Given a new user, when they sign up with email and password, then the account is created together with a new household of which they are the owner.
+  - [ ] Given a registered user, when they sign in with correct credentials, then they enter the app and the session is kept through an httpOnly cookie.
+  - [ ] Given a user, when they choose "Accedi con Google" (sign in with Google) and authorize, then they enter the app; if the email already exists, the Google account is linked to the existing one.
+  - [ ] Given a user who forgot their password, when they request recovery, then they receive a link valid for 1 hour to set a new one.
+  - [ ] Given a signed-in user, when they sign out, then the session is invalidated on the server.
+- Edge cases and errors: wrong credentials (generic message that does not reveal whether the email exists), too many sign-in attempts (temporary block), expired or already used recovery link.
 
-- Descrizione: la proprietaria invita le persone di casa tramite un link.
-- Priorità: must
-- Criteri di accettazione:
-  - [ ] Data la proprietaria, quando genera un invito, allora ottiene un link copiabile valido 7 giorni e utilizzabile una sola volta.
-  - [ ] Dato un link valido, quando una persona lo apre e si registra o accede, allora entra nella casa come membro.
-  - [ ] Data la proprietaria, quando rimuove un membro, allora le condivisioni verso e da quel membro vengono revocate; le copie già fatte restano a chi le ha copiate.
-  - [ ] Dato un membro, quando lascia la casa, allora diventa proprietario di una nuova casa vuota e conserva le proprie ricette.
-- Casi limite ed errori: link scaduto, link già usato, utente già membro di un'altra casa (deve prima lasciarla).
+### F2: Household and invitations
 
-### F3: Gestione ricette
+- Description: the household owner invites the people they live with through a link.
+- Priority: must
+- Acceptance criteria:
+  - [ ] Given the owner, when they generate an invitation, then they get a copyable link valid for 7 days and usable only once.
+  - [ ] Given a valid link, when a person opens it and signs up or signs in, then they join the household as a member.
+  - [ ] Given the owner, when they remove a member, then the shares to and from that member are revoked; copies that were already made stay with whoever made them.
+  - [ ] Given a member, when they leave the household, then they become the owner of a new empty household and keep their own recipes.
+- Edge cases and errors: expired link, already used link, user who already belongs to another household (they must leave it first).
 
-- Descrizione: creare, vedere, modificare ed eliminare le proprie ricette.
-- Priorità: must
-- Contenuto di una ricetta: titolo, foto del piatto, ingredienti (quantità, unità, nome), passaggi ordinati (testo, foto opzionale, durata del timer opzionale), note, tempo di preparazione, tempo di cottura, numero di porzioni, etichette.
-- Criteri di accettazione:
-  - [ ] Dato un utente, quando salva una ricetta con almeno titolo, un ingrediente e un passaggio, allora la ricetta compare nel suo ricettario.
-  - [ ] Dato un utente, quando aggiunge un ingrediente senza quantità, allora viene mostrato come "q.b.".
-  - [ ] Dato un utente, quando riordina passaggi o ingredienti, allora il nuovo ordine viene salvato.
-  - [ ] Dato un utente, quando elimina una ricetta, allora gli viene chiesta conferma e, dopo la conferma, ricetta e foto vengono eliminate.
-  - [ ] Solo l'autrice di una ricetta può modificarla o eliminarla.
-- Casi limite ed errori: campi obbligatori mancanti, foto troppo grande o in formato non supportato, perdita di connessione durante il salvataggio (la bozza non deve andare persa).
+### F3: Recipe management
 
-### F4: Porzioni con ricalcolo delle dosi
+- Description: create, view, edit and delete your own recipes.
+- Priority: must
+- Recipe content: title, photo of the dish, ingredients (quantity, unit, name), ordered steps (text, optional photo, optional timer duration), notes, preparation time, cooking time, number of servings, tags.
+- Acceptance criteria:
+  - [ ] Given a user, when they save a recipe with at least a title, one ingredient and one step, then the recipe appears in their recipe book.
+  - [ ] Given a user, when they add an ingredient without a quantity, then it is shown as "q.b." (*quanto basta*, "as needed").
+  - [ ] Given a user, when they reorder steps or ingredients, then the new order is saved.
+  - [ ] Given a user, when they delete a recipe, then they are asked for confirmation and, after confirming, the recipe and its photos are deleted.
+  - [ ] Only the author of a recipe can edit or delete it.
+- Edge cases and errors: missing required fields, photo that is too large or in an unsupported format, connection lost while saving (the draft must not be lost).
 
-- Priorità: must
-- Criteri di accettazione:
-  - [ ] Data una ricetta per 4 porzioni, quando l'utente imposta 2 porzioni nella vista, allora tutte le quantità vengono dimezzate.
-  - [ ] Gli ingredienti "q.b." non vengono ricalcolati.
-  - [ ] Le quantità ricalcolate sono arrotondate in modo leggibile (es. 1,5 e non 1,4999).
-  - [ ] Il ricalcolo cambia solo la visualizzazione e non modifica la ricetta salvata.
+### F4: Servings with recalculated quantities
 
-### F5: Etichette
+- Priority: must
+- Acceptance criteria:
+  - [ ] Given a recipe for 4 servings, when the user sets 2 servings in the view, then all quantities are halved.
+  - [ ] "q.b." ingredients are not recalculated.
+  - [ ] Recalculated quantities are rounded readably (for example "1,5" rather than "1,4999"; the interface uses the Italian decimal comma).
+  - [ ] The recalculation changes only the view and does not modify the saved recipe.
 
-- Priorità: must
-- Criteri di accettazione:
-  - [ ] Ogni utente trova un elenco di partenza: Antipasti, Primi, Secondi, Contorni, Dolci, Vegetariano, Veloce.
-  - [ ] Ogni utente può creare etichette personali, visibili solo a lui.
-  - [ ] Una ricetta può avere più etichette.
-- Casi limite ed errori: etichetta duplicata per lo stesso utente, eliminazione di un'etichetta usata (viene rimossa dalle ricette, le ricette restano).
+### F5: Tags
 
-### F6: Ricerca
+- Priority: must
+- Acceptance criteria:
+  - [ ] Every user finds a starter list: Antipasti (starters), Primi (first courses), Secondi (main courses), Contorni (side dishes), Dolci (desserts), Vegetariano (vegetarian), Veloce (quick).
+  - [ ] Every user can create personal tags, visible only to them.
+  - [ ] A recipe can have several tags.
+- Edge cases and errors: duplicate tag for the same user, deleting a tag that is in use (it is removed from the recipes, the recipes stay).
 
-- Descrizione: trovare le ricette per nome o per ingrediente.
-- Priorità: must
-- Criteri di accettazione:
-  - [ ] Dato un testo di ricerca, quando l'utente lo scrive, allora vede le ricette il cui titolo lo contiene, senza distinzione tra maiuscole e minuscole.
-  - [ ] Dato un ingrediente, quando l'utente cerca per ingrediente, allora vede le ricette che lo contengono.
-  - [ ] La ricerca include le proprie ricette e quelle condivise con l'utente, distinguendole visivamente.
-  - [ ] Ogni risultato mostra foto del piatto e titolo.
-  - [ ] Senza ricerca, le ricette sono ordinate dalla più recente.
+### F6: Search
 
-### F7: Condivisione e copia
+- Description: find recipes by name or by ingredient.
+- Priority: must
+- Acceptance criteria:
+  - [ ] Given a search text, when the user types it, then they see the recipes whose title contains it, regardless of case.
+  - [ ] Given an ingredient, when the user searches by ingredient, then they see the recipes that contain it.
+  - [ ] The search includes the user's own recipes and the ones shared with them, telling them apart visually.
+  - [ ] Every result shows the photo of the dish and the title.
+  - [ ] Without a search, recipes are ordered from the most recent.
 
-- Priorità: must
-- Criteri di accettazione:
-  - [ ] Data una propria ricetta, quando l'utente sceglie uno o più membri della casa, allora la ricetta compare nella sezione "Condivise con me" di quei membri.
-  - [ ] Data una condivisione, quando l'autrice la revoca, allora la ricetta scompare per quel membro.
-  - [ ] Data una ricetta condivisa, quando il destinatario la apre, allora la vede in sola lettura e può usare porzioni e modalità cucina.
-  - [ ] Data una ricetta condivisa, quando il destinatario sceglie "Fai il bis", allora ottiene una copia indipendente, foto comprese, che può modificare.
-  - [ ] Le modifiche successive all'originale non cambiano le copie.
+### F7: Sharing and copying
 
-### F8: Modalità cucina
+- Priority: must
+- Acceptance criteria:
+  - [ ] Given one of their own recipes, when the user chooses one or more household members, then the recipe appears in the "Condivise con me" (shared with me) section of those members.
+  - [ ] Given a share, when the author revokes it, then the recipe disappears for that member.
+  - [ ] Given a shared recipe, when the recipient opens it, then they see it read-only and can use servings and cooking mode.
+  - [ ] Given a shared recipe, when the recipient chooses "Fai il bis" (roughly "have seconds"), then they get an independent copy, photos included, which they can edit.
+  - [ ] Later changes to the original do not change the copies.
 
-- Priorità: must
-- Criteri di accettazione:
-  - [ ] Dato un utente in modalità cucina, lo schermo resta acceso finché la modalità è attiva, dove il browser lo supporta.
-  - [ ] Viene mostrato un passaggio alla volta, con testo grande leggibile a circa un metro di distanza e la foto del passaggio se presente.
-  - [ ] Pulsanti grandi permettono di andare avanti e indietro.
-  - [ ] Dove il browser supporta il riconoscimento vocale, i comandi "avanti", "indietro", "ripeti" e "avvia timer" funzionano senza toccare lo schermo.
-  - [ ] Dato un passaggio con durata, quando l'utente avvia il timer, allora parte un conto alla rovescia che continua anche passando ad altri passaggi; alla fine suona un avviso.
-  - [ ] Dove il riconoscimento vocale non è supportato, l'interfaccia lo segnala e restano disponibili i pulsanti.
-- Casi limite ed errori: permesso del microfono negato, più timer attivi insieme, uscita accidentale dalla modalità con timer attivi (chiedere conferma).
+### F8: Cooking mode
 
-### F9: App installabile
+- Priority: must
+- Acceptance criteria:
+  - [ ] Given a user in cooking mode, the screen stays on as long as the mode is active, where the browser supports it.
+  - [ ] One step at a time is shown, with large text readable from about one meter away and the photo of the step if present.
+  - [ ] Large buttons allow going forward and back.
+  - [ ] Where the browser supports speech recognition, the commands "avanti" (next), "indietro" (back), "ripeti" (repeat) and "avvia timer" (start timer) work without touching the screen.
+  - [ ] Given a step with a duration, when the user starts the timer, then a countdown starts and keeps running when moving to other steps; at the end an alert sounds.
+  - [ ] Where speech recognition is not supported, the interface says so and the buttons remain available.
+- Edge cases and errors: microphone permission denied, several timers active at once, accidentally leaving the mode with active timers (ask for confirmation).
 
-- Priorità: should
-- Criteri di accettazione:
-  - [ ] L'app può essere aggiunta alla schermata home su Android e iOS e si apre a schermo intero.
+### F9: Installable app
 
-## 6. Modello dati
+- Priority: should
+- Acceptance criteria:
+  - [ ] The app can be added to the home screen on Android and iOS and opens full screen.
 
-- `users`: id, email (unica), password_hash (nullable), google_sub (nullable, unico), display_name, created_at.
+## 6. Data model
+
+- `users`: id, email (unique), password_hash (nullable), google_sub (nullable, unique), display_name, created_at.
 - `households`: id, owner_id, created_at.
-- `household_members`: household_id, user_id (unico: un utente appartiene a una sola casa), joined_at.
-- `household_invites`: id, household_id, token_hash, created_by, created_at, expires_at, used_at (nullable), used_by (nullable). Nel database si salva solo l'hash del token.
+- `household_members`: household_id, user_id (unique: a user belongs to a single household), joined_at.
+- `household_invites`: id, household_id, token_hash, created_by, created_at, expires_at, used_at (nullable), used_by (nullable). Only the hash of the token is stored in the database.
 - `recipes`: id, owner_id, title, notes, prep_minutes, cook_minutes, servings (> 0), cover_photo_id (nullable), copied_from_recipe_id (nullable), created_at, updated_at.
-- `ingredients`: id, recipe_id, position, quantity (decimale, nullable per "q.b."), unit (nullable), name.
+- `ingredients`: id, recipe_id, position, quantity (decimal, nullable for "q.b."), unit (nullable), name.
 - `steps`: id, recipe_id, position, text, timer_seconds (nullable), photo_id (nullable).
-- `tags`: id, owner_id (nullable per le etichette di partenza), name. Unicità su (owner_id, name).
+- `tags`: id, owner_id (nullable for the starter tags), name. Unique on (owner_id, name).
 - `recipe_tags`: recipe_id, tag_id.
-- `recipe_shares`: recipe_id, user_id, created_at. Unicità su (recipe_id, user_id). Il destinatario deve appartenere alla stessa casa dell'autrice.
+- `recipe_shares`: recipe_id, user_id, created_at. Unique on (recipe_id, user_id). The recipient must belong to the same household as the author.
 - `photos`: id, owner_id, storage_key, content_type, width, height, size_bytes, created_at.
-- `sessions`: id, user_id, token_hash (unico), created_at, expires_at. Sessioni lato server; il cookie contiene il token, il database solo il suo hash.
-- `password_reset_tokens`: id, user_id, token_hash (unico), created_at, expires_at, used_at (nullable). Token monouso valido 1 ora.
-- `login_attempts`: id, email, ip, succeeded, attempted_at. Base del limite ai tentativi di accesso.
+- `sessions`: id, user_id, token_hash (unique), created_at, expires_at. Server-side sessions; the cookie holds the token, the database only its hash.
+- `password_reset_tokens`: id, user_id, token_hash (unique), created_at, expires_at, used_at (nullable). Single-use token valid for 1 hour.
+- `login_attempts`: id, email, ip, succeeded, attempted_at. Basis of the sign-in rate limit.
 
-Eliminando una ricetta si eliminano a cascata ingredienti, passaggi, etichette associate, condivisioni e foto.
+Deleting a recipe cascades to its ingredients, steps, associated tags, shares and photos.
 
 ## 7. API
 
-| Metodo | Path                              | Ruoli autorizzati                   | Descrizione                                                           |
-| ------ | --------------------------------- | ----------------------------------- | --------------------------------------------------------------------- |
-| POST   | /auth/register                    | Pubblico                            | Registrazione con email e password, eventualmente con token di invito |
-| POST   | /auth/login                       | Pubblico                            | Accesso                                                               |
-| POST   | /auth/logout                      | Autenticato                         | Uscita                                                                |
-| POST   | /auth/forgot-password             | Pubblico                            | Richiesta recupero password                                           |
-| POST   | /auth/reset-password              | Pubblico                            | Nuova password tramite token                                          |
-| GET    | /auth/google/authorize            | Pubblico                            | Avvio accesso con Google                                              |
-| GET    | /auth/google/callback             | Pubblico                            | Ritorno da Google                                                     |
-| GET    | /me                               | Autenticato                         | Utente corrente e casa                                                |
-| GET    | /household                        | Membro                              | Casa e membri                                                         |
-| POST   | /household/invites                | Proprietaria                        | Genera link di invito                                                 |
-| GET    | /household/invites/{token}        | Pubblico                            | Anteprima dell'invito: nome di chi invita                             |
-| POST   | /household/invites/{token}/accept | Autenticato                         | Accetta un invito                                                     |
-| DELETE | /household/members/{user_id}      | Proprietaria                        | Rimuove un membro                                                     |
-| POST   | /household/leave                  | Membro                              | Lascia la casa                                                        |
-| GET    | /recipes                          | Autenticato                         | Elenco con parametri q, ingredient, scope (mine o shared)             |
-| POST   | /recipes                          | Autenticato                         | Crea una ricetta                                                      |
-| GET    | /recipes/{id}                     | Autrice o destinatario              | Dettaglio                                                             |
-| PUT    | /recipes/{id}                     | Autrice                             | Modifica                                                              |
-| DELETE | /recipes/{id}                     | Autrice                             | Elimina                                                               |
-| POST   | /recipes/{id}/copy                | Destinatario                        | Copia nel proprio ricettario                                          |
-| GET    | /recipes/{id}/shares              | Autrice                             | Elenco condivisioni                                                   |
-| PUT    | /recipes/{id}/shares              | Autrice                             | Imposta i membri con cui è condivisa                                  |
-| GET    | /tags                             | Autenticato                         | Etichette di partenza e personali                                     |
-| POST   | /tags                             | Autenticato                         | Crea etichetta personale                                              |
-| DELETE | /tags/{id}                        | Autrice dell'etichetta              | Elimina etichetta personale                                           |
-| POST   | /photos                           | Autenticato                         | Carica una foto                                                       |
-| GET    | /photos/{id}                      | Chi può vedere la ricetta collegata | Scarica una foto                                                      |
+| Method | Path                              | Authorized roles                    | Description                                                              |
+| ------ | --------------------------------- | ----------------------------------- | ------------------------------------------------------------------------ |
+| POST   | /auth/register                    | Public                              | Sign-up with email and password, optionally with an invitation token     |
+| POST   | /auth/login                       | Public                              | Sign-in                                                                  |
+| POST   | /auth/logout                      | Authenticated                       | Sign-out                                                                 |
+| POST   | /auth/forgot-password             | Public                              | Password recovery request                                                |
+| POST   | /auth/reset-password              | Public                              | New password through a token                                             |
+| GET    | /auth/google/authorize            | Public                              | Start Google sign-in                                                     |
+| GET    | /auth/google/callback             | Public                              | Return from Google                                                       |
+| GET    | /me                               | Authenticated                       | Current user and household                                               |
+| GET    | /household                        | Member                              | Household and members                                                    |
+| POST   | /household/invites                | Household owner                     | Generate an invitation link                                              |
+| GET    | /household/invites/{token}        | Public                              | Invitation preview: name of the person who invites                       |
+| POST   | /household/invites/{token}/accept | Authenticated                       | Accept an invitation                                                     |
+| DELETE | /household/members/{user_id}      | Household owner                     | Remove a member                                                          |
+| POST   | /household/leave                  | Member                              | Leave the household                                                      |
+| GET    | /recipes                          | Authenticated                       | List with parameters q, ingredient, scope (mine or shared)               |
+| POST   | /recipes                          | Authenticated                       | Create a recipe                                                          |
+| GET    | /recipes/{id}                     | Author or recipient                 | Detail                                                                   |
+| PUT    | /recipes/{id}                     | Author                              | Update                                                                   |
+| DELETE | /recipes/{id}                     | Author                              | Delete                                                                   |
+| POST   | /recipes/{id}/copy                | Recipient                           | Copy into your own recipe book                                           |
+| GET    | /recipes/{id}/shares              | Author                              | List shares                                                              |
+| PUT    | /recipes/{id}/shares              | Author                              | Set the members it is shared with                                        |
+| GET    | /tags                             | Authenticated                       | Starter and personal tags                                                |
+| POST   | /tags                             | Authenticated                       | Create a personal tag                                                    |
+| DELETE | /tags/{id}                        | Author of the tag                   | Delete a personal tag                                                    |
+| POST   | /photos                           | Authenticated                       | Upload a photo                                                           |
+| GET    | /photos/{id}                      | Anyone who can see the linked recipe | Download a photo                                                         |
 
-## 8. Interfaccia
+## 8. Interface
 
-Progettazione mobile first, con layout adattato per tablet. Lingua: italiano.
+Mobile-first design, with a layout adapted for tablets. Language: Italian.
 
-Schermate principali:
+Main screens:
 
-- Accesso e registrazione, con accesso Google.
-- Elenco ricette, con barra di ricerca, scelta tra nome e ingrediente, e due sezioni: "Le mie ricette" e "Condivise con me".
-- Dettaglio ricetta, con regolazione delle porzioni, pulsante "Inizia a cucinare", condivisione (per l'autrice) o copia (per il destinatario).
-- Editor ricetta, con riordino di ingredienti e passaggi e caricamento foto.
-- Modalità cucina, a schermo intero.
-- Casa: membri, generazione dell'invito, uscita dalla casa.
+- Sign-in and sign-up, with Google sign-in.
+- Recipe list, with a search bar, a choice between name and ingredient, and two sections: "Le mie ricette" (my recipes) and "Condivise con me" (shared with me).
+- Recipe detail, with servings adjustment, the "Inizia a cucinare" (start cooking) button, sharing (for the author) or copying (for the recipient).
+- Recipe editor, with reordering of ingredients and steps and photo upload.
+- Cooking mode, full screen.
+- Household: members, invitation generation, leaving the household.
 
-## 9. Integrazioni esterne
+## 9. External integrations
 
-- Google OAuth per l'accesso.
-- Servizio di email transazionali via SMTP per recupero password.
-- API del browser: Screen Wake Lock per lo schermo acceso, Web Speech API per i comandi vocali, Web Audio o elemento audio per l'avviso dei timer.
+- Google OAuth for sign-in.
+- Transactional email service over SMTP for password recovery.
+- Browser APIs: Screen Wake Lock to keep the screen on, Web Speech API for voice commands, Web Audio or an audio element for the timer alert.
 
-## 10. Requisiti non funzionali
+## 10. Non-functional requirements
 
-- Performance: ricerca con risposta sotto 1 secondo fino a 1.000 ricette per utente. Foto ridimensionate lato server (lato lungo massimo 1600 px) e convertite in un formato compresso, con miniature per gli elenchi.
-- Sicurezza: cookie httpOnly, Secure, SameSite=Lax. Limite ai tentativi di accesso. Autorizzazione verificata su ogni endpoint: un utente accede solo alle proprie ricette e a quelle condivise con lui. Foto servite solo a chi può vedere la ricetta. Caricamenti limitati a 10 MB e ai formati immagine comuni.
-- Privacy e GDPR: dati personali minimi (email, nome, eventuale identificativo Google). Eliminazione dell'account con cancellazione di ricette, foto e condivisioni. Informativa privacy semplice.
-- Accessibilità: contrasto adeguato, aree toccabili di almeno 44 px, modalità cucina leggibile a distanza.
-- Browser e dispositivi supportati: Chrome su Android e Safari su iOS, ultime due versioni, su telefono e tablet. Comandi vocali e schermo sempre acceso solo dove il browser li supporta.
+- Performance: search responds in under 1 second with up to 1,000 recipes per user. Photos are resized on the server (longest side at most 1600 px) and converted to a compressed format, with thumbnails for lists.
+- Security: httpOnly, Secure, SameSite=Lax cookies. Sign-in attempts are rate limited. Authorization is checked on every endpoint: a user accesses only their own recipes and the ones shared with them. Photos are served only to those who can see the recipe. Uploads are limited to 10 MB and to common image formats.
+- Privacy and GDPR: minimal personal data (email, name, optional Google identifier). Account deletion removes recipes, photos and shares. Simple privacy notice.
+- Accessibility: adequate contrast, touch targets of at least 44 px, cooking mode readable from a distance.
+- Supported browsers and devices: Chrome on Android and Safari on iOS, latest two versions, on phones and tablets. Voice commands and the always-on screen only where the browser supports them.
 
-## 11. Ambienti e rilascio
+## 11. Environments and release
 
-- Locale: Docker Compose con PostgreSQL, backend e frontend.
-- Produzione: VPS con Docker Compose. Caddy come reverse proxy con HTTPS automatico, frontend e API sullo stesso dominio. PostgreSQL in container con volume persistente. Foto su volume persistente.
-- Backup: dump notturno del database e copia delle foto su uno storage esterno al server, conservati per 14 giorni. Ripristino provato almeno una volta prima di usare l'app con dati reali.
-- Configurazione tramite variabili d'ambiente, con `.env.example` aggiornato.
+- Local: Docker Compose with PostgreSQL, backend and frontend.
+- Production: a VPS with Docker Compose. Caddy as reverse proxy with automatic HTTPS, frontend and API on the same domain. PostgreSQL in a container with a persistent volume. Photos on a persistent volume.
+- Backup: nightly database dump and copy of the photos to storage outside the server, kept for 14 days. Restore tested at least once before using the app with real data.
+- Configuration through environment variables, with an up-to-date `.env.example`.
 
-## 12. Domande aperte
+## 12. Open questions
 
-- [x] Nome dell'app: Bis. Da verificare disponibilità di dominio, nomi negli store e marchi registrati.
-- [ ] Le etichette servono anche come filtro nell'elenco ricette, oltre che come informazione?
-- [x] Elenco delle unità di misura: fisso (g, kg, ml, l, cucchiaio, cucchiaino, tazza, pizzico, spicchio, pezzi); l'unità è facoltativa.
-- [ ] La ricerca per ingrediente deve trovare "zucchine" scrivendo "zucchina"?
-- [ ] Serve un modo per esportare le proprie ricette, per non dipendere dall'app?
-- [ ] Provider per il VPS, per il dominio e per le email transazionali.
+- [x] App name: Bis. To check: availability of the domain, store names and registered trademarks.
+- [ ] Should tags also work as a filter in the recipe list, besides being information?
+- [x] List of units of measure: fixed (g, kg, ml, l, cucchiaio, cucchiaino, tazza, pizzico, spicchio, pezzi); the unit is optional.
+- [ ] Should ingredient search find "zucchine" when typing "zucchina"?
+- [ ] Is a way to export your own recipes needed, to avoid depending on the app?
+- [ ] Provider for the VPS, for the domain and for the transactional emails.
 
-## Idee per le versioni successive
+## Ideas for later versions
 
-- Dettatura vocale che trasforma il racconto della preparazione in una ricetta strutturata.
-- Storico delle volte in cui una ricetta è stata rifatta, con note su cosa è cambiato.
-- Importazione di ricette da foto delle pagine del quaderno.
+- Voice dictation that turns the spoken account of the preparation into a structured recipe.
+- A history of the times a recipe was made again, with notes on what changed.
+- Importing recipes from photos of the notebook pages.

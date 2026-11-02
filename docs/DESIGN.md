@@ -1,93 +1,95 @@
-# Identità visiva di Bis: direzione Quaderno
+# Bis visual identity: the Quaderno direction
+
+*Quaderno* means "notebook". Color and token names (`inchiostro`, `pomodoro`, and so on) are Italian identifiers used in the code; their English meaning is given once below.
 
 ## Idea
 
-Bis nasce dal quaderno su cui si scrivono le ricette riuscite. L'interfaccia è pulita, chiara e leggibile in cucina. Il carattere viene da un solo segno distintivo: la scrittura a mano blu inchiostro con la sottolineatura rosso pomodoro. Tutto il resto resta sobrio, così quel segno si nota.
+Bis grew out of the notebook where you write down the recipes that turned out well. The interface is clean, clear and readable in the kitchen. Its character comes from a single distinctive mark: handwriting in ink blue with a tomato-red underline. Everything else stays sober, so that mark stands out.
 
-## Colori
+## Colors
 
-| Nome              | Valore  | Token                            | Uso                                                          |
-| ----------------- | ------- | -------------------------------- | ------------------------------------------------------------ |
-| Inchiostro        | #23366F | `inchiostro.6` (colore primario) | Azioni principali, titoli, link, icone attive                |
-| Pomodoro          | #C23B22 | `pomodoro.6`                     | Accento: "Fai il bis", sottolineatura del logo, timer attivo |
-| Carta             | #FBFAF6 | `--mantine-color-body`           | Sfondo dell'app                                              |
-| Quadretti         | #D8DFEE | `--bis-color-quadretti`          | Bordi di campi, card e contenitori                           |
-| Riga del quaderno | #C9D1E4 | `--bis-color-riga-quaderno`      | Separatori tratteggiati nelle liste                          |
-| Testo             | #1E2233 | `--mantine-color-text`           | Testo principale                                             |
-| Testo secondario  | #4A5168 | `--mantine-color-dimmed`         | Tempi, note, didascalie                                      |
+| Name                            | Value   | Token                            | Use                                                          |
+| ------------------------------- | ------- | -------------------------------- | ------------------------------------------------------------ |
+| Inchiostro (ink)                | #23366F | `inchiostro.6` (primary color)   | Main actions, titles, links, active icons                    |
+| Pomodoro (tomato)               | #C23B22 | `pomodoro.6`                     | Accent: "Fai il bis", logo underline, active timer           |
+| Carta (paper)                   | #FBFAF6 | `--mantine-color-body`           | App background                                               |
+| Quadretti (grid squares)        | #D8DFEE | `--bis-color-quadretti`          | Borders of fields, cards and containers                      |
+| Riga del quaderno (notebook line) | #C9D1E4 | `--bis-color-riga-quaderno`    | Dashed separators in lists                                   |
+| Text                            | #1E2233 | `--mantine-color-text`           | Main text                                                    |
+| Secondary text                  | #4A5168 | `--mantine-color-dimmed`         | Times, notes, captions                                       |
 
-Regole:
+Rules:
 
-- Il pomodoro è un accento: al massimo un elemento pomodoro per schermata, oltre al logo.
-- Errori: `pomodoro.8`, sempre con icona e messaggio, mai solo con il colore. Il pulsante "Fai il bis" è in stile outline, così non si confonde con un errore.
-- Conferme: colore `green.8` di Mantine, sempre con icona e messaggio.
-- I colori si usano solo tramite i token del tema in `src/theme.ts`. Mai valori esadecimali scritti nei componenti.
-- Per ora l'app ha solo il tema chiaro: `MantineProvider` usa `forceColorScheme="light"`.
+- Tomato is an accent: at most one tomato element per screen, besides the logo.
+- Errors: `pomodoro.8`, always with an icon and a message, never with color alone. The "Fai il bis" button uses the outline style, so it is not mistaken for an error.
+- Confirmations: Mantine's `green.8`, always with an icon and a message.
+- Colors are used only through the theme tokens in `src/theme.ts`. Never hexadecimal values written in components.
+- For now the app has only the light theme: `MantineProvider` uses `forceColorScheme="light"`.
 
-## Tipografia
+## Typography
 
-- **Figtree** (400, 600, 700) per tutta l'interfaccia: testi, liste, campi, pulsanti, titoli delle sezioni.
-- **Kalam** (700) solo per pochi momenti: il logo, il titolo della ricetta nella pagina di dettaglio e in modalità cucina, il numero del passaggio in modalità cucina, i titoli degli stati vuoti. Mai per testi lunghi, pulsanti, etichette, liste o campi.
-- Titolo ricetta nel dettaglio: Kalam 32 px, colore inchiostro.
-- Titoli di sezione (Ingredienti, Passaggi, Note): Figtree 600, 18 px, iniziale maiuscola e resto minuscolo. Niente etichette tutte in maiuscolo.
-- Testo dei passaggi: Figtree 400, 17 px, interlinea 1,5.
-- I font sono ospitati dall'app tramite i pacchetti `@fontsource/figtree` e `@fontsource/kalam`, importati in `main.tsx`. Non si usano i server di Google Fonts, così nessun dato degli utenti passa a terzi.
+- **Figtree** (400, 600, 700) for the whole interface: texts, lists, fields, buttons, section titles.
+- **Kalam** (700) only for a few moments: the logo, the recipe title on the detail page and in cooking mode, the step number in cooking mode, the titles of empty states. Never for long texts, buttons, labels, lists or fields.
+- Recipe title on the detail page: Kalam 32 px, ink color.
+- Section titles ("Ingredienti", "Passaggi", "Note"): Figtree 600, 18 px, sentence case. No all-caps labels.
+- Step text: Figtree 400, 17 px, line height 1.5.
+- Fonts are hosted by the app through the `@fontsource/figtree` and `@fontsource/kalam` packages, imported in `main.tsx`. Google Fonts servers are not used, so no user data goes to third parties.
 
-## Forme e spazi
+## Shapes and spacing
 
-- Raggio `md` (12 px) per pulsanti, campi, card e immagini.
-- Etichette e badge a pillola (`radius="xl"`).
-- Niente ombre: la profondità si dà con bordi da 1 px color quadretti.
-- Margine laterale delle pagine: 20 px su telefono, 32 px su tablet.
-- Spaziature dalla scala di Mantine (`xs` … `xl`), mai valori arbitrari.
+- Radius `md` (12 px) for buttons, fields, cards and images.
+- Labels and badges are pill-shaped (`radius="xl"`).
+- No shadows: depth comes from 1 px borders in the grid-squares color.
+- Page side margin: 20 px on phones, 32 px on tablets.
+- Spacing from Mantine's scale (`xs` to `xl`), never arbitrary values.
 
-## Il motivo a quadretti
+## The grid pattern
 
-Lo sfondo a quadretti (righe di 1 px `--bis-color-griglia-sfondo` ogni 24 px) è il richiamo al quaderno. Si usa solo in accesso e registrazione, stati vuoti e pagina di invito. Mai dietro liste, moduli o testi lunghi, dove ridurrebbe la leggibilità.
+The grid background (1 px lines in `--bis-color-griglia-sfondo` every 24 px) is the nod to the notebook. It is used only on sign-in and sign-up, empty states and the invitation page. Never behind lists, forms or long texts, where it would reduce legibility.
 
-## Componenti
+## Components
 
-- **Pulsante principale**: `Button` pieno inchiostro, dimensione `lg` (predefinita nel tema). Uno per schermata.
-- **Fai il bis**: `Button` con `variant="outline"` e `color="pomodoro"`.
-- **Etichette**: `Badge` in stile light inchiostro (predefinito nel tema).
-- **Porzioni**: due `ActionIcon` (meno e più) con il valore al centro, dentro un contenitore bianco con bordo quadretti.
-- **Lista ingredienti**: nome a sinistra, quantità a destra in Figtree 600, separatori tratteggiati 1 px color riga del quaderno, come le righe di un quaderno.
-- **Foto del piatto**: in cima al dettaglio, a tutta larghezza, rapporto 16:10, angoli arrotondati solo nelle miniature degli elenchi.
-- **Icone**: Tabler Icons (`@tabler/icons-react`), tratto 2, dimensione 20 px nell'interfaccia e 28 px in modalità cucina.
+- **Primary button**: filled ink `Button`, size `lg` (the theme default). One per screen.
+- **Fai il bis**: `Button` with `variant="outline"` and `color="pomodoro"`.
+- **Tags**: `Badge` in the light ink style (the theme default).
+- **Servings**: two `ActionIcon`s (minus and plus) with the value in the middle, inside a white container with a grid-squares border.
+- **Ingredient list**: name on the left, quantity on the right in Figtree 600, 1 px dashed separators in the notebook-line color, like the lines of a notebook.
+- **Photo of the dish**: at the top of the detail page, full width, 16:10 ratio, rounded corners only on the thumbnails in lists.
+- **Icons**: Tabler Icons (`@tabler/icons-react`), stroke 2, 20 px in the interface and 28 px in cooking mode.
 
-## Modalità cucina
+## Cooking mode
 
-- Sfondo carta, nessun motivo a quadretti.
-- Numero del passaggio in Kalam inchiostro, 48 px; testo del passaggio in Figtree 28 px, interlinea 1,4.
-- Pulsanti avanti e indietro a tutta larghezza, alti almeno 64 px: si usano con le mani bagnate o sporche.
-- Timer in corso in pomodoro, ben visibile; al termine avviso sonoro e visivo.
+- Paper background, no grid pattern.
+- Step number in Kalam ink, 48 px; step text in Figtree 28 px, line height 1.4.
+- Forward and back buttons at full width, at least 64 px tall: they are used with wet or dirty hands.
+- Running timers in tomato, clearly visible; at the end, a sound and a visual alert.
 
-## Accessibilità
+## Accessibility
 
-- Coppie di colori verificate: inchiostro su carta 11:1, testo secondario su carta oltre 6:1, pomodoro su bianco 5,3:1, testo bianco su inchiostro 11,5:1.
-- Le tonalità `inchiostro.0` … `inchiostro.4` e `pomodoro.0` … `pomodoro.5` non si usano mai per testo su sfondo chiaro: servono per sfondi e decorazioni.
-- Area toccabile minima 44 px (il tema imposta `ActionIcon` a `xl` e `Button` a `lg`).
-- Focus da tastiera sempre visibile.
-- Nessuna informazione affidata al solo colore.
+- Verified color pairs: ink on paper 11:1, secondary text on paper above 6:1, tomato on white 5.3:1, white text on ink 11.5:1.
+- The shades `inchiostro.0` to `inchiostro.4` and `pomodoro.0` to `pomodoro.5` are never used for text on a light background: they are for backgrounds and decoration.
+- Minimum touch target 44 px (the theme sets `ActionIcon` to `xl` and `Button` to `lg`).
+- Keyboard focus always visible.
+- No information conveyed by color alone.
 
-## Logo e icone
+## Logo and icons
 
-I file sono in `apps/frontend/public/brand/`:
+The files are in `apps/frontend/public/brand/`:
 
-- `logo.svg`: logo per sfondi chiari.
-- `logo-chiaro.svg`: logo per sfondo inchiostro.
-- `icon.svg`, `icon-192.png`, `icon-512.png`: icona dell'app e della PWA.
-- `icon-maskable.svg`, `icon-maskable-512.png`: icona a tutto campo per Android.
+- `logo.svg`: logo for light backgrounds.
+- `logo-chiaro.svg`: logo for an ink background ("chiaro" means light).
+- `icon.svg`, `icon-192.png`, `icon-512.png`: app and PWA icon.
+- `icon-maskable.svg`, `icon-maskable-512.png`: full-bleed icon for Android.
 - `favicon-32.png`: favicon.
 
-Il logo non si ricolora, non si deforma e non si ricrea con il font: si usano sempre questi file. Larghezza minima 64 px, con almeno 16 px di spazio libero intorno.
+The logo is never recolored, distorted or recreated with the font: these files are always used. Minimum width 64 px, with at least 16 px of clear space around it.
 
-## Tema Mantine
+## Mantine theme
 
-Il tema è in `apps/frontend/src/theme.ts`, che esporta `theme` e `cssVariablesResolver`:
+The theme is in `apps/frontend/src/theme.ts`, which exports `theme` and `cssVariablesResolver`:
 
 ```tsx
 <MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} forceColorScheme="light">
 ```
 
-Lo stesso provider va usato nel decorator globale di Storybook.
+The same provider is used in the global Storybook decorator.
