@@ -4,10 +4,11 @@ import {
   type RecipeFormValues,
   emptyRecipeForm,
   formToRecipeInput,
+  importedToForm,
   recipeToForm,
   validateRecipeForm,
 } from "./form";
-import type { RecipeResponse } from "./types";
+import type { ImportedRecipe, RecipeResponse } from "./types";
 
 let counter = 0;
 const newKey = () => {
@@ -148,5 +149,70 @@ describe("emptyRecipeForm", () => {
     expect(form.ingredients).toHaveLength(1);
     expect(form.steps).toHaveLength(1);
     expect(validateRecipeForm(form)["title"]).toBe("titleRequired");
+  });
+});
+
+describe("importedToForm", () => {
+  const imported: ImportedRecipe = {
+    title: "Pasta al pomodoro",
+    notes: null,
+    prep_minutes: 10,
+    cook_minutes: null,
+    servings: 4,
+    ingredients: [
+      { quantity: "320.000", unit: "g", name: "spaghetti" },
+      { quantity: null, unit: null, name: "sale" },
+    ],
+    steps: [
+      { text: "Porta a bollore l'acqua.", timer_seconds: null },
+      { text: "Cuoci la pasta.", timer_seconds: 545 },
+    ],
+  };
+
+  it("fills the form with fresh keys and without photos or tags", () => {
+    const form = importedToForm(imported, newKey);
+
+    expect(form).toMatchObject({
+      title: "Pasta al pomodoro",
+      notes: "",
+      prepMinutes: "10",
+      cookMinutes: "",
+      servings: "4",
+      coverPhotoId: null,
+      tagIds: [],
+    });
+    expect(form.ingredients.map(({ quantity, unit, name }) => ({ quantity, unit, name }))).toEqual([
+      { quantity: "320", unit: "g", name: "spaghetti" },
+      { quantity: "", unit: "", name: "sale" },
+    ]);
+    expect(
+      form.steps.map(({ timerMinutes, timerSeconds }) => [timerMinutes, timerSeconds]),
+    ).toEqual([
+      ["", ""],
+      ["9", "5"],
+    ]);
+    const keys = [...form.ingredients, ...form.steps].map((item) => item.key);
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  it("treats omitted optional fields as empty", () => {
+    const form = importedToForm(
+      {
+        title: "Insalata",
+        servings: 2,
+        ingredients: [{ name: "lattuga" }],
+        steps: [{ text: "Mescola." }],
+      },
+      newKey,
+    );
+
+    expect(form.notes).toBe("");
+    expect(form.prepMinutes).toBe("");
+    expect(form.ingredients[0]).toMatchObject({ quantity: "", unit: "" });
+    expect(form.steps[0]).toMatchObject({ timerMinutes: "", timerSeconds: "" });
+  });
+
+  it("produces a form that validates", () => {
+    expect(validateRecipeForm(importedToForm(imported, newKey))).toEqual({});
   });
 });

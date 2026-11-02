@@ -51,12 +51,13 @@ The interface is in Italian. The screenshots are taken on a phone-sized screen, 
 - **Tags and search**: search by name and by ingredient using PostgreSQL full-text search configured for Italian. "Zucchina" finds "zucchine" (singular and plural match), ignoring case and accents, and it works with incomplete words while typing.
 - **Servings**: quantities are recalculated in the view only, with readable rounding per unit.
 - **Sharing and copying**: a recipe can be shared with household members, who see it read-only. With "Fai il bis" (roughly "have seconds") each of them makes an independent copy, photos included.
+- **Recipe import (optional)**: paste the text of a recipe or a link and a language model fills the form for you to review. It talks to any OpenAI-compatible API (Ollama locally or a hosted provider), constrains the answer to a JSON schema and validates it, downloads links only from public addresses and limits imports per person. Without a model configured the feature is simply absent. See [Recipe import](#recipe-import).
 - **Installable app**: web manifest and icons, an install banner (native prompt where available, manual instructions on iOS) and a hand-written service worker that caches static assets and shows an offline page. API responses are never cached, and using recipes offline is not supported yet.
 - **Cooking mode**: one step at a time with large text, screen kept awake, several timers running at once (computed from the end time, so they stay accurate even with the tab in the background) and voice commands in Italian: "avanti" (next), "indietro" (back), "ripeti" (repeat), "avvia timer" (start timer).
 
 ### Status
 
-Features F1 to F9 of the specification are implemented. The app has not been deployed to production yet.
+Features F1 to F10 of the specification are implemented. The app has not been deployed to production yet.
 
 ## Stack
 
@@ -120,6 +121,26 @@ pnpm generate:api     # regenerates the types from openapi.json
 pnpm --filter bis-e2e exec playwright install chromium
 pnpm test:e2e
 ```
+
+## Recipe import
+
+The import is optional and needs a language model reachable through an OpenAI-compatible chat completions API. Set these variables in `.env`:
+
+| Variable | Meaning |
+| --- | --- |
+| `LLM_BASE_URL` | Base URL of the API, for example `http://localhost:11434/v1` for Ollama |
+| `LLM_MODEL` | Model name, for example `llama3.2:3b` |
+| `LLM_API_KEY` | Only for hosted providers |
+
+Inside Docker, `localhost` is the container itself: point `LLM_BASE_URL` at an address the backend container can reach (for example the host IP or a Tailscale address).
+
+Quality is measured, not assumed. `apps/backend/evals/recipe_import_cases.json` holds Italian recipe texts with the expected title, ingredients, quantities, units, steps, timers and servings (and one text that is not a recipe). Run the evaluation against the configured model from `apps/backend`:
+
+```bash
+uv run python -m scripts.evaluate_import
+```
+
+It prints a score per case and the mean (recipe detection, title, ingredient recall, quantity and unit accuracy, number of steps, timers, servings and seconds per case). The tests use a fake model, so they never call a real one.
 
 ## Continuous integration
 

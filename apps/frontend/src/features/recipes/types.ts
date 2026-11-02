@@ -2,6 +2,8 @@ import type { components } from "../../api/generated/schema";
 
 export type RecipeInput = components["schemas"]["RecipeInput"];
 export type RecipeResponse = components["schemas"]["RecipeResponse"];
+export type ImportedRecipe = components["schemas"]["RecipeDraft"];
+export type RecipeImportInput = components["schemas"]["RecipeImportInput"];
 export type RecipeSummary = components["schemas"]["RecipeSummary"];
 export type IngredientResponse = components["schemas"]["IngredientResponse"];
 export type StepResponse = components["schemas"]["StepResponse"];

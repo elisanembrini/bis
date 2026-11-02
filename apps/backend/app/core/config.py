@@ -32,6 +32,14 @@ class Settings(BaseSettings):
     google_redirect_uri: str | None = None
     google_state_ttl_minutes: int = 10
 
+    llm_base_url: str | None = None
+    llm_model: str | None = None
+    llm_api_key: SecretStr | None = None
+    llm_timeout_seconds: int = 120
+    import_max_text_chars: int = 20000
+    import_max_download_bytes: int = 2_000_000
+    import_max_per_hour: int = 20
+
     photos_dir: str
     photo_max_bytes: int = 10 * 1024 * 1024
     unlinked_photo_ttl_hours: int = 24

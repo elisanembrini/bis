@@ -168,6 +168,40 @@ class CannotCopyOwnError(DomainError):
     message = "This recipe is already in your recipe book."
 
 
+class ImportUnavailableError(DomainError):
+    status_code = 503
+    code = ErrorCode.IMPORT_UNAVAILABLE
+    message = "Recipe import is not available."
+
+
+class ImportSourceInvalidError(DomainError):
+    status_code = 422
+    code = ErrorCode.IMPORT_SOURCE_INVALID
+    message = "The page could not be read. Check the link or paste the text of the recipe."
+
+
+class ImportNoRecipeError(DomainError):
+    status_code = 422
+    code = ErrorCode.IMPORT_NO_RECIPE
+    message = "No recipe was found in this content."
+
+
+class ImportFailedError(DomainError):
+    status_code = 502
+    code = ErrorCode.IMPORT_FAILED
+    message = "The recipe could not be extracted. Try again."
+
+
+class TooManyImportsError(DomainError):
+    status_code = 429
+    code = ErrorCode.TOO_MANY_IMPORTS
+    message = "Too many imports. Try again later."
+
+    def __init__(self, retry_after_seconds: int) -> None:
+        super().__init__(headers={"Retry-After": str(retry_after_seconds)})
+        self.retry_after_seconds = retry_after_seconds
+
+
 class GoogleLoginError(Exception):
     def __init__(self, code: ErrorCode) -> None:
         super().__init__(code)
