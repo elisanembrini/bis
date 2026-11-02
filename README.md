@@ -2,6 +2,8 @@
 
 *A mobile-first recipe notebook for households.*
 
+[![CI](https://github.com/elisanembrini/bis/actions/workflows/ci.yml/badge.svg)](https://github.com/elisanembrini/bis/actions/workflows/ci.yml)
+
 Bis is a household recipe book designed for the phone. It grew out of the notebook where you write down the recipes that turned out well: it keeps your own version of a dish, helps you find it in seconds, and lets you follow it in the kitchen with your hands full.
 
 It is used by a small group of people who live in the same home. Everyone has their own recipe book and decides what to share, and with whom. The interface is in Italian by default and is ready for more languages: all texts, formats and voice-command phrases live in per-language i18next resources.
@@ -118,6 +120,10 @@ pnpm generate:api     # regenerates the types from openapi.json
 pnpm --filter bis-e2e exec playwright install chromium
 pnpm test:e2e
 ```
+
+## Continuous integration
+
+GitHub Actions runs the same checks described above (`.github/workflows/ci.yml`). Every push to `main` and every pull request runs the backend job (Ruff, mypy, pytest on PostgreSQL 18), the frontend job (Oxlint, Oxfmt, type check, Vitest with the Storybook stories, production and Storybook builds) and an API contract job that fails when `openapi.json` or the generated TypeScript types are out of date. The end-to-end tests run only on pushes to `main`.
 
 ## Structure
 
