@@ -40,6 +40,19 @@ describe("formatQuantity", () => {
   });
 });
 
+describe("formatQuantity in other languages", () => {
+  it("uses the decimal separator of the language", () => {
+    expect(formatQuantity("1.500", "en")).toBe("1.5");
+    expect(formatQuantity("0.125", "it")).toBe("0,125");
+    expect(quantityToInput("1.500", "en")).toBe("1.5");
+  });
+
+  it("still reads both separators when parsing", () => {
+    expect(parseQuantity("1,5")).toEqual({ ok: true, value: "1.5" });
+    expect(parseQuantity("1.5")).toEqual({ ok: true, value: "1.5" });
+  });
+});
+
 describe("quantityToInput", () => {
   it("leaves the field empty for q.b.", () => {
     expect(quantityToInput(null)).toBe("");

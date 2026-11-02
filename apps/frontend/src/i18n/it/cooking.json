@@ -28,6 +28,19 @@
     "note": "Il riconoscimento vocale può usare servizi del browser.",
     "unsupported": "Questo browser non riconosce i comandi vocali: usa i pulsanti.",
     "denied": "Il microfono non è autorizzato. Puoi abilitarlo dalle impostazioni del browser; intanto usa i pulsanti.",
-    "error": "Il riconoscimento vocale si è interrotto e riprova da solo. Puoi sempre usare i pulsanti."
+    "error": "Il riconoscimento vocale si è interrotto e riprova da solo. Puoi sempre usare i pulsanti.",
+    "recognitionLang": "it-IT",
+    "commands": {
+      "next": ["avanti", "vai avanti", "prossimo", "successivo", "continua"],
+      "previous": ["indietro", "torna indietro", "precedente"],
+      "repeat": ["ripeti", "rileggi", "ancora", "di nuovo"],
+      "startTimer": [
+        "avvia timer",
+        "avvia il timer",
+        "fai partire il timer",
+        "inizia il timer",
+        "parti"
+      ]
+    }
   }
 }

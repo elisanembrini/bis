@@ -45,14 +45,14 @@ export const playAlarm = (): void => {
 
 export const isSpeechSynthesisSupported = (): boolean => "speechSynthesis" in window;
 
-export const speak = (text: string, onEnd: () => void): void => {
+export const speak = (text: string, language: string, onEnd: () => void): void => {
   if (!isSpeechSynthesisSupported()) {
     onEnd();
     return;
   }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "it-IT";
+  utterance.lang = language;
   utterance.addEventListener("end", onEnd);
   utterance.addEventListener("error", onEnd);
   window.speechSynthesis.speak(utterance);

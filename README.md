@@ -4,7 +4,7 @@
 
 Bis is a household recipe book designed for the phone. It grew out of the notebook where you write down the recipes that turned out well: it keeps your own version of a dish, helps you find it in seconds, and lets you follow it in the kitchen with your hands full.
 
-It is used by a small group of people who live in the same home. Everyone has their own recipe book and decides what to share, and with whom. The interface is in Italian (all texts go through i18next).
+It is used by a small group of people who live in the same home. Everyone has their own recipe book and decides what to share, and with whom. The interface is in Italian by default and is ready for more languages: all texts, formats and voice-command phrases live in per-language i18next resources.
 
 ## Features
 

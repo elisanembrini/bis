@@ -23,6 +23,7 @@ import { ChefIcon, ShareIcon } from "../../../components/icons";
 import { InfoMessage, SuccessMessage } from "../../../components/Messages";
 import { FullBleed } from "../../../components/PageContainer";
 import { SectionTitle } from "../../../components/SectionTitle";
+import { formatList } from "../../../i18n/formatList";
 import { useTagLabel } from "../../tags/useTagLabel";
 import { useFormatDuration } from "../hooks/useFormatDuration";
 import type { RecipeResponse } from "../types";
@@ -49,8 +50,6 @@ type RecipeDetailProps = {
 
 const NOBODY: string[] = [];
 
-const listFormatter = new Intl.ListFormat("it-IT", { style: "long", type: "conjunction" });
-
 const defaultPhotoSrc = (photoId: string) => photoUrl(photoId, "full");
 
 export function RecipeDetail({
@@ -68,7 +67,7 @@ export function RecipeDetail({
   onServingsChange,
   onStartCooking,
 }: RecipeDetailProps) {
-  const { t } = useTranslation("recipes");
+  const { t, i18n } = useTranslation("recipes");
   const formatDuration = useFormatDuration();
   const label = useTagLabel();
   const [confirming, setConfirming] = useState(false);
@@ -152,7 +151,7 @@ export function RecipeDetail({
           </Button>
           {sharedWith.length > 0 && (
             <Text size="sm" c="dimmed">
-              {t("detail.sharedWith", { names: listFormatter.format(sharedWith) })}
+              {t("detail.sharedWith", { names: formatList(sharedWith, i18n.language) })}
             </Text>
           )}
         </Stack>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { speak } from "../audio";
 import {
@@ -10,6 +11,7 @@ import {
   isResultEvent,
 } from "../speechRecognition";
 import { type VoiceCommand, parseCommand } from "../voiceCommands";
+import { useVoicePhrases } from "./useVoicePhrases";
 
 export type VoiceStatus = "unsupported" | "off" | "listening" | "paused" | "denied" | "error";
 
@@ -22,6 +24,9 @@ type VoiceHandlers = {
 };
 
 export const useVoiceCommands = ({ onCommand, textToRepeat }: VoiceHandlers) => {
+  const { t } = useTranslation("cooking");
+  const phrases = useVoicePhrases();
+  const language = t("voice.recognitionLang");
   const [status, setStatus] = useState<VoiceStatus>(() =>
     getRecognitionConstructor() === undefined ? "unsupported" : "off",
   );
@@ -30,14 +35,14 @@ export const useVoiceCommands = ({ onCommand, textToRepeat }: VoiceHandlers) => 
   const pausedRef = useRef(false);
   const retriesRef = useRef(0);
   const restartRef = useRef<number | undefined>(undefined);
-  const handlersRef = useRef({ onCommand, textToRepeat });
+  const handlersRef = useRef({ onCommand, textToRepeat, phrases, language });
   const controlsRef = useRef<{ pause: () => void; resume: () => void }>({
     pause: () => undefined,
     resume: () => undefined,
   });
 
   useEffect(() => {
-    handlersRef.current = { onCommand, textToRepeat };
+    handlersRef.current = { onCommand, textToRepeat, phrases, language };
   });
 
   useEffect(
@@ -57,7 +62,6 @@ export const useVoiceCommands = ({ onCommand, textToRepeat }: VoiceHandlers) => 
     }
     if (recognitionRef.current === null) {
       const recognition = new Constructor();
-      recognition.lang = "it-IT";
       recognition.continuous = true;
       recognition.interimResults = false;
       recognition.addEventListener("result", (event) => {
@@ -69,12 +73,12 @@ export const useVoiceCommands = ({ onCommand, textToRepeat }: VoiceHandlers) => 
           const transcript = result?.[0]?.transcript;
           if (result?.isFinal === true && transcript !== undefined) {
             retriesRef.current = 0;
-            const command = parseCommand(transcript);
+            const command = parseCommand(transcript, handlersRef.current.phrases);
             if (command === "repeat") {
               const text = handlersRef.current.textToRepeat();
               if (text !== undefined) {
                 controlsRef.current.pause();
-                speak(text, controlsRef.current.resume);
+                speak(text, handlersRef.current.language, controlsRef.current.resume);
               }
             } else if (command !== null) {
               handlersRef.current.onCommand(command);
@@ -104,6 +108,7 @@ export const useVoiceCommands = ({ onCommand, textToRepeat }: VoiceHandlers) => 
       recognitionRef.current = recognition;
     }
     try {
+      recognitionRef.current.lang = handlersRef.current.language;
       recognitionRef.current.start();
       setStatus("listening");
     } catch {

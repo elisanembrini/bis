@@ -47,5 +47,8 @@
     "remove": "Rimuovi foto",
     "uploading": "Caricamento della foto",
     "noPhoto": "Nessuna foto"
+  },
+  "language": {
+    "label": "Lingua"
   }
 }

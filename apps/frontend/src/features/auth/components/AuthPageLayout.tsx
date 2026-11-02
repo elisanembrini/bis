@@ -2,6 +2,7 @@ import { Center, Container, Paper, Stack, Title } from "@mantine/core";
 import type { ReactNode } from "react";
 
 import { GridPaper } from "../../../components/GridPaper";
+import { LanguageSwitcher } from "../../../components/LanguageSwitcher";
 import { Logo } from "../../../components/Logo";
 
 type AuthPageLayoutProps = {
@@ -14,6 +15,7 @@ export function AuthPageLayout({ title, children }: AuthPageLayoutProps) {
     <GridPaper mih="100dvh">
       <Container size="xs" py="xl">
         <Stack gap="md">
+          <LanguageSwitcher />
           <Center>
             <Logo width={128} />
           </Center>

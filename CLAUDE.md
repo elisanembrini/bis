@@ -106,7 +106,9 @@ E2E (from the root):
 
 - Strict TypeScript, no `any`.
 - UI with Mantine components and a centralized theme. No arbitrary inline styles.
-- No hardcoded visible strings: everything goes through i18next, with keys organized by feature. Add every new key in all supported languages.
+- No hardcoded visible strings: everything goes through i18next, with keys organized by feature. Add every new key in all supported languages (the parity test fails otherwise).
+- Anything that depends on the language (date, list and number formats, the speech recognition and synthesis language, the voice-command phrases) comes from i18next or the active `i18n.language`, never from a fixed locale such as `it-IT`.
+- Starter data that users see (the starter tags) is identified by a stable key and translated in the frontend; the API returns error codes with English messages and the interface translates from the code.
 - Always handle the loading, error and empty-list states.
 
 ### React Compiler

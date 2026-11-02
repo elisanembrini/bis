@@ -3,6 +3,7 @@ import { Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { AnchorLink } from "../../../components/AnchorLink";
+import { LanguageSwitcher } from "../../../components/LanguageSwitcher";
 import { Logo } from "../../../components/Logo";
 import { useLogout } from "../hooks/useLogout";
 
@@ -28,14 +29,17 @@ export function AuthenticatedLayout() {
               {t("nav.household")}
             </AnchorLink>
           </Group>
-          <Button
-            variant="subtle"
-            color="ink"
-            loading={logout.isPending}
-            onClick={() => logout.mutate({})}
-          >
-            {tAuth("logout")}
-          </Button>
+          <Group gap="sm" wrap="nowrap">
+            <LanguageSwitcher />
+            <Button
+              variant="subtle"
+              color="ink"
+              loading={logout.isPending}
+              onClick={() => logout.mutate({})}
+            >
+              {tAuth("logout")}
+            </Button>
+          </Group>
         </Group>
       </AppShell.Header>
       <AppShell.Main>

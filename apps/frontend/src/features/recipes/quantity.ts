@@ -1,3 +1,6 @@
+import i18n from "../../i18n";
+import { decimalSeparator } from "../../i18n/numbers";
+
 const QUANTITY_PATTERN = /^(\d{1,7})(?:[.,](\d{1,3}))?$/;
 
 export type ParsedQuantity = { ok: true; value: string | null } | { ok: false };
@@ -26,7 +29,8 @@ const normalize = (value: string): string => {
   return decimals === "" ? integer : `${integer}.${decimals}`;
 };
 
-export const formatQuantity = (value: string): string => normalize(value).replace(".", ",");
+export const formatQuantity = (value: string, language: string = i18n.language): string =>
+  normalize(value).replace(".", decimalSeparator(language));
 
-export const quantityToInput = (value: string | null): string =>
-  value === null ? "" : formatQuantity(value);
+export const quantityToInput = (value: string | null, language?: string): string =>
+  value === null ? "" : formatQuantity(value, language);

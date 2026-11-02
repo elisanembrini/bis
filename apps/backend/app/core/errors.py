@@ -17,13 +17,13 @@ class DomainError(Exception):
 class InvalidCredentialsError(DomainError):
     status_code = 401
     code = ErrorCode.INVALID_CREDENTIALS
-    message = "Email o password non corretti."
+    message = "Incorrect email or password."
 
 
 class TooManyAttemptsError(DomainError):
     status_code = 429
     code = ErrorCode.TOO_MANY_ATTEMPTS
-    message = "Troppi tentativi di accesso. Riprova più tardi."
+    message = "Too many sign-in attempts. Try again later."
 
     def __init__(self, retry_after_seconds: int) -> None:
         super().__init__(headers={"Retry-After": str(retry_after_seconds)})
@@ -33,139 +33,139 @@ class TooManyAttemptsError(DomainError):
 class EmailAlreadyRegisteredError(DomainError):
     status_code = 409
     code = ErrorCode.EMAIL_ALREADY_REGISTERED
-    message = "Esiste già un account con questa email."
+    message = "An account with this email already exists."
 
 
 class ResetTokenInvalidError(DomainError):
     status_code = 400
     code = ErrorCode.RESET_TOKEN_INVALID
-    message = "Il link per reimpostare la password non è valido o è scaduto."
+    message = "The password reset link is invalid or has expired."
 
 
 class UnauthenticatedError(DomainError):
     status_code = 401
     code = ErrorCode.UNAUTHENTICATED
-    message = "Accesso richiesto."
+    message = "Sign-in required."
 
 
 class InviteNotFoundError(DomainError):
     status_code = 404
     code = ErrorCode.INVITE_NOT_FOUND
-    message = "Questo invito non esiste."
+    message = "This invitation does not exist."
 
 
 class InviteExpiredError(DomainError):
     status_code = 410
     code = ErrorCode.INVITE_EXPIRED
-    message = "Questo invito è scaduto."
+    message = "This invitation has expired."
 
 
 class InviteUsedError(DomainError):
     status_code = 410
     code = ErrorCode.INVITE_USED
-    message = "Questo invito è già stato usato."
+    message = "This invitation has already been used."
 
 
 class AlreadyInHouseholdError(DomainError):
     status_code = 409
     code = ErrorCode.ALREADY_IN_HOUSEHOLD
-    message = "Fai già parte di questa casa."
+    message = "You are already part of this household."
 
 
 class MustLeaveHouseholdError(DomainError):
     status_code = 409
     code = ErrorCode.MUST_LEAVE_HOUSEHOLD
-    message = "Per entrare in questa casa devi prima lasciare quella attuale."
+    message = "To join this household you must first leave your current one."
 
 
 class OwnerCannotLeaveError(DomainError):
     status_code = 409
     code = ErrorCode.OWNER_CANNOT_LEAVE
-    message = "Chi è titolare della casa non può lasciarla."
+    message = "The household owner cannot leave it."
 
 
 class NotHouseholdOwnerError(DomainError):
     status_code = 403
     code = ErrorCode.NOT_HOUSEHOLD_OWNER
-    message = "Solo chi è titolare della casa può farlo."
+    message = "Only the household owner can do this."
 
 
 class MemberNotFoundError(DomainError):
     status_code = 404
     code = ErrorCode.MEMBER_NOT_FOUND
-    message = "Questa persona non fa parte della casa."
+    message = "This person is not part of the household."
 
 
 class CannotRemoveSelfError(DomainError):
     status_code = 400
     code = ErrorCode.CANNOT_REMOVE_SELF
-    message = "Non puoi rimuoverti dalla casa."
+    message = "You cannot remove yourself from the household."
 
 
 class RecipeNotFoundError(DomainError):
     status_code = 404
     code = ErrorCode.RECIPE_NOT_FOUND
-    message = "Ricetta non trovata."
+    message = "Recipe not found."
 
 
 class PhotoTooLargeError(DomainError):
     status_code = 413
     code = ErrorCode.PHOTO_TOO_LARGE
-    message = "La foto supera i 10 MB."
+    message = "The photo is larger than 10 MB."
 
 
 class PhotoInvalidError(DomainError):
     status_code = 422
     code = ErrorCode.PHOTO_INVALID
-    message = "Il file non è un'immagine JPEG, PNG, WebP o HEIC valida."
+    message = "The file is not a valid JPEG, PNG, WebP or HEIC image."
 
 
 class PhotoNotFoundError(DomainError):
     status_code = 404
     code = ErrorCode.PHOTO_NOT_FOUND
-    message = "Foto non trovata."
+    message = "Photo not found."
 
 
 class PhotoNotAvailableError(DomainError):
     status_code = 422
     code = ErrorCode.PHOTO_NOT_AVAILABLE
-    message = "Una delle foto non è disponibile per questa ricetta."
+    message = "One of the photos is not available for this recipe."
 
 
 class TagAlreadyExistsError(DomainError):
     status_code = 409
     code = ErrorCode.TAG_ALREADY_EXISTS
-    message = "Esiste già un'etichetta con questo nome."
+    message = "A tag with this name already exists."
 
 
 class TagNotFoundError(DomainError):
     status_code = 404
     code = ErrorCode.TAG_NOT_FOUND
-    message = "Etichetta non trovata."
+    message = "Tag not found."
 
 
 class TagNotAvailableError(DomainError):
     status_code = 422
     code = ErrorCode.TAG_NOT_AVAILABLE
-    message = "Una delle etichette non è disponibile."
+    message = "One of the tags is not available."
 
 
 class RecipeReadOnlyError(DomainError):
     status_code = 403
     code = ErrorCode.RECIPE_READ_ONLY
-    message = "Questa ricetta è condivisa con te in sola lettura."
+    message = "This recipe is shared with you as read-only."
 
 
 class ShareNotAllowedError(DomainError):
     status_code = 422
     code = ErrorCode.SHARE_NOT_ALLOWED
-    message = "Puoi condividere una ricetta solo con chi vive nella tua casa."
+    message = "You can only share a recipe with people in your household."
 
 
 class CannotCopyOwnError(DomainError):
     status_code = 409
     code = ErrorCode.CANNOT_COPY_OWN
-    message = "Questa ricetta è già nel tuo ricettario."
+    message = "This recipe is already in your recipe book."
 
 
 class GoogleLoginError(Exception):
