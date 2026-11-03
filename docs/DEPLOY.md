@@ -53,7 +53,9 @@ The password you set is used only by `sudo`, never to log in over SSH. From your
 
 ### 2.3 SSH with keys only
 
-As `deploy`:
+> **Before you change anything, open a second SSH session and leave it open.** In another terminal on your computer, run `ssh deploy@<server-ip>` and keep that window untouched until the checks at the end of this section pass. If the new SSH settings turn out to lock you out, that session is still connected and lets you undo the change. Without it, the only way back in may be the provider's rescue console. The same applies to the firewall (2.4) and to fail2ban (2.5).
+
+As `deploy`, in your first session:
 
 ```bash
 sudo tee /etc/ssh/sshd_config.d/01-hardening.conf >/dev/null <<'CONF'
@@ -64,11 +66,22 @@ PubkeyAuthentication yes
 CONF
 sudo sshd -t
 sudo systemctl restart ssh
+sudo sshd -T | grep -E '^(permitrootlogin|passwordauthentication) '
 ```
 
-The file name starts with `01` on purpose: sshd keeps the first value it reads, and some providers ship a `50-cloud-init.conf` that re-enables passwords. Keep your current session open and verify in a second terminal that you can still log in as `deploy` with your key, and that `ssh root@<server-ip>` is refused.
+The file name starts with `01` on purpose: sshd keeps the first value it reads, and some providers ship a `50-cloud-init.conf` that re-enables passwords.
+
+Check the result:
+
+1. The last command must print `permitrootlogin no` and `passwordauthentication no`. If `sshd -t` printed an error, do not restart SSH: fix the file first.
+2. Open a third terminal and run `ssh deploy@<server-ip>`: you must get in with your key, without a password prompt.
+3. In that terminal run `ssh root@<server-ip>`: it must be refused with `Permission denied`.
+
+Only when both checks pass, close the spare session.
 
 ### 2.4 Firewall
+
+Keep the spare SSH session from 2.3 open. The firewall must allow SSH before it is switched on, which is why `ufw allow OpenSSH` comes before `ufw enable`. `ufw enable` warns that it may disrupt existing SSH connections: answer `y`.
 
 ```bash
 sudo ufw default deny incoming
@@ -81,9 +94,37 @@ sudo ufw enable
 sudo ufw status verbose
 ```
 
+Check that `ufw status verbose` says `Status: active`, that the default is `deny (incoming)`, and that 22, 80 and 443 are listed. From your computer, `ssh deploy@<server-ip>` must still work.
+
 Port 80 is needed for the certificate challenge and the redirect to HTTPS, 443 (TCP and UDP) for the app and HTTP/3. The production compose file publishes no other port: PostgreSQL and the backend are reachable only inside the Docker network. Docker writes its own firewall rules for published ports, which is why this file must never publish more.
 
-### 2.5 Automatic security updates
+### 2.5 Block repeated login attempts (fail2ban)
+
+Anyone can try to log in to a server that is reachable from the Internet, and the logs fill up with failed attempts. Because passwords are already disabled (2.3), those attempts cannot succeed, but fail2ban still watches the SSH log and blocks an address for one hour after 5 failed attempts in 10 minutes. This reduces noise and load. It protects only SSH: ports 80 and 443 are served by Caddy.
+
+Keep the spare SSH session open. As `deploy`:
+
+```bash
+sudo apt install -y fail2ban
+sudo tee /etc/fail2ban/jail.d/bis-sshd.local >/dev/null <<'CONF'
+[sshd]
+enabled = true
+backend = systemd
+maxretry = 5
+findtime = 10m
+bantime = 1h
+CONF
+sudo systemctl enable fail2ban
+sudo systemctl restart fail2ban
+sudo systemctl is-active fail2ban
+sudo fail2ban-client status sshd
+```
+
+`is-active` must print `active`, and the last command must show `Status for the jail: sshd` with a `Currently banned` counter. If it says that the `sshd` jail does not exist, look at `sudo journalctl -u fail2ban -n 30`.
+
+If you ever ban yourself by mistake (for example after many wrong attempts), log in from another network or the provider's console and run `sudo fail2ban-client set sshd unbanip <your-ip>`.
+
+### 2.6 Automatic security updates
 
 ```bash
 sudo apt install -y unattended-upgrades
@@ -100,7 +141,7 @@ sudo unattended-upgrade --dry-run --debug 2>&1 | tail -5
 
 Kernel updates then take effect with a reboot at 04:30 server time, after the nightly backup. Every container has `restart: unless-stopped`, so the stack comes back by itself.
 
-### 2.6 Install Docker
+### 2.7 Install Docker
 
 ```bash
 sudo apt-get install -y ca-certificates curl
@@ -293,9 +334,9 @@ If a deploy is interrupted and says another release is running, check that no `d
 - **Disk**: `docker system df` and `df -h`. The release script already removes old images.
 - **Certificates** renew automatically through Caddy. Port 80 must stay open.
 - **Base images** (Python, Node, PostgreSQL, Caddy, restic) are pinned to exact versions in the Dockerfiles and the compose file. To update one, change the version in a commit, run the CI, release. PostgreSQL major upgrades need a dump and restore: do not change the major version in place.
-- **Operating system** security updates are automatic (section 2.5). Run `sudo apt update && sudo apt upgrade` now and then for the rest.
+- **Operating system** security updates are automatic (section 2.6). Run `sudo apt update && sudo apt upgrade` now and then for the rest.
 - **Privacy notice**: the page is in `apps/frontend/src/i18n/it/privacy.json`. When the hosting, email and storage providers are chosen, check that it describes them and, if any is outside the European Union, add the transfer safeguards.
 
 ## 11. What was not tested on a real server
 
-The stack, the migration order, the health checks, the security headers and the backup and restore cycle were exercised locally with a self-signed certificate and a local restic repository. Not exercised before the first real release: the automatic certificate from a public CA, the SSH and firewall steps, Backblaze B2 itself, sending real email and Google sign-in on the real domain.
+The stack, the migration order, the health checks, the security headers and the backup and restore cycle were exercised locally with a self-signed certificate and a local restic repository. Not exercised before the first real release: the automatic certificate from a public CA, the SSH, firewall and fail2ban steps, Backblaze B2 itself, sending real email and Google sign-in on the real domain.
