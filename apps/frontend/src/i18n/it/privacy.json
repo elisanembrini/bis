@@ -1,0 +1,68 @@
+{
+  "title": "Informativa sulla privacy",
+  "updated": "Ultimo aggiornamento: 2 novembre 2026",
+  "intro": "Questa informativa spiega quali dati personali tratta Bis, perché e per quanto tempo, ai sensi del Regolamento UE 2016/679 (GDPR). Bis è un ricettario per le persone che vivono nella stessa casa.",
+  "back": "Torna a Bis",
+  "contactLabel": "Contatto:",
+  "sections": {
+    "controller": {
+      "title": "Chi è il titolare",
+      "paragraphs": ["Il titolare del trattamento è Elisa Nembrini, che gestisce Bis."]
+    },
+    "data": {
+      "title": "Quali dati tratto",
+      "paragraphs": ["Tratto solo i dati che servono al funzionamento dell'app:"],
+      "items": [
+        "Account: indirizzo email, nome visualizzato e, se accedi con Google, l'identificativo del tuo account Google. La password non è conservata in chiaro: ne salvo solo un'impronta cifrata.",
+        "Contenuti: ricette, ingredienti, passaggi, note, tag e foto che carichi. Dalle foto elimino tutti i metadati, compresa la posizione GPS.",
+        "Casa: la casa a cui appartieni, gli inviti e le condivisioni delle ricette.",
+        "Sicurezza: per limitare i tentativi di accesso conservo email, indirizzo IP, esito e data di ogni tentativo.",
+        "Sessione: un identificativo che ti mantiene connesso per 30 giorni."
+      ]
+    },
+    "purposes": {
+      "title": "Perché li tratto",
+      "paragraphs": [
+        "Uso i dati per fornirti il servizio (creare l'account, conservare e condividere le ricette) e per proteggerlo da accessi abusivi. Le basi giuridiche sono l'esecuzione del servizio che hai richiesto e il legittimo interesse alla sicurezza.",
+        "Non uso i dati per pubblicità o profilazione e non li vendo."
+      ]
+    },
+    "cookies": {
+      "title": "Cookie e dati sul dispositivo",
+      "paragraphs": [
+        "Bis usa un solo cookie, tecnico e necessario: il cookie di sessione, che non è accessibile da JavaScript e viene inviato solo su connessioni protette. Non ci sono cookie di tracciamento né strumenti di analisi.",
+        "Il browser conserva inoltre alcune preferenze, come la lingua, e una copia dei file dell'app per aprirla più in fretta. Questi dati restano sul tuo dispositivo."
+      ]
+    },
+    "recipients": {
+      "title": "Con chi condivido i dati",
+      "paragraphs": [
+        "Le altre persone della tua casa vedono solo le ricette che scegli di condividere con loro. Per far funzionare il servizio mi appoggio a:"
+      ],
+      "items": [
+        "il fornitore del server, che ospita l'app e il database;",
+        "il servizio di invio email, usato per il recupero della password;",
+        "un servizio di archiviazione esterno, dove vengono salvati i backup cifrati;",
+        "Google, solo se scegli di accedere con Google."
+      ]
+    },
+    "retention": {
+      "title": "Per quanto tempo li conservo",
+      "paragraphs": [
+        "Conservo i dati finché mantieni l'account. Quando un account viene cancellato elimino anche le sue ricette, le foto e le condivisioni.",
+        "I backup cifrati sono conservati per 14 giorni: una copia dei dati cancellati può restare lì fino alla scadenza."
+      ]
+    },
+    "rights": {
+      "title": "I tuoi diritti",
+      "paragraphs": [
+        "Hai il diritto di accedere ai tuoi dati, correggerli, cancellarli, riceverne una copia in un formato leggibile, limitarne il trattamento od opporti. Per esercitare questi diritti scrivi all'indirizzo email indicato sopra: rispondo entro 30 giorni.",
+        "Per ora la cancellazione dell'account si richiede via email. Hai anche il diritto di presentare reclamo al Garante per la protezione dei dati personali."
+      ]
+    },
+    "changes": {
+      "title": "Modifiche",
+      "paragraphs": ["Se cambia qualcosa di importante aggiorno questa pagina e la data in alto."]
+    }
+  }
+}

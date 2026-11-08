@@ -55,5 +55,8 @@
   },
   "language": {
     "label": "Lingua"
+  },
+  "footer": {
+    "privacy": "Informativa sulla privacy"
   }
 }

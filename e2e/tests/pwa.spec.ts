@@ -28,7 +28,7 @@ test("the service worker shows the offline page when there is no connection", as
   await expect(page.getByRole("heading", { name: "Sei offline" })).toBeVisible();
 
   await context.setOffline(false);
-  await page.getByRole("button", { name: "Riprova" }).click();
+  await page.getByRole("link", { name: "Riprova" }).click();
 
   await expect(page.getByRole("heading", { name: "Accedi" })).toBeVisible();
 });
