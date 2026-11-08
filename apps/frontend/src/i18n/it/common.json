@@ -39,7 +39,12 @@
     "TAG_NOT_AVAILABLE": "Una delle etichette non esiste più. Ricarica la pagina.",
     "RECIPE_READ_ONLY": "Questa ricetta è condivisa con te in sola lettura.",
     "SHARE_NOT_ALLOWED": "Puoi condividere una ricetta solo con chi vive nella tua casa.",
-    "CANNOT_COPY_OWN": "Questa ricetta è già nel tuo ricettario."
+    "CANNOT_COPY_OWN": "Questa ricetta è già nel tuo ricettario.",
+    "IMPORT_UNAVAILABLE": "L'importazione delle ricette non è disponibile al momento.",
+    "IMPORT_SOURCE_INVALID": "Non è stato possibile leggere la pagina. Controlla il link oppure incolla il testo della ricetta.",
+    "IMPORT_NO_RECIPE": "In questo contenuto non è stata trovata nessuna ricetta.",
+    "IMPORT_FAILED": "Non è stato possibile estrarre la ricetta. Riprova.",
+    "TOO_MANY_IMPORTS": "Hai importato troppe ricette. Riprova più tardi."
   },
   "photo": {
     "add": "Aggiungi foto",

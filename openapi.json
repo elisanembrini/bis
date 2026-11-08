@@ -836,6 +836,128 @@
         ]
       }
     },
+    "/features": {
+      "get": {
+        "tags": [
+          "features"
+        ],
+        "summary": "Get Features",
+        "operationId": "getFeatures",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeaturesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyCookie": []
+          }
+        ]
+      }
+    },
+    "/recipes/import": {
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Import Recipe",
+        "operationId": "importRecipe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeImportInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDraft"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyCookie": []
+          }
+        ]
+      }
+    },
     "/recipes": {
       "get": {
         "tags": [
@@ -1851,7 +1973,12 @@
           "TAG_NOT_AVAILABLE",
           "RECIPE_READ_ONLY",
           "SHARE_NOT_ALLOWED",
-          "CANNOT_COPY_OWN"
+          "CANNOT_COPY_OWN",
+          "IMPORT_UNAVAILABLE",
+          "IMPORT_SOURCE_INVALID",
+          "IMPORT_NO_RECIPE",
+          "IMPORT_FAILED",
+          "TOO_MANY_IMPORTS"
         ],
         "title": "ErrorCode"
       },
@@ -1871,6 +1998,19 @@
           "message"
         ],
         "title": "ErrorResponse"
+      },
+      "FeaturesResponse": {
+        "properties": {
+          "recipe_import": {
+            "type": "boolean",
+            "title": "Recipe Import"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recipe_import"
+        ],
+        "title": "FeaturesResponse"
       },
       "ForgotPasswordRequest": {
         "properties": {
@@ -2001,7 +2141,7 @@
         ],
         "title": "HouseholdSummary"
       },
-      "IngredientInput": {
+      "IngredientInput-Input": {
         "properties": {
           "quantity": {
             "anyOf": [
@@ -2009,6 +2149,42 @@
                 "type": "number",
                 "exclusiveMinimum": 0.0
               },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantity"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "IngredientInput"
+      },
+      "IngredientInput-Output": {
+        "properties": {
+          "quantity": {
+            "anyOf": [
               {
                 "type": "string"
               },
@@ -2200,6 +2376,118 @@
         ],
         "title": "PhotoUploadResponse"
       },
+      "RecipeDraft": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "prep_minutes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prep Minutes"
+          },
+          "cook_minutes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cook Minutes"
+          },
+          "servings": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Servings"
+          },
+          "ingredients": {
+            "items": {
+              "$ref": "#/components/schemas/IngredientInput-Output"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Ingredients"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/StepDraft"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Steps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "servings",
+          "ingredients",
+          "steps"
+        ],
+        "title": "RecipeDraft"
+      },
+      "RecipeImportInput": {
+        "properties": {
+          "text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50000,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "title": "RecipeImportInput"
+      },
       "RecipeInput": {
         "properties": {
           "title": {
@@ -2254,7 +2542,7 @@
           },
           "ingredients": {
             "items": {
-              "$ref": "#/components/schemas/IngredientInput"
+              "$ref": "#/components/schemas/IngredientInput-Input"
             },
             "type": "array",
             "maxItems": 100,
@@ -2614,6 +2902,33 @@
           "user_ids"
         ],
         "title": "SharesInput"
+      },
+      "StepDraft": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 5000,
+            "minLength": 1,
+            "title": "Text"
+          },
+          "timer_seconds": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timer Seconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "StepDraft"
       },
       "StepInput": {
         "properties": {
