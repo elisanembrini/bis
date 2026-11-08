@@ -132,6 +132,18 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
   - [x] The app can be added to the home screen on Android and iOS and opens full screen.
 - Implementation notes: a hand-written service worker caches only the static assets (never `/api`) and shows an offline page when a navigation fails; the app offers an install banner (native prompt where the browser provides one, manual instructions on iOS) that can be dismissed for good. Using recipes without a connection is out of scope for now.
 
+### F10: Recipe import with a language model
+
+- Priority: could
+- Acceptance criteria:
+  - [x] Given a configured language model, when the user pastes the text of a recipe or a link to a web page, then the recipe form is filled with a title, servings, times, ingredients (quantity, unit, name) and steps (with timers where the text states a time), ready to be reviewed and edited before saving.
+  - [x] Nothing is saved by the import itself: the result is a draft that the user confirms.
+  - [x] When the content holds no recipe, or the model answer is not usable, the user gets a clear message and the form is left untouched.
+  - [x] Without a configured model the feature is absent: the app works exactly as before.
+- Edge cases and errors: link that cannot be read (blocked, too large, not a web page), content with no recipe, malformed model output, too many imports in a short time.
+- Security notes: links are downloaded only if they resolve to public addresses (loopback, private, link-local and reserved ranges are refused, also after each redirect, with at most 3 redirects, ports 80 and 443 only, 2 MB and 10 s limits). The downloaded content is treated as untrusted data: it is delimited in the prompt, the model has no tools and its output is constrained to a JSON schema and validated before it reaches the user. Imports are limited per person (20 per hour).
+- Known limits: the rate limiter lives in the memory of the backend process, so it resets on restart and is not shared between processes; a host could in theory change its DNS answer between the check and the download; recipes from photos are not supported yet.
+
 ## 6. Data model
 
 - `users`: id, email (unique), password_hash (nullable), google_sub (nullable, unique), display_name, created_at.
@@ -177,6 +189,8 @@ Deleting a recipe cascades to its ingredients, steps, associated tags, shares an
 | POST   | /recipes/{id}/copy                | Recipient                           | Copy into your own recipe book                                           |
 | GET    | /recipes/{id}/shares              | Author                              | List shares                                                              |
 | PUT    | /recipes/{id}/shares              | Author                              | Set the members it is shared with                                        |
+| POST   | /recipes/import                   | Authenticated                       | Turn pasted text or a link into a recipe draft (nothing is saved)        |
+| GET    | /features                         | Authenticated                       | Optional features available on this server                               |
 | GET    | /tags                             | Authenticated                       | Starter and personal tags                                                |
 | POST   | /tags                             | Authenticated                       | Create a personal tag                                                    |
 | DELETE | /tags/{id}                        | Author of the tag                   | Delete a personal tag                                                    |
@@ -200,6 +214,7 @@ Main screens:
 
 - Google OAuth for sign-in.
 - Transactional email service over SMTP for password recovery.
+- A language model through an OpenAI-compatible chat completions API (Ollama or any compatible provider), configured with `LLM_BASE_URL`, `LLM_MODEL` and an optional `LLM_API_KEY`. The feature is optional.
 - Browser APIs: Screen Wake Lock to keep the screen on, Web Speech API for voice commands, Web Audio or an audio element for the timer alert.
 
 ## 10. Non-functional requirements

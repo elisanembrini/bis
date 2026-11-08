@@ -132,5 +132,17 @@
     "invite": "Invita qualcuno nella tua casa",
     "save": "Salva",
     "cancel": "Annulla"
+  },
+  "import": {
+    "title": "Importa una ricetta",
+    "description": "Incolla il testo o il link di una ricetta: il modulo sarà compilato per te. Il contenuto attuale del modulo viene sostituito e potrai correggere tutto prima di salvare.",
+    "source": "Origine",
+    "sourceText": "Testo",
+    "sourceLink": "Link",
+    "textLabel": "Testo della ricetta",
+    "linkLabel": "Link della ricetta",
+    "submit": "Importa",
+    "loading": "Sto leggendo la ricetta. Può richiedere qualche decina di secondi.",
+    "done": "Ricetta importata. Controlla ogni campo prima di salvarla: l'importazione può sbagliare quantità e unità."
   }
 }

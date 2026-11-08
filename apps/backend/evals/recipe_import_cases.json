@@ -1,0 +1,243 @@
+{
+  "cases": [
+    {
+      "id": "pasta-pomodoro",
+      "text": "Pasta al pomodoro\nPer 4 persone. Preparazione 10 minuti, cottura 15 minuti.\nIngredienti: 320 g di spaghetti, 400 g di pomodori pelati, 1 spicchio d'aglio, 2 cucchiai di olio extravergine, basilico q.b., sale q.b.\nProcedimento:\n1. Fai insaporire l'aglio nell'olio e aggiungi i pelati, poi cuoci il sugo per 15 minuti.\n2. Cuoci gli spaghetti in acqua salata per 9 minuti e scolali al dente.\n3. Manteca la pasta con il sugo e il basilico.",
+      "expect": {
+        "recipe": true,
+        "title": "pomodoro",
+        "ingredients": [
+          {
+            "name": "spaghetti",
+            "quantity": 320,
+            "unit": "g"
+          },
+          {
+            "name": "pelati",
+            "quantity": 400,
+            "unit": "g"
+          },
+          {
+            "name": "aglio",
+            "quantity": 1,
+            "unit": "clove"
+          },
+          {
+            "name": "olio",
+            "quantity": 2,
+            "unit": "tablespoon"
+          },
+          {
+            "name": "basilico",
+            "quantity": null,
+            "unit": null
+          },
+          {
+            "name": "sale",
+            "quantity": null,
+            "unit": null
+          }
+        ],
+        "steps_min": 3,
+        "steps_max": 3,
+        "timers_seconds": [
+          900,
+          540
+        ],
+        "servings": 4
+      }
+    },
+    {
+      "id": "torta-mele",
+      "text": "TORTA DI MELE DELLA NONNA (8 porzioni)\n3 mele, 250 g di farina, 150 g di zucchero, 3 uova, 100 g di burro fuso, 1 cucchiaino di lievito per dolci, un pizzico di cannella.\nSbuccia le mele e tagliale a fettine. Monta le uova con lo zucchero per 5 minuti. Aggiungi la farina, il burro e il lievito, poi le mele. Versa nello stampo e inforna a 180 gradi per 45 minuti.",
+      "expect": {
+        "recipe": true,
+        "title": "mele",
+        "ingredients": [
+          {
+            "name": "mele",
+            "quantity": 3,
+            "unit": "pieces"
+          },
+          {
+            "name": "farina",
+            "quantity": 250,
+            "unit": "g"
+          },
+          {
+            "name": "zucchero",
+            "quantity": 150,
+            "unit": "g"
+          },
+          {
+            "name": "uova",
+            "quantity": 3,
+            "unit": "pieces"
+          },
+          {
+            "name": "burro",
+            "quantity": 100,
+            "unit": "g"
+          },
+          {
+            "name": "lievito",
+            "quantity": 1,
+            "unit": "teaspoon"
+          },
+          {
+            "name": "cannella",
+            "quantity": 1,
+            "unit": "pinch"
+          }
+        ],
+        "steps_min": 3,
+        "steps_max": 5,
+        "timers_seconds": [
+          300,
+          2700
+        ],
+        "servings": 8
+      }
+    },
+    {
+      "id": "frittata-zucchine",
+      "text": "Frittata di zucchine - 4 persone\nIngredienti\n- 6 uova\n- 300 g zucchine\n- 50 g parmigiano grattugiato\n- 1 cucchiaio di olio\n- sale\n\nAffetta le zucchine e saltale in padella. Sbatti le uova con il parmigiano e unisci le zucchine. Cuoci da entrambi i lati, 8 minuti in tutto.",
+      "expect": {
+        "recipe": true,
+        "title": "frittata",
+        "ingredients": [
+          {
+            "name": "uova",
+            "quantity": 6,
+            "unit": "pieces"
+          },
+          {
+            "name": "zucchine",
+            "quantity": 300,
+            "unit": "g"
+          },
+          {
+            "name": "parmigiano",
+            "quantity": 50,
+            "unit": "g"
+          },
+          {
+            "name": "olio",
+            "quantity": 1,
+            "unit": "tablespoon"
+          },
+          {
+            "name": "sale",
+            "quantity": null,
+            "unit": null
+          }
+        ],
+        "steps_min": 3,
+        "steps_max": 3,
+        "timers_seconds": [
+          480
+        ],
+        "servings": 4
+      }
+    },
+    {
+      "id": "risotto-funghi",
+      "text": "Risotto ai funghi. Dosi per 4: riso Carnaroli 320 g, funghi champignon 300 g, brodo vegetale 1 litro, 1 cipolla, burro 40 g, parmigiano 50 g. Soffriggi la cipolla tritata nel burro. Tosta il riso e sfuma con il brodo caldo, un mestolo alla volta, per circa 18 minuti. Manteca con il parmigiano e i funghi saltati.",
+      "expect": {
+        "recipe": true,
+        "title": "risotto",
+        "ingredients": [
+          {
+            "name": "riso",
+            "quantity": 320,
+            "unit": "g"
+          },
+          {
+            "name": "funghi",
+            "quantity": 300,
+            "unit": "g"
+          },
+          {
+            "name": "brodo",
+            "quantity": 1,
+            "unit": "l"
+          },
+          {
+            "name": "cipolla",
+            "quantity": 1,
+            "unit": "pieces"
+          },
+          {
+            "name": "burro",
+            "quantity": 40,
+            "unit": "g"
+          },
+          {
+            "name": "parmigiano",
+            "quantity": 50,
+            "unit": "g"
+          }
+        ],
+        "steps_min": 3,
+        "steps_max": 3,
+        "timers_seconds": [
+          1080
+        ],
+        "servings": 4
+      }
+    },
+    {
+      "id": "tiramisu",
+      "text": "Tiramisù. 6 porzioni. 200 g di savoiardi, 500 g di mascarpone, 4 uova, 100 g di zucchero, 300 ml di caffè, cacao amaro q.b.\nMonta i tuorli con lo zucchero e unisci il mascarpone. Inzuppa i savoiardi nel caffè e fai gli strati. Lascia riposare in frigorifero per 4 ore e spolvera con il cacao.",
+      "expect": {
+        "recipe": true,
+        "title": "tiramisù",
+        "ingredients": [
+          {
+            "name": "savoiardi",
+            "quantity": 200,
+            "unit": "g"
+          },
+          {
+            "name": "mascarpone",
+            "quantity": 500,
+            "unit": "g"
+          },
+          {
+            "name": "uova",
+            "quantity": 4,
+            "unit": "pieces"
+          },
+          {
+            "name": "zucchero",
+            "quantity": 100,
+            "unit": "g"
+          },
+          {
+            "name": "caffè",
+            "quantity": 300,
+            "unit": "ml"
+          },
+          {
+            "name": "cacao",
+            "quantity": null,
+            "unit": null
+          }
+        ],
+        "steps_min": 3,
+        "steps_max": 3,
+        "timers_seconds": [
+          14400
+        ],
+        "servings": 6
+      }
+    },
+    {
+      "id": "not-a-recipe",
+      "text": "Ciao a tutti! Domani la riunione del condominio è spostata alle 18:30 nella sala al piano terra. Portate le vostre proposte per il giardino. A presto, Marta.",
+      "expect": {
+        "recipe": false
+      }
+    }
+  ]
+}

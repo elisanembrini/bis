@@ -1,6 +1,12 @@
 import { splitTimer, joinTimer } from "./duration";
 import { parseQuantity, quantityToInput } from "./quantity";
-import { type RecipeInput, type RecipeResponse, type Unit, isUnit } from "./types";
+import {
+  type ImportedRecipe,
+  type RecipeInput,
+  type RecipeResponse,
+  type Unit,
+  isUnit,
+} from "./types";
 
 export type IngredientFormValue = {
   key: string;
@@ -96,6 +102,35 @@ export const recipeToForm = (recipe: RecipeResponse): RecipeFormValues => ({
       timerMinutes: timer.minutes,
       timerSeconds: timer.seconds,
       photoId: step.photo_id,
+    };
+  }),
+});
+
+const numberToInput = (value: number | null | undefined): string =>
+  value === null || value === undefined ? "" : String(value);
+
+export const importedToForm = (recipe: ImportedRecipe, newKey: () => string): RecipeFormValues => ({
+  title: recipe.title,
+  notes: recipe.notes ?? "",
+  prepMinutes: numberToInput(recipe.prep_minutes),
+  cookMinutes: numberToInput(recipe.cook_minutes),
+  servings: String(recipe.servings),
+  coverPhotoId: null,
+  tagIds: [],
+  ingredients: recipe.ingredients.map((ingredient) => ({
+    key: newKey(),
+    quantity: quantityToInput(ingredient.quantity ?? null),
+    unit: ingredient.unit ?? "",
+    name: ingredient.name,
+  })),
+  steps: recipe.steps.map((step) => {
+    const timer = splitTimer(step.timer_seconds ?? null);
+    return {
+      key: newKey(),
+      text: step.text,
+      timerMinutes: timer.minutes,
+      timerSeconds: timer.seconds,
+      photoId: null,
     };
   }),
 });

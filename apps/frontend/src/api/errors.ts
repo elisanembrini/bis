@@ -36,6 +36,11 @@ const API_ERROR_CODES = {
   RECIPE_READ_ONLY: true,
   SHARE_NOT_ALLOWED: true,
   CANNOT_COPY_OWN: true,
+  IMPORT_UNAVAILABLE: true,
+  IMPORT_SOURCE_INVALID: true,
+  IMPORT_NO_RECIPE: true,
+  IMPORT_FAILED: true,
+  TOO_MANY_IMPORTS: true,
 } satisfies Record<ApiErrorCode, true>;
 
 export const isApiErrorCode = (value: unknown): value is ApiErrorCode =>
