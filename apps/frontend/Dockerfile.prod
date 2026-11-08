@@ -24,7 +24,7 @@ RUN addgroup -S -g 10001 bis \
     && chown -R bis:bis /srv /data /config
 
 COPY --from=build --chown=bis:bis /repo/apps/frontend/dist /srv
-COPY --chown=bis:bis deploy/Caddyfile /etc/caddy/Caddyfile
+COPY --chown=bis:bis deploy/Caddyfile deploy/Caddyfile.site /etc/caddy/
 
 USER bis:bis
 

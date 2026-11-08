@@ -1,0 +1,16 @@
+# Home profile, used together with docker-compose.prod.yml and docker-compose.casa.ports.yml.
+# `ports: !reset null` removes the public ports of the production file. It is a separate file from
+# the new ports because Compose 2.24.3 silently ignores `!override`, which would leave 80 and 443 public.
+services:
+  caddy:
+    ports: !reset null
+    volumes:
+      - ./deploy/Caddyfile.casa:/etc/caddy/Caddyfile:ro
+
+  backup:
+    volumes:
+      - ${BACKUP_DIR:?Set BACKUP_DIR in .env.casa}:/backup
+
+  restore:
+    volumes:
+      - ${BACKUP_DIR:?Set BACKUP_DIR in .env.casa}:/backup
