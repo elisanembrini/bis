@@ -126,6 +126,8 @@ pnpm test:e2e
 
 The production setup (Docker Compose with Caddy and automatic HTTPS, nightly encrypted backups, one-command releases) is in `docker-compose.prod.yml` and `deploy/`. [docs/DEPLOY.md](docs/DEPLOY.md) is the step-by-step guide: preparing an Ubuntu 24.04 server, the first release, later releases, restoring from a backup and what to do when a release goes wrong.
 
+To run Bis for free on your own Mac, reachable only from your devices through Tailscale, use the home profile instead: [docs/CASA.md](docs/CASA.md).
+
 ## Recipe import
 
 The import is optional and needs a language model reachable through an OpenAI-compatible chat completions API. Set these variables in `.env`:

@@ -9,9 +9,11 @@ compose_file="docker-compose.prod.yml"
 
 compose() {
   local files=(-f "$compose_file")
-  if [ -n "${COMPOSE_OVERRIDE:-}" ]; then
-    files+=(-f "$COMPOSE_OVERRIDE")
-  fi
+  local overrides override
+  read -ra overrides <<<"${COMPOSE_OVERRIDE:-}"
+  for override in "${overrides[@]}"; do
+    files+=(-f "$override")
+  done
   docker compose --env-file "$env_file" "${files[@]}" "$@"
 }
 

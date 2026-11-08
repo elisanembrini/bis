@@ -2,6 +2,8 @@
 
 This guide takes you from an empty Ubuntu 24.04 server to a running Bis, and covers every release after the first, restoring from a backup and what to do when a release goes wrong.
 
+To run Bis on your own Mac behind Tailscale instead of on a server, see [CASA.md](CASA.md).
+
 Everything is run on the server, in a clone of this repository, with Docker Compose. The files involved:
 
 | File | Purpose |

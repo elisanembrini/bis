@@ -1,0 +1,11 @@
+{
+	auto_https off
+}
+
+import /etc/caddy/Caddyfile.site
+
+import bis_health
+
+:80 {
+	import bis_site
+}

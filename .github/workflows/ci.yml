@@ -115,6 +115,7 @@ jobs:
       - uses: actions/checkout@v7
       - run: shellcheck -x --source-path=SCRIPTDIR deploy/*.sh deploy/backup/*.sh
       - run: docker compose --env-file .env.production.example -f docker-compose.prod.yml --profile tools config --quiet
+      - run: docker compose --env-file .env.casa.example -f docker-compose.prod.yml -f docker-compose.casa.yml -f docker-compose.casa.ports.yml --profile tools config --quiet
       - run: docker compose --env-file .env.production.example -f docker-compose.prod.yml build
 
   e2e:
