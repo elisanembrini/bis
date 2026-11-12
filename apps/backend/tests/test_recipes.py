@@ -118,6 +118,12 @@ def test_decimal_quantities_keep_their_precision(client: TestClient) -> None:
         ({"ingredients": [{"quantity": "1", "unit": "g", "name": " "}]}, "name"),
         ({"steps": [{"text": ""}]}, "text"),
         ({"steps": [{"text": "Cuoci", "timer_seconds": 0}]}, "timer_seconds"),
+        ({"source_url": "javascript:alert(1)"}, "source_url"),
+        ({"source_url": "ftp://example.com/ricetta"}, "source_url"),
+        ({"source_url": "data:text/html,<script>alert(1)</script>"}, "source_url"),
+        ({"source_url": "https://"}, "source_url"),
+        ({"source_url": "non è un indirizzo"}, "source_url"),
+        ({"source_url": "https://example.com/" + "a" * 2048}, "source_url"),
     ],
 )
 def test_invalid_recipes_are_rejected(
@@ -274,3 +280,52 @@ def test_unknown_recipe_is_not_found(client: TestClient) -> None:
     response = client.get("/recipes/00000000-0000-4000-8000-000000000000", headers=anna)
 
     assert response.status_code == 404
+
+
+def test_source_link_is_saved_and_returned(client: TestClient) -> None:
+    anna = register(client, "Anna")
+
+    created = create(client, anna, source_url="https://www.giallozafferano.it/ricetta")
+
+    detail = client.get(f"/recipes/{created['id']}", headers=anna).json()
+    assert detail["source_url"] == "https://www.giallozafferano.it/ricetta"
+
+
+def test_source_link_is_optional(client: TestClient) -> None:
+    anna = register(client, "Anna")
+
+    created = create(client, anna)
+
+    assert created["source_url"] is None
+
+
+@pytest.mark.parametrize("blank", ["", "   "])
+def test_blank_source_link_is_stored_as_missing(client: TestClient, blank: str) -> None:
+    anna = register(client, "Anna")
+
+    created = create(client, anna, source_url=blank)
+
+    assert created["source_url"] is None
+
+
+def test_source_link_is_trimmed_and_accepts_http(client: TestClient) -> None:
+    anna = register(client, "Anna")
+
+    created = create(client, anna, source_url="  http://example.com/ricetta?id=7  ")
+
+    assert created["source_url"] == "http://example.com/ricetta?id=7"
+
+
+def test_source_link_can_be_changed_and_removed(client: TestClient) -> None:
+    anna = register(client, "Anna")
+    created = create(client, anna, source_url="https://example.com/uno")
+
+    changed = client.put(
+        f"/recipes/{created['id']}",
+        json=recipe_payload(source_url="https://example.com/due"),
+        headers=anna,
+    ).json()
+    removed = client.put(f"/recipes/{created['id']}", json=recipe_payload(), headers=anna).json()
+
+    assert changed["source_url"] == "https://example.com/due"
+    assert removed["source_url"] is None

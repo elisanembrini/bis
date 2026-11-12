@@ -135,6 +135,7 @@ class RecipeService:
                 owner=user,
                 title=original.title,
                 notes=original.notes,
+                source_url=original.source_url,
                 prep_minutes=original.prep_minutes,
                 cook_minutes=original.cook_minutes,
                 servings=original.servings,
@@ -243,6 +244,7 @@ class RecipeService:
 def _apply(recipe: Recipe, body: RecipeInput, selected_tags: list[Tag]) -> None:
     recipe.title = body.title
     recipe.notes = body.notes
+    recipe.source_url = body.source_url
     recipe.prep_minutes = body.prep_minutes
     recipe.cook_minutes = body.cook_minutes
     recipe.servings = body.servings
@@ -306,6 +308,7 @@ def _detail(recipe: Recipe, viewer: User) -> RecipeResponse:
     return RecipeResponse(
         **_summary(recipe, viewer).model_dump(),
         notes=recipe.notes,
+        source_url=recipe.source_url,
         ingredients=[
             IngredientResponse(
                 id=ingredient.id,

@@ -43,6 +43,7 @@ class Recipe(Base):
     owner_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     title: Mapped[str] = mapped_column(String(200))
     notes: Mapped[str | None] = mapped_column(Text)
+    source_url: Mapped[str | None] = mapped_column(String(2048))
     prep_minutes: Mapped[int | None] = mapped_column(Integer)
     cook_minutes: Mapped[int | None] = mapped_column(Integer)
     servings: Mapped[int] = mapped_column(Integer)

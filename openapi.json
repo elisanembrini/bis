@@ -2508,6 +2508,18 @@
             ],
             "title": "Notes"
           },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
           "prep_minutes": {
             "anyOf": [
               {
@@ -2674,6 +2686,17 @@
             ],
             "title": "Notes"
           },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
           "ingredients": {
             "items": {
               "$ref": "#/components/schemas/IngredientResponse"
@@ -2703,6 +2726,7 @@
           "created_at",
           "updated_at",
           "notes",
+          "source_url",
           "ingredients",
           "steps"
         ],

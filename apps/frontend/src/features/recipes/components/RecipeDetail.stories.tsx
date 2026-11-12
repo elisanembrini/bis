@@ -27,6 +27,19 @@ export const Complete: Story = {
       "sale q.b.",
     ]);
     await expect(canvas.getByText("Timer: 9 min 30 s")).toBeVisible();
+    const source = canvas.getByRole("link", { name: "giallozafferano.it" });
+    await expect(source).toHaveAttribute("href", "https://www.giallozafferano.it/ricetta-pasta");
+    await expect(source).toHaveAttribute("target", "_blank");
+    await expect(source).toHaveAttribute("rel", "noopener noreferrer");
+  },
+};
+
+export const UnsafeSourceLinkIsNotShown: Story = {
+  args: { recipe: { ...pastaRecipe, source_url: "javascript:alert(1)" } },
+  play: async ({ canvas }) => {
+    await expect(await canvas.findByText("Preparazione: 10 min · Cottura: 15 min")).toBeVisible();
+    await expect(canvas.queryByText("Fonte:")).toBeNull();
+    await expect(canvas.queryByRole("link", { name: /alert/ })).toBeNull();
   },
 };
 
@@ -62,6 +75,7 @@ export const WithoutNotesAndTimes: Story = {
   play: async ({ canvas }) => {
     await expect(await canvas.findByText("1 porzione")).toBeVisible();
     await expect(canvas.queryByRole("heading", { name: "Note" })).toBeNull();
+    await expect(canvas.queryByText("Fonte:")).toBeNull();
   },
 };
 

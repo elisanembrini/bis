@@ -47,7 +47,7 @@ The interface is in Italian. The screenshots are taken on a phone-sized screen, 
 
 - **Sign-in**: email and password, or Google (OAuth flow handled by the backend, with `state` and PKCE). Server-side sessions with httpOnly cookies, login rate limiting, password recovery by email.
 - **Household and invitations**: single-use invitation links valid for 7 days, member list, leaving the household and removing members.
-- **Recipes**: ingredients with decimal quantities written the Italian way (and "q.b.", short for *quanto basta*, "as needed"), steps with timers, photos of the dish and of each step. Photos are processed on the server: orientation fixed, all metadata (including GPS location) stripped, converted to WebP, thumbnails generated.
+- **Recipes**: ingredients with decimal quantities written the Italian way (and "q.b.", short for *quanto basta*, "as needed"), steps with timers, photos of the dish and of each step, and an optional link to the page the recipe was taken from. Photos are processed on the server: orientation fixed, all metadata (including GPS location) stripped, converted to WebP, thumbnails generated.
 - **Tags and search**: search by name and by ingredient using PostgreSQL full-text search configured for Italian. "Zucchina" finds "zucchine" (singular and plural match), ignoring case and accents, and it works with incomplete words while typing.
 - **Servings**: quantities are recalculated in the view only, with readable rounding per unit.
 - **Sharing and copying**: a recipe can be shared with household members, who see it read-only. With "Fai il bis" (roughly "have seconds") each of them makes an independent copy, photos included.

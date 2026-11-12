@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Literal
+from urllib.parse import urlsplit
 
 from pydantic import BaseModel, Field, StringConstraints, field_validator
 
@@ -18,6 +19,8 @@ SERVINGS_MAX = 100
 MAX_TAGS = 20
 MAX_SHARES = 50
 SEARCH_MAX_LENGTH = 200
+SOURCE_URL_MAX_LENGTH = 2048
+SOURCE_URL_SCHEMES = {"http", "https"}
 
 Title = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=TITLE_MAX_LENGTH)
@@ -47,6 +50,7 @@ class StepInput(BaseModel):
 class RecipeInput(BaseModel):
     title: Title
     notes: Annotated[str, Field(max_length=TEXT_MAX_LENGTH)] | None = None
+    source_url: Annotated[str, Field(max_length=SOURCE_URL_MAX_LENGTH)] | None = None
     prep_minutes: Minutes | None = None
     cook_minutes: Minutes | None = None
     servings: Annotated[int, Field(ge=1, le=SERVINGS_MAX)]
@@ -62,6 +66,22 @@ class RecipeInput(BaseModel):
             return None
         stripped = value.strip()
         return stripped or None
+
+    @field_validator("source_url")
+    @classmethod
+    def source_url_is_web_address(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        stripped = value.strip()
+        if not stripped:
+            return None
+        try:
+            parts = urlsplit(stripped)
+        except ValueError as error:
+            raise ValueError("Enter a valid http or https address.") from error
+        if parts.scheme.lower() not in SOURCE_URL_SCHEMES or not parts.hostname:
+            raise ValueError("Enter a valid http or https address.")
+        return stripped
 
 
 class IngredientResponse(BaseModel):
@@ -102,6 +122,7 @@ class RecipeSummary(BaseModel):
 
 class RecipeResponse(RecipeSummary):
     notes: str | None
+    source_url: str | None
     ingredients: list[IngredientResponse]
     steps: list[StepResponse]
 

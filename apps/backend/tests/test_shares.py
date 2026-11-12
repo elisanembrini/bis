@@ -75,6 +75,20 @@ def test_shared_recipe_appears_for_chosen_members(
     assert listed(client, anna)[0]["is_own"] is True
 
 
+def test_source_link_is_visible_to_recipients_and_kept_by_the_copy(
+    client: TestClient, household: dict[str, Headers]
+) -> None:
+    anna, bruno = household["anna"], household["bruno"]
+    recipe = create(client, anna, source_url="https://example.com/tiramisu")
+    share(client, anna, recipe["id"], bruno)
+
+    seen_by_bruno = client.get(f"/recipes/{recipe['id']}", headers=bruno).json()
+    copied = copy_of(client, bruno, recipe["id"])
+
+    assert seen_by_bruno["source_url"] == "https://example.com/tiramisu"
+    assert copied["source_url"] == "https://example.com/tiramisu"
+
+
 def test_share_list_shows_household_members_and_state(
     client: TestClient, household: dict[str, Headers]
 ) -> None:

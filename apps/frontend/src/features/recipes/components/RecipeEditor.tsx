@@ -256,6 +256,14 @@ export function RecipeEditor({
           onChange={(selected) => form.setFieldValue("tagIds", selected)}
         />
 
+        <TextInput
+          label={t("editor.sourceUrl")}
+          type="url"
+          inputMode="url"
+          key={form.key("sourceUrl")}
+          {...form.getInputProps("sourceUrl")}
+        />
+
         <Textarea
           label={t("editor.notes")}
           autosize

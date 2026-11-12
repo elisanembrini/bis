@@ -652,6 +652,8 @@ export interface components {
             title: string;
             /** Notes */
             notes?: string | null;
+            /** Source Url */
+            source_url?: string | null;
             /** Prep Minutes */
             prep_minutes?: number | null;
             /** Cook Minutes */
@@ -704,6 +706,8 @@ export interface components {
             updated_at: string;
             /** Notes */
             notes: string | null;
+            /** Source Url */
+            source_url: string | null;
             /** Ingredients */
             ingredients: components["schemas"]["IngredientResponse"][];
             /** Steps */

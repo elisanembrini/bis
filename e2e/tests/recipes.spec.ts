@@ -69,3 +69,30 @@ test("an unsaved draft survives a reload and can be restored", async ({ page }) 
   await page.getByRole("button", { name: "Ripristina" }).click();
   await expect(page.getByLabel("Titolo")).toHaveValue("Torta in bozza");
 });
+
+test("add, change and remove the link a recipe comes from", async ({ page }) => {
+  await registerNewUser(page);
+  await page.getByRole("link", { name: "Nuova ricetta" }).click();
+  await page.getByLabel("Titolo").fill("Focaccia");
+  await group(page, "Ingrediente 1").getByLabel("Ingrediente").fill("farina");
+  await group(page, "Passaggio 1").getByLabel("Descrizione").fill("Impasta.");
+
+  await page.getByLabel("Link originale").fill("javascript:alert(1)");
+  await page.getByRole("button", { name: "Salva ricetta" }).click();
+  await expect(page.getByText("Usa un indirizzo che inizi con http:// o https://")).toBeVisible();
+
+  await page.getByLabel("Link originale").fill("https://www.example.com/focaccia");
+  await page.getByRole("button", { name: "Salva ricetta" }).click();
+  await expect(page.getByRole("heading", { name: "Focaccia" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "example.com" })).toHaveAttribute(
+    "href",
+    "https://www.example.com/focaccia",
+  );
+
+  await page.getByRole("link", { name: "Modifica" }).click();
+  await expect(page.getByLabel("Link originale")).toHaveValue("https://www.example.com/focaccia");
+  await page.getByLabel("Link originale").fill("");
+  await page.getByRole("button", { name: "Salva ricetta" }).click();
+  await expect(page.getByRole("heading", { name: "Focaccia" })).toBeVisible();
+  await expect(page.getByText("Fonte:")).toHaveCount(0);
+});
