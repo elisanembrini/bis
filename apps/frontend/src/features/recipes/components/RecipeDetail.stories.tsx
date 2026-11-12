@@ -27,6 +27,7 @@ export const Complete: Story = {
       "sale q.b.",
     ]);
     await expect(canvas.getByText("Timer: 9 min 30 s")).toBeVisible();
+    await expect(canvas.getByText("Voto: 8/10")).toBeVisible();
     const source = canvas.getByRole("link", { name: "giallozafferano.it" });
     await expect(source).toHaveAttribute("href", "https://www.giallozafferano.it/ricetta-pasta");
     await expect(source).toHaveAttribute("target", "_blank");
@@ -76,6 +77,7 @@ export const WithoutNotesAndTimes: Story = {
     await expect(await canvas.findByText("1 porzione")).toBeVisible();
     await expect(canvas.queryByRole("heading", { name: "Note" })).toBeNull();
     await expect(canvas.queryByText("Fonte:")).toBeNull();
+    await expect(canvas.queryByText(/^Voto:/)).toBeNull();
   },
 };
 
@@ -144,6 +146,7 @@ export const OwnerSharedWithOthers: Story = {
 export const SharedReadOnly: Story = {
   args: { recipe: sharedRecipe },
   play: async ({ args, canvas, userEvent }) => {
+    await expect(await canvas.findByText("Voto: 9/10")).toBeVisible();
     await expect(
       await canvas.findByText("Ricetta di Bruno, condivisa con te in sola lettura."),
     ).toBeVisible();

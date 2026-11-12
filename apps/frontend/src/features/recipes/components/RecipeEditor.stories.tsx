@@ -56,6 +56,7 @@ export const CreateRecipe: Story = {
       title: "Frittata",
       notes: null,
       source_url: null,
+      rating: null,
       prep_minutes: null,
       cook_minutes: null,
       servings: 4,
@@ -84,6 +85,24 @@ export const SourceLink: Story = {
     await expect(args.onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({ source_url: "https://example.com/frittata" }),
     );
+  },
+};
+
+export const RateRecipe: Story = {
+  play: async ({ args, canvas, userEvent }) => {
+    await userEvent.type(await canvas.findByLabelText("Titolo"), "Frittata");
+    const rating = canvas.getByLabelText("Voto (da 1 a 10)");
+    await expect(rating).toHaveValue("");
+    await expect(canvas.getAllByRole("option", { name: /^(\d+|Nessun voto)$/ })).toHaveLength(11);
+    await userEvent.selectOptions(rating, "9");
+    const ingredient = within(canvas.getByRole("group", { name: "Ingrediente 1" }));
+    await userEvent.type(ingredient.getByLabelText("Ingrediente"), "uova");
+    const step = within(canvas.getByRole("group", { name: "Passaggio 1" }));
+    await userEvent.type(step.getByLabelText("Descrizione"), "Sbatti le uova.");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Salva ricetta" }));
+
+    await expect(args.onSubmit).toHaveBeenCalledWith(expect.objectContaining({ rating: 9 }));
   },
 };
 

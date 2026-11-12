@@ -20,6 +20,7 @@ const validForm = (): RecipeFormValues => ({
   title: "  Pasta al pomodoro ",
   notes: "",
   sourceUrl: "",
+  rating: "",
   prepMinutes: "10",
   cookMinutes: "",
   servings: "4",
@@ -83,6 +84,28 @@ describe("validateRecipeForm", () => {
   });
 });
 
+describe("rating", () => {
+  it("sends the chosen rating as a number, or null when there is none", () => {
+    expect(formToRecipeInput({ ...validForm(), rating: "10" }).rating).toBe(10);
+    expect(formToRecipeInput({ ...validForm(), rating: "1" }).rating).toBe(1);
+    expect(formToRecipeInput({ ...validForm(), rating: "" }).rating).toBeNull();
+  });
+
+  it("starts unrated for a new or an imported recipe", () => {
+    expect(emptyRecipeForm(newKey).rating).toBe("");
+    const imported = importedToForm(
+      {
+        title: "Insalata",
+        servings: 2,
+        ingredients: [{ name: "lattuga" }],
+        steps: [{ text: "Mescola." }],
+      },
+      newKey,
+    );
+    expect(imported.rating).toBe("");
+  });
+});
+
 describe("source link", () => {
   it("accepts an empty link and web addresses", () => {
     for (const sourceUrl of ["", "  ", "https://example.com/ricetta?id=7", "http://example.com"]) {
@@ -119,6 +142,7 @@ describe("formToRecipeInput", () => {
       title: "Pasta al pomodoro",
       notes: null,
       source_url: null,
+      rating: null,
       prep_minutes: 10,
       cook_minutes: null,
       servings: 4,
@@ -145,6 +169,7 @@ describe("recipeToForm", () => {
       author: { id: "u1", display_name: "Anna" },
       notes: null,
       source_url: "https://example.com/pasta",
+      rating: 7,
       prep_minutes: null,
       cook_minutes: 15,
       servings: 2,
@@ -160,6 +185,7 @@ describe("recipeToForm", () => {
 
     expect(form.ingredients[0]).toEqual({ key: "i1", quantity: "1,5", unit: "kg", name: "farina" });
     expect(form.sourceUrl).toBe("https://example.com/pasta");
+    expect(form.rating).toBe("7");
     expect(form.coverPhotoId).toBe("p1");
     expect(form.tagIds).toEqual(["t2"]);
     expect(form.steps[0]).toEqual({
@@ -172,6 +198,7 @@ describe("recipeToForm", () => {
     const input = formToRecipeInput(form);
     expect(input.ingredients[0]?.quantity).toBe("1.5");
     expect(input.source_url).toBe("https://example.com/pasta");
+    expect(input.rating).toBe(7);
     expect(input.cover_photo_id).toBe("p1");
     expect(input.steps[0]?.photo_id).toBe("p2");
   });

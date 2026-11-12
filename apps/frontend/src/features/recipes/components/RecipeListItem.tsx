@@ -54,6 +54,11 @@ export function RecipeListItem({ recipe, thumbnailSrc }: RecipeListItemProps) {
             <AnchorLink to="/recipes/$recipeId" params={{ recipeId: recipe.id }} fw={600} size="lg">
               {recipe.title}
             </AnchorLink>
+            {recipe.rating !== null && (
+              <Badge size="md" tt="none" variant="outline">
+                {t("list.rating", { rating: recipe.rating })}
+              </Badge>
+            )}
             {!recipe.is_own && (
               <Badge size="md" tt="none" leftSection={<SharedIcon size={14} />}>
                 {t("list.sharedBadge")}

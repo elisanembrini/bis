@@ -28,6 +28,7 @@ import {
   formToRecipeInput,
   validateRecipeForm,
 } from "../form";
+import { RATINGS } from "../rating";
 import { type RecipeInput, UNITS } from "../types";
 import { PhotoField } from "./PhotoField";
 import { RowActions } from "./RowActions";
@@ -262,6 +263,16 @@ export function RecipeEditor({
           inputMode="url"
           key={form.key("sourceUrl")}
           {...form.getInputProps("sourceUrl")}
+        />
+
+        <NativeSelect
+          label={t("editor.rating")}
+          data={[
+            { value: "", label: t("editor.noRating") },
+            ...RATINGS.map((rating) => ({ value: String(rating), label: String(rating) })),
+          ]}
+          key={form.key("rating")}
+          {...form.getInputProps("rating")}
         />
 
         <Textarea

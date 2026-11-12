@@ -25,6 +25,7 @@ from app.schemas.recipe import (
     RecipeInput,
     RecipeResponse,
     RecipeScope,
+    RecipeSort,
     RecipeSummary,
     ShareCandidate,
     StepInput,
@@ -48,6 +49,8 @@ class RecipeService:
         ingredient: str | None,
         tag_id: uuid.UUID | None,
         scope: RecipeScope | None = None,
+        min_rating: int | None = None,
+        sort: RecipeSort = "recent",
     ) -> list[RecipeSummary]:
         visible = (
             recipes.own_recipe_ids(user.id)
@@ -62,6 +65,8 @@ class RecipeService:
             title_words=search_words(title),
             ingredient_words=search_words(ingredient),
             tag_id=tag_id,
+            min_rating=min_rating,
+            best_rated_first=sort == "rating",
         )
         return [_summary(recipe, user) for recipe in found]
 
@@ -245,6 +250,7 @@ def _apply(recipe: Recipe, body: RecipeInput, selected_tags: list[Tag]) -> None:
     recipe.title = body.title
     recipe.notes = body.notes
     recipe.source_url = body.source_url
+    recipe.rating = body.rating
     recipe.prep_minutes = body.prep_minutes
     recipe.cook_minutes = body.cook_minutes
     recipe.servings = body.servings
@@ -295,6 +301,7 @@ def _summary(recipe: Recipe, viewer: User) -> RecipeSummary:
         is_own=recipe.owner_id == viewer.id,
         author=AuthorSummary(id=recipe.owner.id, display_name=recipe.owner.display_name),
         servings=recipe.servings,
+        rating=recipe.rating,
         prep_minutes=recipe.prep_minutes,
         cook_minutes=recipe.cook_minutes,
         cover_photo_id=recipe.cover_photo_id,

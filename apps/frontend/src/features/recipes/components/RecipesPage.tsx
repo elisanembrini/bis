@@ -8,7 +8,8 @@ import { PageContainer } from "../../../components/PageContainer";
 import { TagFilter } from "../../tags/components/TagFilter";
 import { tagsQueryOptions } from "../../tags/queries";
 import { type RecipesSearch, recipesQueryOptions } from "../queries";
-import { withSearchText } from "../recipesSearch";
+import { hasActiveFilters, withMinRating, withSearchText, withSort } from "../recipesSearch";
+import { RatingControls } from "./RatingControls";
 import { RecipeList } from "./RecipeList";
 import { SearchBar, type SearchMode } from "./SearchBar";
 
@@ -31,7 +32,7 @@ export function RecipesPage({ search, onSearchChange }: RecipesPageProps) {
   );
   const recipes = useQuery({ ...recipesQueryOptions(search), placeholderData: keepPreviousData });
   const tags = useQuery(tagsQueryOptions());
-  const isFiltered = Object.keys(search).length > 0;
+  const isFiltered = hasActiveFilters(search);
 
   return (
     <PageContainer>
@@ -53,6 +54,12 @@ export function RecipesPage({ search, onSearchChange }: RecipesPageProps) {
                 setMode(next);
                 onSearchChange(withSearchText(search, next, text));
               }}
+            />
+            <RatingControls
+              sort={search.sort}
+              minRating={search.minRating}
+              onSortChange={(sort) => onSearchChange(withSort(search, sort))}
+              onMinRatingChange={(minRating) => onSearchChange(withMinRating(search, minRating))}
             />
             {tags.data !== undefined && tags.data.length > 0 && (
               <TagFilter

@@ -118,6 +118,11 @@ def test_decimal_quantities_keep_their_precision(client: TestClient) -> None:
         ({"ingredients": [{"quantity": "1", "unit": "g", "name": " "}]}, "name"),
         ({"steps": [{"text": ""}]}, "text"),
         ({"steps": [{"text": "Cuoci", "timer_seconds": 0}]}, "timer_seconds"),
+        ({"rating": 0}, "rating"),
+        ({"rating": 11}, "rating"),
+        ({"rating": -3}, "rating"),
+        ({"rating": 7.5}, "rating"),
+        ({"rating": "ottimo"}, "rating"),
         ({"source_url": "javascript:alert(1)"}, "source_url"),
         ({"source_url": "ftp://example.com/ricetta"}, "source_url"),
         ({"source_url": "data:text/html,<script>alert(1)</script>"}, "source_url"),
@@ -329,3 +334,30 @@ def test_source_link_can_be_changed_and_removed(client: TestClient) -> None:
 
     assert changed["source_url"] == "https://example.com/due"
     assert removed["source_url"] is None
+
+
+@pytest.mark.parametrize("rating", [1, 7, 10])
+def test_rating_is_saved_and_returned_in_detail_and_list(client: TestClient, rating: int) -> None:
+    anna = register(client, "Anna")
+
+    created = create(client, anna, rating=rating)
+
+    assert created["rating"] == rating
+    assert client.get(f"/recipes/{created['id']}", headers=anna).json()["rating"] == rating
+    assert client.get("/recipes", headers=anna).json()[0]["rating"] == rating
+
+
+def test_rating_is_optional_and_can_be_changed_and_removed(client: TestClient) -> None:
+    anna = register(client, "Anna")
+    created = create(client, anna)
+    assert created["rating"] is None
+
+    rated = client.put(
+        f"/recipes/{created['id']}", json=recipe_payload(rating=8), headers=anna
+    ).json()
+    changed = client.put(
+        f"/recipes/{created['id']}", json=recipe_payload(rating=9), headers=anna
+    ).json()
+    removed = client.put(f"/recipes/{created['id']}", json=recipe_payload(), headers=anna).json()
+
+    assert (rated["rating"], changed["rating"], removed["rating"]) == (8, 9, None)

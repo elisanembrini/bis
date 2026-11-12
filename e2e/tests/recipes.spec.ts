@@ -96,3 +96,56 @@ test("add, change and remove the link a recipe comes from", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Focaccia" })).toBeVisible();
   await expect(page.getByText("Fonte:")).toHaveCount(0);
 });
+
+const createRatedRecipe = async (page: Page, title: string, rating: string) => {
+  await page.goto("/recipes/new");
+  await page.getByLabel("Titolo").fill(title);
+  await group(page, "Ingrediente 1").getByLabel("Ingrediente").fill("farina");
+  await group(page, "Passaggio 1").getByLabel("Descrizione").fill("Cuoci.");
+  if (rating !== "") {
+    await page.getByLabel("Voto (da 1 a 10)").selectOption(rating);
+  }
+  await page.getByRole("button", { name: "Salva ricetta" }).click();
+  await expect(page.getByRole("heading", { name: title })).toBeVisible();
+};
+
+test("rate recipes, then sort and filter the list by rating", async ({ page }) => {
+  await registerNewUser(page);
+  await createRatedRecipe(page, "Frittata", "6");
+  await createRatedRecipe(page, "Lasagne", "9");
+  await createRatedRecipe(page, "Insalata", "");
+  await expect(page.getByText("Voto: ", { exact: false })).toHaveCount(0);
+
+  await page.goto("/recipes");
+  const own = page.getByRole("list", { name: "Le mie ricette" }).getByRole("link");
+  await expect(own).toHaveText(["Insalata", "Lasagne", "Frittata"]);
+  await expect(page.getByText("Voto 9/10")).toBeVisible();
+
+  await page.getByLabel("Ordina per").selectOption("Voto più alto");
+  await expect(own).toHaveText(["Lasagne", "Frittata", "Insalata"]);
+  await expect(page).toHaveURL(/sort=rating/);
+
+  await page.getByLabel("Voto minimo").selectOption("8+");
+  await expect(own).toHaveText(["Lasagne"]);
+  await expect(page).toHaveURL(/minRating=8/);
+
+  await page.reload();
+  await expect(own).toHaveText(["Lasagne"]);
+  await expect(page.getByLabel("Voto minimo")).toHaveValue("8");
+  await expect(page.getByLabel("Ordina per")).toHaveValue("rating");
+
+  await page.getByLabel("Voto minimo").selectOption("10");
+  await expect(page.getByText("Nessuna ricetta trovata.")).toBeVisible();
+
+  await page.getByLabel("Voto minimo").selectOption("Tutti");
+  await expect(own).toHaveText(["Lasagne", "Frittata", "Insalata"]);
+
+  await page.getByRole("link", { name: "Lasagne" }).click();
+  await expect(page.getByText("Voto: 9/10")).toBeVisible();
+  await page.getByRole("link", { name: "Modifica" }).click();
+  await expect(page.getByLabel("Voto (da 1 a 10)")).toHaveValue("9");
+  await page.getByLabel("Voto (da 1 a 10)").selectOption("Nessun voto");
+  await page.getByRole("button", { name: "Salva ricetta" }).click();
+  await expect(page.getByRole("heading", { name: "Lasagne" })).toBeVisible();
+  await expect(page.getByText(/^Voto:/)).toHaveCount(0);
+});

@@ -10,7 +10,8 @@
     "noResultsHint": "Prova con un'altra parola o togli il filtro.",
     "shared": "Condivise con me",
     "sharedBadge": "Condivisa",
-    "by": "di {{name}}"
+    "by": "di {{name}}",
+    "rating": "Voto {{rating}}/10"
   },
   "detail": {
     "ingredients": "Ingredienti",
@@ -30,6 +31,7 @@
     "stepPhotoAlt": "Foto del passaggio {{number}}",
     "tags": "Etichette",
     "source": "Fonte:",
+    "rating": "Voto: {{rating}}/10",
     "sharedWithMe": "Ricetta di {{name}}, condivisa con te in sola lettura.",
     "copy": "Fai il bis",
     "copied": "Fatto! Ora la ricetta è nel tuo ricettario e puoi modificarla.",
@@ -46,6 +48,8 @@
     "cookMinutes": "Cottura (minuti)",
     "notes": "Note",
     "sourceUrl": "Link originale",
+    "rating": "Voto (da 1 a 10)",
+    "noRating": "Nessun voto",
     "ingredients": "Ingredienti",
     "quantity": "Quantità",
     "quantityHint": "Vuoto per q.b.",
@@ -147,5 +151,14 @@
     "submit": "Importa",
     "loading": "Sto leggendo la ricetta. Può richiedere qualche decina di secondi.",
     "done": "Ricetta importata. Controlla ogni campo prima di salvarla: l'importazione può sbagliare quantità e unità."
+  },
+  "sort": {
+    "label": "Ordina per",
+    "recent": "Più recenti",
+    "rating": "Voto più alto",
+    "minRating": "Voto minimo",
+    "anyRating": "Tutti",
+    "atLeast": "{{rating}}+",
+    "topRating": "{{rating}}"
   }
 }

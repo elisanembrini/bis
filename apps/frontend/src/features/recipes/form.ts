@@ -28,6 +28,7 @@ export type RecipeFormValues = {
   title: string;
   notes: string;
   sourceUrl: string;
+  rating: string;
   prepMinutes: string;
   cookMinutes: string;
   servings: string;
@@ -75,6 +76,7 @@ export const emptyRecipeForm = (newKey: () => string): RecipeFormValues => ({
   title: "",
   notes: "",
   sourceUrl: "",
+  rating: "",
   prepMinutes: "",
   cookMinutes: "",
   servings: "4",
@@ -88,6 +90,7 @@ export const recipeToForm = (recipe: RecipeResponse): RecipeFormValues => ({
   title: recipe.title,
   notes: recipe.notes ?? "",
   sourceUrl: recipe.source_url ?? "",
+  rating: recipe.rating === null ? "" : String(recipe.rating),
   prepMinutes: recipe.prep_minutes === null ? "" : String(recipe.prep_minutes),
   cookMinutes: recipe.cook_minutes === null ? "" : String(recipe.cook_minutes),
   servings: String(recipe.servings),
@@ -122,6 +125,7 @@ export const importedToForm = (
   title: recipe.title,
   notes: recipe.notes ?? "",
   sourceUrl,
+  rating: "",
   prepMinutes: numberToInput(recipe.prep_minutes),
   cookMinutes: numberToInput(recipe.cook_minutes),
   servings: String(recipe.servings),
@@ -206,6 +210,7 @@ export const formToRecipeInput = (values: RecipeFormValues): RecipeInput => ({
   title: values.title.trim(),
   notes: values.notes.trim() === "" ? null : values.notes.trim(),
   source_url: values.sourceUrl.trim() === "" ? null : values.sourceUrl.trim(),
+  rating: values.rating === "" ? null : Number(values.rating),
   prep_minutes: optionalWholeNumber(values.prepMinutes) ?? null,
   cook_minutes: optionalWholeNumber(values.cookMinutes) ?? null,
   servings: Number(values.servings.trim()),

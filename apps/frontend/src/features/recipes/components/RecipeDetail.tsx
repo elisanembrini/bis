@@ -106,6 +106,9 @@ export function RecipeDetail({
       <Stack gap="xs">
         <HandwrittenTitle>{recipe.title}</HandwrittenTitle>
         {times.length > 0 && <Text c="dimmed">{times.join(" · ")}</Text>}
+        {recipe.rating !== null && (
+          <Text fw={600}>{t("detail.rating", { rating: recipe.rating })}</Text>
+        )}
         {recipe.tags.length > 0 && (
           <Group gap="xs" aria-label={t("detail.tags")}>
             {recipe.tags.map((tag) => (

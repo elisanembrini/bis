@@ -38,6 +38,7 @@ test("a member shares a recipe and the other one makes it their own", async ({
   await anna.getByRole("link", { name: "Nuova ricetta" }).click();
   await anna.getByLabel("Titolo").fill("Tiramisù della nonna");
   await anna.getByLabel("Link originale").fill("https://www.example.com/tiramisu");
+  await anna.getByLabel("Voto (da 1 a 10)").selectOption("9");
   const chooser = anna.waitForEvent("filechooser");
   await anna
     .getByRole("group", { name: "Foto del piatto" })
@@ -75,6 +76,7 @@ test("a member shares a recipe and the other one makes it their own", async ({
   await sharedWithMe.getByRole("link", { name: "Tiramisù della nonna" }).click();
   await expect(bruno.getByText("Ricetta di Anna, condivisa con te in sola lettura.")).toBeVisible();
   await expect(bruno.getByRole("link", { name: "Modifica" })).toHaveCount(0);
+  await expect(bruno.getByText("Voto: 9/10")).toBeVisible();
   await expectLoaded(bruno.getByRole("img", { name: "Foto di Tiramisù della nonna" }));
   await expect(bruno.getByRole("link", { name: "example.com" })).toHaveAttribute(
     "href",
@@ -92,6 +94,7 @@ test("a member shares a recipe and the other one makes it their own", async ({
   await expect(bruno.getByRole("link", { name: "Modifica" })).toBeVisible();
   await expectLoaded(bruno.getByRole("img", { name: "Foto di Tiramisù della nonna" }));
   await expect(bruno.getByRole("link", { name: "example.com" })).toBeVisible();
+  await expect(bruno.getByText(/^Voto:/)).toHaveCount(0);
 
   await bruno.getByRole("link", { name: "Ricette" }).click();
   await expect(

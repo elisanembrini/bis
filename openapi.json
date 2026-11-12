@@ -1041,6 +1041,38 @@
               ],
               "title": "Scope"
             }
+          },
+          {
+            "name": "min_rating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 10,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Rating"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "recent",
+                "rating"
+              ],
+              "type": "string",
+              "default": "recent",
+              "title": "Sort"
+            }
           }
         ],
         "responses": {
@@ -2520,6 +2552,19 @@
             ],
             "title": "Source Url"
           },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
           "prep_minutes": {
             "anyOf": [
               {
@@ -2624,6 +2669,17 @@
             "type": "integer",
             "title": "Servings"
           },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
           "prep_minutes": {
             "anyOf": [
               {
@@ -2719,6 +2775,7 @@
           "is_own",
           "author",
           "servings",
+          "rating",
           "prep_minutes",
           "cook_minutes",
           "cover_photo_id",
@@ -2753,6 +2810,17 @@
           "servings": {
             "type": "integer",
             "title": "Servings"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
           },
           "prep_minutes": {
             "anyOf": [
@@ -2813,6 +2881,7 @@
           "is_own",
           "author",
           "servings",
+          "rating",
           "prep_minutes",
           "cook_minutes",
           "cover_photo_id",

@@ -6,10 +6,13 @@ from fastapi import APIRouter, Depends, Query, status
 from app.core.security import Authenticated, get_authenticated
 from app.schemas.errors import ErrorResponse
 from app.schemas.recipe import (
+    RATING_MAX,
+    RATING_MIN,
     SEARCH_MAX_LENGTH,
     RecipeInput,
     RecipeResponse,
     RecipeScope,
+    RecipeSort,
     RecipeSummary,
     ShareCandidate,
     SharesInput,
@@ -44,8 +47,18 @@ def list_recipes(
     ingredient: Annotated[str | None, Query(max_length=SEARCH_MAX_LENGTH)] = None,
     tag_id: uuid.UUID | None = None,
     scope: RecipeScope | None = None,
+    min_rating: Annotated[int | None, Query(ge=RATING_MIN, le=RATING_MAX)] = None,
+    sort: RecipeSort = "recent",
 ) -> list[RecipeSummary]:
-    return service.search(current.user, title=q, ingredient=ingredient, tag_id=tag_id, scope=scope)
+    return service.search(
+        current.user,
+        title=q,
+        ingredient=ingredient,
+        tag_id=tag_id,
+        scope=scope,
+        min_rating=min_rating,
+        sort=sort,
+    )
 
 
 @router.post(

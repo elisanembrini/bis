@@ -20,6 +20,8 @@ MAX_TAGS = 20
 MAX_SHARES = 50
 SEARCH_MAX_LENGTH = 200
 SOURCE_URL_MAX_LENGTH = 2048
+RATING_MIN = 1
+RATING_MAX = 10
 SOURCE_URL_SCHEMES = {"http", "https"}
 
 Title = Annotated[
@@ -33,6 +35,7 @@ StepText = Annotated[
 ]
 Quantity = Annotated[Decimal, Field(gt=0, max_digits=10, decimal_places=3)]
 Minutes = Annotated[int, Field(ge=0, le=MINUTES_MAX)]
+Rating = Annotated[int, Field(ge=RATING_MIN, le=RATING_MAX)]
 
 
 class IngredientInput(BaseModel):
@@ -51,6 +54,7 @@ class RecipeInput(BaseModel):
     title: Title
     notes: Annotated[str, Field(max_length=TEXT_MAX_LENGTH)] | None = None
     source_url: Annotated[str, Field(max_length=SOURCE_URL_MAX_LENGTH)] | None = None
+    rating: Rating | None = None
     prep_minutes: Minutes | None = None
     cook_minutes: Minutes | None = None
     servings: Annotated[int, Field(ge=1, le=SERVINGS_MAX)]
@@ -104,6 +108,7 @@ class AuthorSummary(BaseModel):
 
 
 RecipeScope = Literal["mine", "shared"]
+RecipeSort = Literal["recent", "rating"]
 
 
 class RecipeSummary(BaseModel):
@@ -112,6 +117,7 @@ class RecipeSummary(BaseModel):
     is_own: bool
     author: AuthorSummary
     servings: int
+    rating: int | None
     prep_minutes: int | None
     cook_minutes: int | None
     cover_photo_id: uuid.UUID | None

@@ -1,18 +1,23 @@
 import { $api } from "../../api/client";
+import type { RecipeSort } from "./rating";
 
 export type RecipesSearch = {
   q?: string;
   ingredient?: string;
   tag?: string;
+  minRating?: number;
+  sort?: RecipeSort;
 };
 
-export const recipesQueryOptions = ({ q, ingredient, tag }: RecipesSearch = {}) =>
+export const recipesQueryOptions = ({ q, ingredient, tag, minRating, sort }: RecipesSearch = {}) =>
   $api.queryOptions("get", "/recipes", {
     params: {
       query: {
         ...(q === undefined ? {} : { q }),
         ...(ingredient === undefined ? {} : { ingredient }),
         ...(tag === undefined ? {} : { tag_id: tag }),
+        ...(minRating === undefined ? {} : { min_rating: minRating }),
+        ...(sort === undefined ? {} : { sort }),
       },
     },
   });
