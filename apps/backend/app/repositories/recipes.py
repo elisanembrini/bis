@@ -26,13 +26,17 @@ def search(
     title_words: list[str],
     ingredient_words: list[str],
     tag_id: uuid.UUID | None,
+    min_rating: int | None = None,
+    best_rated_first: bool = False,
 ) -> list[Recipe]:
     statement = (
         select(Recipe)
         .where(Recipe.id.in_(visible))
         .options(selectinload(Recipe.tags), selectinload(Recipe.owner))
     )
-    ordering = []
+    ordering = [Recipe.rating.desc().nulls_last()] if best_rated_first else []
+    if min_rating is not None:
+        statement = statement.where(Recipe.rating >= min_rating)
     if title_words:
         title_query = build_tsquery(title_words)
         statement = statement.where(Recipe.title_search.op("@@")(title_query))

@@ -1,4 +1,5 @@
 import {
+  Anchor,
   AspectRatio,
   Badge,
   Button,
@@ -26,6 +27,7 @@ import { SectionTitle } from "../../../components/SectionTitle";
 import { formatList } from "../../../i18n/formatList";
 import { useTagLabel } from "../../tags/useTagLabel";
 import { useFormatDuration } from "../hooks/useFormatDuration";
+import { sourceHost } from "../sourceLink";
 import type { RecipeResponse } from "../types";
 import { IngredientList } from "./IngredientList";
 import { ServingsSelector } from "./ServingsSelector";
@@ -85,6 +87,7 @@ export function RecipeDetail({
       ? t("detail.cook", { duration: formatDuration(recipe.cook_minutes * 60) })
       : null,
   ].filter((part) => part !== null);
+  const sourceName = recipe.source_url === null ? null : sourceHost(recipe.source_url);
 
   return (
     <Stack gap="lg">
@@ -103,6 +106,9 @@ export function RecipeDetail({
       <Stack gap="xs">
         <HandwrittenTitle>{recipe.title}</HandwrittenTitle>
         {times.length > 0 && <Text c="dimmed">{times.join(" · ")}</Text>}
+        {recipe.rating !== null && (
+          <Text fw={600}>{t("detail.rating", { rating: recipe.rating })}</Text>
+        )}
         {recipe.tags.length > 0 && (
           <Group gap="xs" aria-label={t("detail.tags")}>
             {recipe.tags.map((tag) => (
@@ -111,6 +117,14 @@ export function RecipeDetail({
               </Badge>
             ))}
           </Group>
+        )}
+        {recipe.source_url !== null && sourceName !== null && (
+          <Text c="dimmed">
+            {t("detail.source")}{" "}
+            <Anchor href={recipe.source_url} target="_blank" rel="noopener noreferrer">
+              {sourceName}
+            </Anchor>
+          </Text>
         )}
       </Stack>
       <ButtonLink

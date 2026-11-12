@@ -46,7 +46,7 @@ export function RecipeEditorPage({ userId, recipeId, createInitialValues }: Reci
               { body },
               {
                 onSuccess: (imported) => {
-                  setInitialValues(importedToForm(imported, newKey));
+                  setInitialValues(importedToForm(imported, newKey, body.url ?? ""));
                   setEditorVersion((version) => version + 1);
                 },
               },

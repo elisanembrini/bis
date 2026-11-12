@@ -1,5 +1,6 @@
 import { splitTimer, joinTimer } from "./duration";
 import { parseQuantity, quantityToInput } from "./quantity";
+import { isValidSourceUrl } from "./sourceLink";
 import {
   type ImportedRecipe,
   type RecipeInput,
@@ -26,6 +27,8 @@ export type StepFormValue = {
 export type RecipeFormValues = {
   title: string;
   notes: string;
+  sourceUrl: string;
+  rating: string;
   prepMinutes: string;
   cookMinutes: string;
   servings: string;
@@ -39,6 +42,7 @@ export type RecipeFormErrorKey =
   | "titleRequired"
   | "servingsInvalid"
   | "minutesInvalid"
+  | "sourceUrlInvalid"
   | "ingredientsRequired"
   | "stepsRequired"
   | "ingredientNameRequired"
@@ -71,6 +75,8 @@ export const emptyStep = (key: string): StepFormValue => ({
 export const emptyRecipeForm = (newKey: () => string): RecipeFormValues => ({
   title: "",
   notes: "",
+  sourceUrl: "",
+  rating: "",
   prepMinutes: "",
   cookMinutes: "",
   servings: "4",
@@ -83,6 +89,8 @@ export const emptyRecipeForm = (newKey: () => string): RecipeFormValues => ({
 export const recipeToForm = (recipe: RecipeResponse): RecipeFormValues => ({
   title: recipe.title,
   notes: recipe.notes ?? "",
+  sourceUrl: recipe.source_url ?? "",
+  rating: recipe.rating === null ? "" : String(recipe.rating),
   prepMinutes: recipe.prep_minutes === null ? "" : String(recipe.prep_minutes),
   cookMinutes: recipe.cook_minutes === null ? "" : String(recipe.cook_minutes),
   servings: String(recipe.servings),
@@ -109,9 +117,15 @@ export const recipeToForm = (recipe: RecipeResponse): RecipeFormValues => ({
 const numberToInput = (value: number | null | undefined): string =>
   value === null || value === undefined ? "" : String(value);
 
-export const importedToForm = (recipe: ImportedRecipe, newKey: () => string): RecipeFormValues => ({
+export const importedToForm = (
+  recipe: ImportedRecipe,
+  newKey: () => string,
+  sourceUrl = "",
+): RecipeFormValues => ({
   title: recipe.title,
   notes: recipe.notes ?? "",
+  sourceUrl,
+  rating: "",
   prepMinutes: numberToInput(recipe.prep_minutes),
   cookMinutes: numberToInput(recipe.cook_minutes),
   servings: String(recipe.servings),
@@ -149,6 +163,9 @@ export const validateRecipeForm = (values: RecipeFormValues): RecipeFormErrors =
   const errors: RecipeFormErrors = {};
   if (values.title.trim() === "") {
     errors["title"] = "titleRequired";
+  }
+  if (values.sourceUrl.trim() !== "" && !isValidSourceUrl(values.sourceUrl)) {
+    errors["sourceUrl"] = "sourceUrlInvalid";
   }
   const servings = optionalWholeNumber(values.servings);
   if (servings === null || servings === undefined || servings < 1 || servings > SERVINGS_MAX) {
@@ -192,6 +209,8 @@ export const validateRecipeForm = (values: RecipeFormValues): RecipeFormErrors =
 export const formToRecipeInput = (values: RecipeFormValues): RecipeInput => ({
   title: values.title.trim(),
   notes: values.notes.trim() === "" ? null : values.notes.trim(),
+  source_url: values.sourceUrl.trim() === "" ? null : values.sourceUrl.trim(),
+  rating: values.rating === "" ? null : Number(values.rating),
   prep_minutes: optionalWholeNumber(values.prepMinutes) ?? null,
   cook_minutes: optionalWholeNumber(values.cookMinutes) ?? null,
   servings: Number(values.servings.trim()),

@@ -65,14 +65,16 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
 
 - Description: create, view, edit and delete your own recipes.
 - Priority: must
-- Recipe content: title, photo of the dish, ingredients (quantity, unit, name), ordered steps (text, optional photo, optional timer duration), notes, preparation time, cooking time, number of servings, tags.
+- Recipe content: title, photo of the dish, ingredients (quantity, unit, name), ordered steps (text, optional photo, optional timer duration), notes, optional source link (the address the recipe was taken from), optional rating from 1 to 10, preparation time, cooking time, number of servings, tags.
 - Acceptance criteria:
   - [ ] Given a user, when they save a recipe with at least a title, one ingredient and one step, then the recipe appears in their recipe book.
   - [ ] Given a user, when they add an ingredient without a quantity, then it is shown as "q.b." (*quanto basta*, "as needed").
   - [ ] Given a user, when they reorder steps or ingredients, then the new order is saved.
   - [ ] Given a user, when they delete a recipe, then they are asked for confirmation and, after confirming, the recipe and its photos are deleted.
-  - [ ] Only the author of a recipe can edit or delete it.
-- Edge cases and errors: missing required fields, photo that is too large or in an unsupported format, connection lost while saving (the draft must not be lost).
+  - [ ] Given a user, when they enter the address a recipe was taken from, then it is shown on the recipe as a link to the original page, and can be changed or removed later.
+  - [ ] Given a user, when they give one of their recipes a rating from 1 to 10, then the rating is shown on the recipe and in the list, and can be changed or removed later.
+  - [ ] Only the author of a recipe can edit or delete it, and that includes every field: content, source link and rating.
+- Edge cases and errors: missing required fields, a source link that is not an http or https address (rejected by the server, so `javascript:` and similar addresses never reach the page), a source link longer than 2048 characters, a rating outside 1 to 10 or not a whole number (rejected by the server), photo that is too large or in an unsupported format, connection lost while saving (the draft must not be lost).
 
 ### F4: Servings with recalculated quantities
 
@@ -102,6 +104,8 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
   - [ ] The search includes the user's own recipes and the ones shared with them, telling them apart visually.
   - [ ] Every result shows the photo of the dish and the title.
   - [ ] Without a search, recipes are ordered from the most recent.
+  - [ ] Given the "Ordina per" (sort by) control, when the user chooses "Voto più alto" (highest rating), then recipes are ordered by rating, best first, and recipes without a rating come last. Search relevance and then recency break ties.
+  - [ ] Given the "Voto minimo" (minimum rating) filter, when the user chooses 6+, 7+, 8+, 9+ or 10, then only recipes with at least that rating are shown, and recipes without a rating are hidden. It combines with the text search and the tag filter, and both controls are kept in the address of the page.
 
 ### F7: Sharing and copying
 
@@ -109,8 +113,8 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
 - Acceptance criteria:
   - [ ] Given one of their own recipes, when the user chooses one or more household members, then the recipe appears in the "Condivise con me" (shared with me) section of those members.
   - [ ] Given a share, when the author revokes it, then the recipe disappears for that member.
-  - [ ] Given a shared recipe, when the recipient opens it, then they see it read-only and can use servings and cooking mode.
-  - [ ] Given a shared recipe, when the recipient chooses "Fai il bis" (roughly "have seconds"), then they get an independent copy, photos included, which they can edit.
+  - [ ] Given a shared recipe, when the recipient opens it, then they see it read-only, rating and source link included, and can use servings and cooking mode.
+  - [ ] Given a shared recipe, when the recipient chooses "Fai il bis" (roughly "have seconds"), then they get an independent copy, photos and source link included, which they can edit. The copy starts without a rating: the rating is the author's own judgement.
   - [ ] Later changes to the original do not change the copies.
 
 ### F8: Cooking mode
@@ -136,7 +140,7 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
 
 - Priority: could
 - Acceptance criteria:
-  - [x] Given a configured language model, when the user pastes the text of a recipe or a link to a web page, then the recipe form is filled with a title, servings, times, ingredients (quantity, unit, name) and steps (with timers where the text states a time), ready to be reviewed and edited before saving.
+  - [x] Given a configured language model, when the user pastes the text of a recipe or a link to a web page, then the recipe form is filled with a title, servings, times, ingredients (quantity, unit, name) and steps (with timers where the text states a time), ready to be reviewed and edited before saving. When the source is a link, the source link field is filled with it.
   - [x] Nothing is saved by the import itself: the result is a draft that the user confirms.
   - [x] When the content holds no recipe, or the model answer is not usable, the user gets a clear message and the form is left untouched.
   - [x] Without a configured model the feature is absent: the app works exactly as before.
@@ -150,7 +154,7 @@ Each user belongs to exactly one household. Anyone who signs up without an invit
 - `households`: id, owner_id, created_at.
 - `household_members`: household_id, user_id (unique: a user belongs to a single household), joined_at.
 - `household_invites`: id, household_id, token_hash, created_by, created_at, expires_at, used_at (nullable), used_by (nullable). Only the hash of the token is stored in the database.
-- `recipes`: id, owner_id, title, notes, prep_minutes, cook_minutes, servings (> 0), cover_photo_id (nullable), copied_from_recipe_id (nullable), created_at, updated_at.
+- `recipes`: id, owner_id, title, notes, source_url (nullable, http or https, at most 2048 characters), rating (nullable, 1 to 10), prep_minutes, cook_minutes, servings (> 0), cover_photo_id (nullable), copied_from_recipe_id (nullable), created_at, updated_at.
 - `ingredients`: id, recipe_id, position, quantity (decimal, nullable for "q.b."), unit (nullable), name.
 - `steps`: id, recipe_id, position, text, timer_seconds (nullable), photo_id (nullable).
 - `tags`: id, owner_id (nullable for the starter tags), name, key (nullable: a stable identifier of the starter tags, used to translate their names). Unique on (owner_id, name) and on key.
@@ -181,7 +185,7 @@ Deleting a recipe cascades to its ingredients, steps, associated tags, shares an
 | POST   | /household/invites/{token}/accept | Authenticated                       | Accept an invitation                                                     |
 | DELETE | /household/members/{user_id}      | Household owner                     | Remove a member                                                          |
 | POST   | /household/leave                  | Member                              | Leave the household                                                      |
-| GET    | /recipes                          | Authenticated                       | List with parameters q, ingredient, scope (mine or shared)               |
+| GET    | /recipes                          | Authenticated                       | List with parameters q, ingredient, tag_id, scope, min_rating, sort            |
 | POST   | /recipes                          | Authenticated                       | Create a recipe                                                          |
 | GET    | /recipes/{id}                     | Author or recipient                 | Detail                                                                   |
 | PUT    | /recipes/{id}                     | Author                              | Update                                                                   |

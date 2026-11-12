@@ -652,6 +652,10 @@ export interface components {
             title: string;
             /** Notes */
             notes?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /** Rating */
+            rating?: number | null;
             /** Prep Minutes */
             prep_minutes?: number | null;
             /** Cook Minutes */
@@ -684,6 +688,8 @@ export interface components {
             author: components["schemas"]["AuthorSummary"];
             /** Servings */
             servings: number;
+            /** Rating */
+            rating: number | null;
             /** Prep Minutes */
             prep_minutes: number | null;
             /** Cook Minutes */
@@ -704,6 +710,8 @@ export interface components {
             updated_at: string;
             /** Notes */
             notes: string | null;
+            /** Source Url */
+            source_url: string | null;
             /** Ingredients */
             ingredients: components["schemas"]["IngredientResponse"][];
             /** Steps */
@@ -723,6 +731,8 @@ export interface components {
             author: components["schemas"]["AuthorSummary"];
             /** Servings */
             servings: number;
+            /** Rating */
+            rating: number | null;
             /** Prep Minutes */
             prep_minutes: number | null;
             /** Cook Minutes */
@@ -1583,6 +1593,8 @@ export interface operations {
                 ingredient?: string | null;
                 tag_id?: string | null;
                 scope?: ("mine" | "shared") | null;
+                min_rating?: number | null;
+                sort?: "recent" | "rating";
             };
             header?: never;
             path?: never;

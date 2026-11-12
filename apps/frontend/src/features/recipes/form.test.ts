@@ -19,6 +19,8 @@ const newKey = () => {
 const validForm = (): RecipeFormValues => ({
   title: "  Pasta al pomodoro ",
   notes: "",
+  sourceUrl: "",
+  rating: "",
   prepMinutes: "10",
   cookMinutes: "",
   servings: "4",
@@ -82,11 +84,65 @@ describe("validateRecipeForm", () => {
   });
 });
 
+describe("rating", () => {
+  it("sends the chosen rating as a number, or null when there is none", () => {
+    expect(formToRecipeInput({ ...validForm(), rating: "10" }).rating).toBe(10);
+    expect(formToRecipeInput({ ...validForm(), rating: "1" }).rating).toBe(1);
+    expect(formToRecipeInput({ ...validForm(), rating: "" }).rating).toBeNull();
+  });
+
+  it("starts unrated for a new or an imported recipe", () => {
+    expect(emptyRecipeForm(newKey).rating).toBe("");
+    const imported = importedToForm(
+      {
+        title: "Insalata",
+        servings: 2,
+        ingredients: [{ name: "lattuga" }],
+        steps: [{ text: "Mescola." }],
+      },
+      newKey,
+    );
+    expect(imported.rating).toBe("");
+  });
+});
+
+describe("source link", () => {
+  it("accepts an empty link and web addresses", () => {
+    for (const sourceUrl of ["", "  ", "https://example.com/ricetta?id=7", "http://example.com"]) {
+      expect(validateRecipeForm({ ...validForm(), sourceUrl })).toEqual({});
+    }
+  });
+
+  it("rejects anything that is not an http or https address", () => {
+    for (const sourceUrl of [
+      "javascript:alert(1)",
+      "ftp://example.com/ricetta",
+      "example.com/ricetta",
+      "https://",
+      "non è un indirizzo",
+      `https://example.com/${"a".repeat(2048)}`,
+    ]) {
+      expect(validateRecipeForm({ ...validForm(), sourceUrl })).toEqual({
+        sourceUrl: "sourceUrlInvalid",
+      });
+    }
+  });
+
+  it("sends the trimmed link, or null when empty", () => {
+    expect(
+      formToRecipeInput({ ...validForm(), sourceUrl: "  https://example.com/a  " }).source_url,
+    ).toBe("https://example.com/a");
+    expect(formToRecipeInput({ ...validForm(), sourceUrl: "  " }).source_url).toBeNull();
+  });
+});
+
 describe("formToRecipeInput", () => {
   it("converts Italian quantities, timers and empty fields", () => {
     expect(formToRecipeInput(validForm())).toEqual({
       title: "Pasta al pomodoro",
       notes: null,
+      source_url: null,
+      rating: null,
       prep_minutes: 10,
       cook_minutes: null,
       servings: 4,
@@ -112,6 +168,8 @@ describe("recipeToForm", () => {
       is_own: true,
       author: { id: "u1", display_name: "Anna" },
       notes: null,
+      source_url: "https://example.com/pasta",
+      rating: 7,
       prep_minutes: null,
       cook_minutes: 15,
       servings: 2,
@@ -126,6 +184,8 @@ describe("recipeToForm", () => {
     const form = recipeToForm(recipe);
 
     expect(form.ingredients[0]).toEqual({ key: "i1", quantity: "1,5", unit: "kg", name: "farina" });
+    expect(form.sourceUrl).toBe("https://example.com/pasta");
+    expect(form.rating).toBe("7");
     expect(form.coverPhotoId).toBe("p1");
     expect(form.tagIds).toEqual(["t2"]);
     expect(form.steps[0]).toEqual({
@@ -137,6 +197,8 @@ describe("recipeToForm", () => {
     });
     const input = formToRecipeInput(form);
     expect(input.ingredients[0]?.quantity).toBe("1.5");
+    expect(input.source_url).toBe("https://example.com/pasta");
+    expect(input.rating).toBe(7);
     expect(input.cover_photo_id).toBe("p1");
     expect(input.steps[0]?.photo_id).toBe("p2");
   });
@@ -193,6 +255,13 @@ describe("importedToForm", () => {
     ]);
     const keys = [...form.ingredients, ...form.steps].map((item) => item.key);
     expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  it("keeps the link the recipe was imported from", () => {
+    const form = importedToForm(imported, newKey, "https://example.com/ricetta");
+
+    expect(form.sourceUrl).toBe("https://example.com/ricetta");
+    expect(importedToForm(imported, newKey).sourceUrl).toBe("");
   });
 
   it("treats omitted optional fields as empty", () => {

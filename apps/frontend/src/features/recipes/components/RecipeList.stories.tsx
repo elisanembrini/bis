@@ -20,6 +20,8 @@ export const WithRecipes: Story = {
     await expect(links.map((link) => link.textContent)).toEqual(["Pasta al pomodoro", "Uovo sodo"]);
     await expect(canvas.getByText("4 porzioni · 25 min")).toBeVisible();
     await expect(canvas.getByText("1 porzione")).toBeVisible();
+    await expect(canvas.getByText("Voto 8/10")).toBeVisible();
+    await expect(canvas.getAllByText(/^Voto \d+\/10$/)).toHaveLength(1);
   },
 };
 

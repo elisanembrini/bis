@@ -162,3 +162,94 @@ def test_search_follows_recipe_updates(client: TestClient, anna: Headers) -> Non
     assert titles(client, anna, q="frittata") == []
     assert titles(client, anna, q="torta") == ["Torta salata"]
     assert titles(client, anna, ingredient="brise") == ["Torta salata"]
+
+
+@pytest.fixture
+def rated(client: TestClient, anna: Headers) -> Headers:
+    ratings = {
+        "Frittata di zucchine": 7,
+        "Pasta al pomodoro": 10,
+        "Caffè shakerato": 7,
+        "Lasagne alla bolognese": None,
+        "Insalata di patate": 4,
+    }
+    for recipe in client.get("/recipes", headers=anna).json():
+        detail = client.get(f"/recipes/{recipe['id']}", headers=anna).json()
+        payload = {
+            "title": detail["title"],
+            "servings": detail["servings"],
+            "rating": ratings[detail["title"]],
+            "ingredients": [
+                {"quantity": None, "unit": None, "name": item["name"]}
+                for item in detail["ingredients"]
+            ],
+            "steps": [{"text": step["text"]} for step in detail["steps"]],
+        }
+        assert client.put(f"/recipes/{recipe['id']}", json=payload, headers=anna).status_code == 200
+    return anna
+
+
+def test_best_rated_recipes_come_first_and_unrated_last(client: TestClient, rated: Headers) -> None:
+    assert titles(client, rated, sort="rating") == [
+        "Pasta al pomodoro",
+        "Caffè shakerato",
+        "Frittata di zucchine",
+        "Insalata di patate",
+        "Lasagne alla bolognese",
+    ]
+
+
+def test_default_order_ignores_ratings(client: TestClient, rated: Headers) -> None:
+    assert titles(client, rated)[0] == "Insalata di patate"
+    assert titles(client, rated, sort="recent") == titles(client, rated)
+
+
+def test_minimum_rating_hides_lower_and_unrated_recipes(client: TestClient, rated: Headers) -> None:
+    assert titles(client, rated, min_rating="7", sort="rating") == [
+        "Pasta al pomodoro",
+        "Caffè shakerato",
+        "Frittata di zucchine",
+    ]
+    assert titles(client, rated, min_rating="8") == ["Pasta al pomodoro"]
+    assert titles(client, rated, min_rating="10") == ["Pasta al pomodoro"]
+    assert len(titles(client, rated, min_rating="1")) == 4
+
+
+def test_rating_filter_and_sort_combine_with_search_and_tags(
+    client: TestClient, rated: Headers
+) -> None:
+    dolci = tag_id(client, rated, "Dolci")
+    pasta = next(r for r in client.get("/recipes", headers=rated).json() if "Pasta" in r["title"])
+    detail = client.get(f"/recipes/{pasta['id']}", headers=rated).json()
+    client.put(
+        f"/recipes/{pasta['id']}",
+        json={
+            "title": detail["title"],
+            "servings": detail["servings"],
+            "rating": 10,
+            "tag_ids": [dolci],
+            "ingredients": [{"name": item["name"]} for item in detail["ingredients"]],
+            "steps": [{"text": step["text"]} for step in detail["steps"]],
+        },
+        headers=rated,
+    )
+
+    assert titles(client, rated, tag_id=dolci, min_rating="5") == ["Pasta al pomodoro"]
+    assert titles(client, rated, ingredient="zucchine", min_rating="7") == ["Frittata di zucchine"]
+    assert titles(client, rated, q="pasta", sort="rating") == ["Pasta al pomodoro"]
+
+
+@pytest.mark.parametrize(
+    "params",
+    [{"min_rating": "0"}, {"min_rating": "11"}, {"min_rating": "x"}, {"sort": "alphabetical"}],
+)
+def test_invalid_rating_filter_or_sort_is_rejected(
+    client: TestClient, rated: Headers, params: dict[str, str]
+) -> None:
+    assert client.get("/recipes", params=params, headers=rated).status_code == 422
+
+
+def test_rating_filter_never_exposes_recipes_of_others(client: TestClient, rated: Headers) -> None:
+    other = register(client, "Bruno")
+
+    assert titles(client, other, min_rating="1", sort="rating") == []

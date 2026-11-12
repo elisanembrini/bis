@@ -10,6 +10,7 @@ from sqlalchemy import (
     Index,
     Integer,
     Numeric,
+    SmallInteger,
     String,
     Text,
 )
@@ -35,6 +36,7 @@ class Recipe(Base):
         CheckConstraint("servings > 0", name="servings_positive"),
         CheckConstraint("prep_minutes >= 0", name="prep_minutes_not_negative"),
         CheckConstraint("cook_minutes >= 0", name="cook_minutes_not_negative"),
+        CheckConstraint("rating BETWEEN 1 AND 10", name="rating_range"),
         Index("ix_recipes_owner_id_created_at", "owner_id", "created_at"),
         Index("ix_recipes_title_search", "title_search", postgresql_using="gin"),
     )
@@ -43,6 +45,8 @@ class Recipe(Base):
     owner_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     title: Mapped[str] = mapped_column(String(200))
     notes: Mapped[str | None] = mapped_column(Text)
+    source_url: Mapped[str | None] = mapped_column(String(2048))
+    rating: Mapped[int | None] = mapped_column(SmallInteger)
     prep_minutes: Mapped[int | None] = mapped_column(Integer)
     cook_minutes: Mapped[int | None] = mapped_column(Integer)
     servings: Mapped[int] = mapped_column(Integer)

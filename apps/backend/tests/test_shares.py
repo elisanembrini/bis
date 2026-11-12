@@ -75,6 +75,20 @@ def test_shared_recipe_appears_for_chosen_members(
     assert listed(client, anna)[0]["is_own"] is True
 
 
+def test_source_link_is_visible_to_recipients_and_kept_by_the_copy(
+    client: TestClient, household: dict[str, Headers]
+) -> None:
+    anna, bruno = household["anna"], household["bruno"]
+    recipe = create(client, anna, source_url="https://example.com/tiramisu")
+    share(client, anna, recipe["id"], bruno)
+
+    seen_by_bruno = client.get(f"/recipes/{recipe['id']}", headers=bruno).json()
+    copied = copy_of(client, bruno, recipe["id"])
+
+    assert seen_by_bruno["source_url"] == "https://example.com/tiramisu"
+    assert copied["source_url"] == "https://example.com/tiramisu"
+
+
 def test_share_list_shows_household_members_and_state(
     client: TestClient, household: dict[str, Headers]
 ) -> None:
@@ -154,6 +168,43 @@ def test_recipient_sees_the_recipe_read_only(
     assert shares.status_code == 403
     assert reshare.status_code == 403
     assert client.get(f"/recipes/{recipe['id']}", headers=anna).json()["title"] == "Originale"
+
+
+def test_rating_is_visible_to_recipients_but_only_the_author_can_change_it(
+    client: TestClient, household: dict[str, Headers]
+) -> None:
+    anna, bruno = household["anna"], household["bruno"]
+    recipe = create(client, anna, title="Originale", rating=8, source_url="https://example.com/a")
+    share(client, anna, recipe["id"], bruno)
+
+    seen_by_bruno = client.get(f"/recipes/{recipe['id']}", headers=bruno).json()
+    listed_for_bruno = listed(client, bruno, scope="shared")
+    rerate = client.put(
+        f"/recipes/{recipe['id']}",
+        json=recipe_payload(title="Originale", rating=1, source_url="https://example.com/b"),
+        headers=bruno,
+    )
+    delete = client.delete(f"/recipes/{recipe['id']}", headers=bruno)
+
+    assert seen_by_bruno["rating"] == 8
+    assert listed_for_bruno[0]["rating"] == 8
+    assert rerate.status_code == 403
+    assert rerate.json()["code"] == "RECIPE_READ_ONLY"
+    assert delete.status_code == 403
+    unchanged = client.get(f"/recipes/{recipe['id']}", headers=anna).json()
+    assert unchanged["rating"] == 8
+    assert unchanged["source_url"] == "https://example.com/a"
+
+
+def test_copy_starts_without_a_rating(client: TestClient, household: dict[str, Headers]) -> None:
+    anna, bruno = household["anna"], household["bruno"]
+    recipe = create(client, anna, rating=9)
+    share(client, anna, recipe["id"], bruno)
+
+    copied = copy_of(client, bruno, recipe["id"])
+
+    assert copied["rating"] is None
+    assert client.get(f"/recipes/{recipe['id']}", headers=anna).json()["rating"] == 9
 
 
 def test_non_recipients_cannot_see_recipe_or_photos(

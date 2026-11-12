@@ -89,3 +89,30 @@ test("the import form is hidden when the feature is not available", async ({ pag
   await expect(page.getByRole("heading", { name: "Nuova ricetta" })).toBeVisible();
   await expect(page.getByLabel("Testo della ricetta")).toHaveCount(0);
 });
+
+test("a recipe imported from a link keeps that link as its source", async ({ page }) => {
+  await mockFeatures(page, true);
+  await page.route("**/api/recipes/import", (route) =>
+    route.fulfill({
+      json: {
+        title: "Pasta al pomodoro",
+        notes: null,
+        prep_minutes: null,
+        cook_minutes: null,
+        servings: 4,
+        ingredients: [{ quantity: null, unit: null, name: "spaghetti" }],
+        steps: [{ text: "Cuoci la pasta.", timer_seconds: null }],
+      },
+    }),
+  );
+  await registerNewUser(page);
+
+  await page.goto("/recipes/new");
+  await page.getByRole("radiogroup", { name: "Origine" }).getByText("Link", { exact: true }).click();
+  await page.getByLabel("Link della ricetta").fill("https://www.example.com/pasta");
+  await page.getByRole("button", { name: "Importa" }).click();
+
+  await expect(page.getByLabel("Link originale")).toHaveValue("https://www.example.com/pasta");
+  await page.getByRole("button", { name: "Salva ricetta" }).click();
+  await expect(page.getByRole("link", { name: "example.com" })).toBeVisible();
+});

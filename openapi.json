@@ -1041,6 +1041,38 @@
               ],
               "title": "Scope"
             }
+          },
+          {
+            "name": "min_rating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 10,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Rating"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "recent",
+                "rating"
+              ],
+              "type": "string",
+              "default": "recent",
+              "title": "Sort"
+            }
           }
         ],
         "responses": {
@@ -2508,6 +2540,31 @@
             ],
             "title": "Notes"
           },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
           "prep_minutes": {
             "anyOf": [
               {
@@ -2612,6 +2669,17 @@
             "type": "integer",
             "title": "Servings"
           },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
           "prep_minutes": {
             "anyOf": [
               {
@@ -2674,6 +2742,17 @@
             ],
             "title": "Notes"
           },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
           "ingredients": {
             "items": {
               "$ref": "#/components/schemas/IngredientResponse"
@@ -2696,6 +2775,7 @@
           "is_own",
           "author",
           "servings",
+          "rating",
           "prep_minutes",
           "cook_minutes",
           "cover_photo_id",
@@ -2703,6 +2783,7 @@
           "created_at",
           "updated_at",
           "notes",
+          "source_url",
           "ingredients",
           "steps"
         ],
@@ -2729,6 +2810,17 @@
           "servings": {
             "type": "integer",
             "title": "Servings"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
           },
           "prep_minutes": {
             "anyOf": [
@@ -2789,6 +2881,7 @@
           "is_own",
           "author",
           "servings",
+          "rating",
           "prep_minutes",
           "cook_minutes",
           "cover_photo_id",
